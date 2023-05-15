@@ -1,27 +1,42 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+    <Header />
+    <div class="main-body">
+        <Side />
+        <Body />
+    </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import HelloWorld from './components/HelloWorld.vue';
+import { mapActions } from 'vuex';
+
+import Side from './components/Side.vue';
+import Header from './components/Header.vue';
+import Body from './components/Body.vue';
 
 export default defineComponent({
-  name: 'App',
-  components: {
-    HelloWorld,
-  },
+    name: 'App',
+    components: {
+        Header,
+        Side,
+        Body,
+    },
+    methods: {
+        ...mapActions(['getList']),
+    },
+    mounted() {
+        this.getList().then(() => {
+            console.log('load');
+        })
+    },
 });
+
 </script>
 
 <style lang="less">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+@import './styles/main.less';
+.main-body {
+    display: flex;
+    height: calc(100vh - 70px);
 }
 </style>
