@@ -1,5 +1,6 @@
 <template>
     <div>
+        <Song v-if="playbackSong" :song="playbackSong" />
         <div class="progress" ref="container" @click="moveTo">
             <div class="progress-line" :style="{ width: progress + '%' }"></div>
         </div>
@@ -37,107 +38,47 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapMutations, mapState } from 'vuex';
+import Song from './Song.vue'
 
 export default defineComponent({
+    components: {
+        Song,
+    },
     data() {
         return {
-            audio: null as HTMLAudioElement | null,
-            isPlaying: false,
-            timer: '00:00',
-            timerInterval: null,
-            muted: false,
             shuffled: false,
             repeated: false,
-            duration: 0,
-            progress: 0,
         };
     },
-    mounted() {
-        this.audio = new Audio();
-        this.audio.addEventListener('playing', () => {
-            this.isPlaying = true;
-        });
-
-        this.audio.addEventListener('pause', () => {
-            this.isPlaying = false;
-        });
-
-        this.audio.addEventListener('ended', () => {
-            this.isPlaying = false;
-        });
-
-        this.audio.addEventListener('timeupdate', () => {
-            if (this.audio) {
-                this.duration = this.audio.duration;
-                this.timer = this.secondsToMinutes(this.audio.currentTime);
-                if (this.isPlaying) {
-                    this.progress = Math.round((this.audio.currentTime * 100) / this.duration);
-                    document.title = `${this.timer} - ${this.playbackSong.name}`;
-                }
-            }
-        });
-    },
     computed: {
-        ...mapState(['playbackSong', 'playbackIndex', 'songs']),
+        ...mapState(['playbackSong', 'playbackIndex', 'songs', 'isPlaying', 'muted', 'duration', 'timer', 'progress']),
     },
     methods: {
-        ...mapMutations(['SET_PLAYBACK', 'SET_NEXT', 'SET_PREW']),
-        start() {
-            if (this.audio) {
-                this.audio.src = this.playbackSong.song;
-                this.audio.currentTime = 0;
-                this.audio.play();
-            }
-        },
+        ...mapMutations(['SET_NEXT', 'SET_PREW', 'SET_PLAY', 'SET_PAUSE', 'MOVE_TO', 'MUTE']),
         play() {
-            if (this.audio && this.audio.src) {
-                this.audio.play();
-            } else {
-                this.SET_PLAYBACK(0);
-                this.start();
-            }
+            this.SET_PLAY(0);
         },
         pause() {
-            if (this.audio) {
-                this.audio.pause();
-                setTimeout(() => {
-                    document.title = `⏸ ${this.playbackSong.name}`;
-                }, 100);
-            }
+            this.SET_PAUSE();
         },
         moveTo(event: MouseEvent) {
-            if (this.audio) {
+            if (this.isPlaying) {
                 const container: HTMLElement = this.$refs.container as HTMLElement;
                 const containerWidth = container.clientWidth;
                 const clickPosition = event.clientX - container.getBoundingClientRect().left;
                 const clickPositionPercentage = (clickPosition / containerWidth) * 100;
-                this.audio.currentTime = (clickPositionPercentage / 100) * this.duration;
+                const currentTime = (clickPositionPercentage / 100) * this.duration;
+                this.MOVE_TO(currentTime);
             }
         },
         mute() {
-            if (this.audio) {
-                if (!this.muted) {
-                    this.audio.muted = true;
-                } else {
-                    this.audio.muted = false;
-                }
-                this.muted = !this.muted;
-            }
-        },
-        secondsToMinutes(seconds: number) {
-            const minutes = Math.round(seconds / 60);
-            const remainderSeconds = Math.round(seconds % 60);
-            const formattedMinutes = `${minutes.toString().padStart(3, '0').slice(-2)}`;
-            const formattedSeconds = `${remainderSeconds.toString().padStart(3, '0').slice(-2)}`;
-            return `${formattedMinutes}:${formattedSeconds}`;
+            this.MUTE();
         },
         backward() {
             this.SET_PREW();
-            this.start();
         },
         forward() {
             this.SET_NEXT();
-            this.start();
         },
         shuffle() {
             this.shuffled = !this.shuffled;

@@ -8,13 +8,23 @@
                 <div class="song-details-cover" v-if="activeSong.cover">
                     <img :src="activeSong.cover" alt="">
                 </div>
-                <div class="song-details-cover" v-if="activeSong.clip">
-                    <img :src="`https://img.youtube.com/vi/${activeSong.clip}/0.jpg`" alt="">
+                <div class="song-details-clip" v-if="activeSong.clip">
+                    <img :src="`https://img.youtube.com/vi/${getClipID(activeSong.clip)}/0.jpg`" alt="" @click="showClip = true">
+                </div>
+                <div v-if="showClip" class="add-song-form" @click="hideForm">
+                    <div class="clip-popup">
+                        <div class="close-popup" @click="hideForm"></div>
+                        <iframe width="800" height="500" :src="`https://www.youtube.com/embed/${getClipID(activeSong.clip)}`" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
                 </div>
             </div>
             <div class="song-details-right">
                 <PlaybackPanel />
-                <div class="song-one__date"><b>Добавлено:</b> {{ dateFormat }}</div>
+                <div
+                    class="song-one__date"
+                    v-if="activeSong">
+                    <b>Добавлено:</b> {{ dateFormat(activeSong.date_create) }}
+                </div>
                 <div class="song-one__composer" v-if="activeSong.composer">
                     <b>Музыка: </b>{{ activeSong.composer }}
                 </div>
@@ -39,19 +49,40 @@ export default defineComponent({
     components: {
         PlaybackPanel,
     },
+    data() {
+        return {
+            showClip: false,
+        }
+    },
     computed: {
         ...mapState(['activeSong']),
-        dateFormat() {
-            const date = new Date(this.activeSong.date_create);
-            const day = date.getDate().toString().padStart(2, '0');
-            const month = (date.getMonth() + 1).toString().padStart(2, '0');
-            const year = date.getFullYear();
-
-            return `${day}.${month}.${year}`;
-        },
     },
     methods: {
         ...mapMutations(['SET_ACTIVE']),
+        hideForm(event:Event) {
+            const element = event.target as HTMLElement;
+            if (element.classList.contains('add-song-form') || element.classList.contains('close-popup')) {
+                this.showClip = false;
+            }
+        },
+        dateFormat(dateCreate: number) {
+            if (this.activeSong) {
+                const date = new Date(dateCreate * 1000);
+                const day = date.getDate().toString().padStart(2, '0');
+                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                const year = date.getFullYear();
+                return `${day}.${month}.${year}`;
+            }
+            return false;
+        },
+        getClipID(url: string) {
+            const regex = /v=([a-zA-Z0-9_-]{11})/;
+            const match = url.match(regex);
+            if (match) {
+                return match[1];
+            }
+            return null;
+        },
     },
 });
 </script>
@@ -87,6 +118,25 @@ export default defineComponent({
 .song-details-cover {
     img {
         width: 100%;
+    }
+}
+
+.song-details-clip {
+    cursor: pointer;
+    position: relative;
+    img {
+        width: 100%;
+    }
+    &::before {
+        content: "";
+        background: url('/src/assets/youTube.png') no-repeat;
+        width: 72px;
+        height: 50px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-left: -36px;
+        margin-top: -25px;
     }
 }
 

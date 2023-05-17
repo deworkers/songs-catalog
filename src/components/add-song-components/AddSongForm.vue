@@ -52,19 +52,19 @@
                 <div class="steps-tab" v-if="step == 2">
                     <div class="steps-tab-title">3. Введите композитора</div>
                     <div class="steps-tab-body">
-                        <input type="text" v-model="form.composer">
+                        <input name="composer" type="text" v-model="form.composer">
                     </div>
                 </div>
                 <div class="steps-tab" v-if="step == 3">
                     <div class="steps-tab-title">4. Введите автора слов</div>
                     <div class="steps-tab-body">
-                        <input type="text" v-model="form.author">
+                        <input name="author" type="text" v-model="form.author">
                     </div>
                 </div>
                 <div class="steps-tab" v-if="step == 4">
                     <div class="steps-tab-title">5. Введите исполнителя</div>
                     <div class="steps-tab-body">
-                        <input type="text" v-model="form.singer">
+                        <input name="singer" type="text" v-model="form.singer">
                     </div>
                 </div>
                 <div class="steps-tab" v-if="step == 5">
@@ -128,6 +128,7 @@
 <script lang="ts">
 import axios from 'axios';
 import { defineComponent } from 'vue';
+import { mapActions } from 'vuex';
 
 interface IFile {
     name: string,
@@ -154,6 +155,8 @@ export default defineComponent({
                 author: '' as string,
                 singer: '' as string,
                 clip: '' as string,
+                description: '' as string,
+                originalId: '' as string,
             },
             song: null as IFile | null,
             cover: null as IFile | null,
@@ -164,6 +167,7 @@ export default defineComponent({
     computed: {
     },
     methods: {
+        ...mapActions(['getList']),
         hideForm(event:Event) {
             const element = event.target as HTMLElement;
             if (this.setShowForm && (element.classList.contains('add-song-form') || element.classList.contains('close-popup'))) {
@@ -205,25 +209,39 @@ export default defineComponent({
             }
         },
         toFormData() {
-            this.formData.delete('name');
-            this.formData.delete('composer');
-            this.formData.delete('author');
-            this.formData.delete('singer');
-            this.formData.delete('clip');
+            this.formData.delete('Song[name]');
+            this.formData.delete('Song[composer]');
+            this.formData.delete('Song[author]');
+            this.formData.delete('Song[singer]');
+            this.formData.delete('Song[clip]');
+            this.formData.delete('Song[description]');
+            this.formData.delete('Song[originalId]');
 
-            this.formData.append('name', this.form.name);
-            this.formData.append('composer', this.form.composer);
-            this.formData.append('author', this.form.author);
-            this.formData.append('singer', this.form.singer);
-            this.formData.append('clip', this.form.clip);
+            this.formData.append('Song[name]', this.form.name);
+            this.formData.append('Song[composer]', this.form.composer);
+            this.formData.append('Song[author]', this.form.author);
+            this.formData.append('Song[singer]', this.form.singer);
+            this.formData.append('Song[clip]', this.form.clip);
+            this.formData.append('Song[description]', this.form.description);
+            this.formData.append('Song[originalId]', this.form.originalId);
         },
         submit() {
             this.validate();
             if (this.valid) {
                 this.toFormData();
-                axios.post('/songs/', this.formData)
+                axios.post('/song/', this.formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                })
                     .then((response) => {
                         console.log(response);
+                        if (this.setShowForm) {
+                            this.setShowForm(false);
+                            this.getList().then(() => {
+                                console.log('load');
+                            })
+                        }
                     })
                     .catch((error) => {
                         console.log(error);
@@ -239,10 +257,10 @@ export default defineComponent({
                     size: song.size,
                     type: song.type,
                 };
-                this.formData.append('song', song);
+                this.formData.append('Song[songFile]', song);
             } else {
                 this.song = null;
-                this.formData.delete('song');
+                this.formData.delete('Song[songFile]');
             }
         },
         selectCover(event: Event) {
@@ -254,10 +272,10 @@ export default defineComponent({
                     size: cover.size,
                     type: cover.type,
                 };
-                this.formData.append('cover', cover);
+                this.formData.append('Song[coverFile]', cover);
             } else {
                 this.cover = null;
-                this.formData.delete('cover');
+                this.formData.delete('Song[coverFile]');
             }
         },
         byteToMegabyte(byte: number) : string {
@@ -265,11 +283,11 @@ export default defineComponent({
         },
         removeCover() {
             this.cover = null;
-            this.formData.delete('cover');
+            this.formData.delete('Song[cover]');
         },
         removeSong() {
             this.song = null;
-            this.formData.delete('song');
+            this.formData.delete('Song[songFile]');
         },
     },
 });
