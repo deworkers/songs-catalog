@@ -166,6 +166,7 @@ export default defineComponent({
     border-radius: 50%;
     top: 25px;
     left: 25px;
+    cursor: pointer;
     &::before {
         content: "";
         background: url('/src/assets/pause.png') no-repeat 55% 50%;
@@ -184,6 +185,7 @@ export default defineComponent({
     border-radius: 50%;
     top: 25px;
     left: 25px;
+    cursor: pointer;
     &::before {
         content: "";
         background: url('/src/assets/play.png') no-repeat 65% 50%;
