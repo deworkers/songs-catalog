@@ -1,57 +1,6 @@
 import { createStore } from 'vuex';
 import axios from 'axios';
 
-const data = {
-    items: [
-        {
-            id: '1',
-            name: 'Сумасшедший февраль',
-            song: 'https://www.avtoall.ru/upload/iblock/7d2/FEVRAL-DUET-MIX-04.mp3',
-            composer: 'Рустам Неврединов',
-            author: 'Валерий Парфёнов и Олеся Борисова',
-            singer: 'Валерий Парфёнов и Олеся Борисова.',
-            clip: null,
-            cover: 'https://bigpicture.ru/wp-content/uploads/2021/12/bigpicture_ru_music-people-girl-sunshine-scaled.jpg',
-            description: null,
-            date_create: 1674241200000,
-            date_modify: 1674241200000,
-            listeningCnt: 0,
-            originalId: null,
-        },
-        {
-            id: '2',
-            name: 'Орёл и Орлица',
-            song: 'https://www.avtoall.ru/upload/iblock/368/SUDBI-DUET-MIX-01.mp3',
-            composer: 'Рустам Неврединов',
-            author: 'Валерий Парфёнов и Олеся Борисова',
-            singer: 'Валерий Парфёнов и Олеся Борисова.',
-            clip: '0XiLHYrmAbc',
-            cover: null,
-            description: null,
-            date_create: 1642878000000,
-            date_modify: 1642878000000,
-            listeningCnt: 0,
-            originalId: null,
-        },
-        {
-            id: '3',
-            name: 'Белые голуби',
-            song: 'https://www.avtoall.ru/upload/iblock/438/MARSEL-DUET-MIX-03.mp3',
-            composer: 'Рустам Неврединов',
-            author: 'Валерий Парфёнов и Олеся Борисова',
-            singer: 'Валерий Парфёнов и Олеся Борисова.',
-            clip: null,
-            cover: 'https://bigpicture.ru/wp-content/uploads/2021/12/bigpicture_ru_music-people-girl-sunshine-scaled.jpg',
-            description: null,
-            date_create: 1648321200000,
-            date_modify: 1648321200000,
-            listeningCnt: 0,
-            originalId: null,
-        },
-    ],
-    pages: 1,
-}
-
 export interface ISong {
     id: string
     name: string,
@@ -76,11 +25,17 @@ export interface State {
     playbackIndex: number
 }
 
+declare global {
+    interface Window {
+      isAdmin: boolean;
+    }
+}
+
 export default createStore({
     state():State {
         return {
-            songs: data.items,
-            isAdmin: false,
+            songs: [],
+            isAdmin: window.isAdmin,
             activeSong: null, // показываем подробную информацию
             playbackSong: null, // проигрывается
             playbackIndex: 0,
@@ -115,6 +70,9 @@ export default createStore({
             }
             state.playbackSong = state.songs[state.playbackIndex];
         },
+        SET_IS_ADMIN(state:State, payload: boolean) {
+            state.isAdmin = payload;
+        }
     },
     actions: {
         async getList({ commit }, params) {

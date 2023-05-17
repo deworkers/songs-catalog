@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 
 import Side from './components/Side.vue';
 import Header from './components/Header.vue';
@@ -23,8 +23,10 @@ export default defineComponent({
     },
     methods: {
         ...mapActions(['getList']),
+        ...mapMutations(['SET_IS_ADMIN']),
     },
     mounted() {
+        document.title = '🎵 Живая музыка и хорошие песни';
         this.getList().then(() => {
             console.log('load');
         })

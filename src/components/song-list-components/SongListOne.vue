@@ -8,7 +8,7 @@
         </div>
         <div class="song-one-right">
             <div class="song-one__title" @click="SET_ACTIVE(song)">{{ song.name }}</div>
-            <div class="song-one__date">{{ song.date_create }}</div>
+            <div class="song-one__date">{{ dateFormat }}</div>
             <div class="song-one__composer" v-if="song.composer">
                 <b>Музыка: </b>{{ song.composer }}
             </div>
@@ -36,6 +36,16 @@ export default defineComponent({
         song: {
             type: Object as () => ISong,
             required: true,
+        },
+    },
+    computed: {
+        dateFormat() : string {
+            const date = new Date(this.song.date_create);
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+
+            return `${day}.${month}.${year}`;
         },
     },
     methods: {

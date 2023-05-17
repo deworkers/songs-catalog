@@ -14,7 +14,7 @@
                 {{ timer }}
             </div>
             <div class="control-right">
-                <button
+                <!-- <button
                     :class="['control-shuffle', shuffled ? 'active' : '']"
                     @click="shuffle"
                 >
@@ -23,7 +23,7 @@
                     :class="['control-repeat', repeated ? 'active' : '']"
                     @click="repeat"
                 >
-                </button>
+                </button> -->
                 <button
                     :class="['control-mute', muted ? 'active' : '']"
                     @click="mute"
@@ -70,7 +70,10 @@ export default defineComponent({
             if (this.audio) {
                 this.duration = this.audio.duration;
                 this.timer = this.secondsToMinutes(this.audio.currentTime);
-                this.progress = Math.round((this.audio.currentTime * 100) / this.duration);
+                if (this.isPlaying) {
+                    this.progress = Math.round((this.audio.currentTime * 100) / this.duration);
+                    document.title = `${this.timer} - ${this.playbackSong.name}`;
+                }
             }
         });
     },
@@ -97,6 +100,9 @@ export default defineComponent({
         pause() {
             if (this.audio) {
                 this.audio.pause();
+                setTimeout(() => {
+                    document.title = `⏸ ${this.playbackSong.name}`;
+                }, 100);
             }
         },
         moveTo(event: MouseEvent) {

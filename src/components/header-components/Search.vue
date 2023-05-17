@@ -19,6 +19,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { mapActions } from 'vuex';
 
 export default defineComponent({
     name: 'SearchPage',
@@ -28,9 +29,14 @@ export default defineComponent({
         };
     },
     methods: {
+        ...mapActions(['getList']),
         search(searchRequest: string): void {
             if (searchRequest.length > 2) {
-                console.log(searchRequest);
+                this.getList({
+                    search: searchRequest,
+                }).then(() => {
+                    console.log('load');
+                })
             }
         },
     },

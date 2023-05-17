@@ -14,6 +14,7 @@
 <script lang="ts">
 
 import { defineComponent } from 'vue';
+import { mapActions } from 'vuex';
 
 export default defineComponent({
     name: 'TagsComponents',
@@ -21,17 +22,23 @@ export default defineComponent({
     },
     data() {
         return {
-            active: 'byDateDesc',
+            active: 'new',
             tags: {
-                byDateDesc: 'Сначала новые',
-                byListeningDesc: 'Популярные',
-                byClip: 'С клипами',
+                new: 'Сначала новые',
+                popular: 'Популярные',
+                withClip: 'С клипами',
             },
         }
     },
     methods: {
+        ...mapActions(['getList']),
         filterBy(param:string) {
             this.active = param;
+            this.getList({
+                order: param,
+            }).then(() => {
+                console.log('load');
+            })
         },
     },
 });
