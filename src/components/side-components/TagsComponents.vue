@@ -36,9 +36,7 @@ export default defineComponent({
             this.active = param;
             this.getList({
                 order: param,
-            }).then(() => {
-                console.log('load');
-            })
+            });
         },
     },
 });

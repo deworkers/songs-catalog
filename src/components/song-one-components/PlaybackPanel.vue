@@ -1,25 +1,30 @@
 <template>
-    <div class="playback">
+    <div class="playback" v-if="activeSong.song">
         <button class="playback-backward" @click="backward"></button>
-        <button class="playback-play" @click="play" v-if="!isPlaying"></button>
-        <button class="playback-pause" @click="pause" v-if="isPlaying"></button>
+        <button
+            class="playback-pause"
+            @click="pause"
+            v-if="isPlaying && activeSong.id === playbackSong.id"
+        ></button>
+        <button class="playback-play" @click="play" v-else></button>
         <button class="playback-forward" @click="forward"></button>
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { mapMutations, mapState } from 'vuex';
+import { ISong } from '@/store';
 
 export default defineComponent({
     name: 'PlaybackPanel',
     components: {
     },
     computed: {
-        isPlaying() {
-            return false;
-        },
+        ...mapState(['isAdmin', 'playbackSong', 'isPlaying', 'songs', 'activeSong']),
     },
     methods: {
+        ...mapMutations(['SET_ACTIVE', 'SET_PLAY', 'SET_PAUSE']),
         backward() {
             console.log('backward');
         },
@@ -27,10 +32,11 @@ export default defineComponent({
             console.log('forward');
         },
         play() {
-            console.log('play');
+            const index = this.songs.findIndex((el: ISong) => el.id === this.activeSong.id);
+            this.SET_PLAY(index);
         },
         pause() {
-            console.log('pause');
+            this.SET_PAUSE();
         },
     },
 });
@@ -72,6 +78,7 @@ export default defineComponent({
     width: 50px;
     height: 50px;
     cursor: pointer;
+    margin: 0 10px;
     &::before {
         content: '';
         width: 28px;
@@ -80,8 +87,8 @@ export default defineComponent({
         background-size: contain;
         display: block;
         position: absolute;
-        top: 5px;
-        left: 7px;
+        top: 8px;
+        left: 10px;
     }
     transition: opacity 0.1s ease-in;
     &:hover {

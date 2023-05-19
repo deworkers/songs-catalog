@@ -154,7 +154,7 @@ export default defineComponent({
     margin-bottom: 15px;
 
     label {
-        width: 130px;
+        width: 150px;
         text-align: right;
         font-size: 16px;
         margin-right: 10px;

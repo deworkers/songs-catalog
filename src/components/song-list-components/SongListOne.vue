@@ -1,12 +1,14 @@
 <template>
     <div class="song-one">
-        <div
-            class="song-one-pause"
-            v-if="playbackSong && playbackSong.id == song.id && isPlaying"
-            @click="pause"
-        ></div>
-        <div class="song-one-play" @click="play" v-else></div>
-        <div class="song-one-cover" v-if="song.cover">
+        <div v-if="song.song">
+            <div
+                class="song-one-pause"
+                v-if="playbackSong && playbackSong.id == song.id && isPlaying"
+                @click="pause"
+            ></div>
+            <div class="song-one-play" @click="play" v-else></div>
+        </div>
+        <div class="song-one-cover" v-if="song.cover && !song.clip">
             <img :src="song.cover" alt="">
         </div>
         <div class="song-one-cover" v-if="clipId">
@@ -25,7 +27,7 @@
                 <b>Исполняет: </b>{{ song.singer }}
             </div>
         </div>
-        <div class="song-one-edit" @click="setShowPanel(true)">
+        <div class="song-one-edit" @click="setShowPanel(true)" v-if="isAdmin">
             <EditPanel
                 v-if="showPanel"
                 :setShowPanel="setShowPanel"

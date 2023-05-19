@@ -1,6 +1,6 @@
 <template>
     <div class="song-one-playback">
-        <div class="song-one-cover" v-if="song.cover">
+        <div class="song-one-cover" v-if="song.cover && !song.clip">
             <img :src="song.cover" alt="">
         </div>
         <div class="song-one-cover" v-if="song.clip">

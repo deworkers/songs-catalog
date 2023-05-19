@@ -5,11 +5,11 @@
         </div>
         <div class="song-details-body">
             <div class="song-details-left">
-                <div class="song-details-cover" v-if="activeSong.cover">
+                <div class="song-details-cover" v-if="activeSong.cover && !activeSong.clip">
                     <img :src="activeSong.cover" alt="">
                 </div>
-                <div class="song-details-clip" v-if="activeSong.clip">
-                    <img :src="`https://img.youtube.com/vi/${getClipID(activeSong.clip)}/0.jpg`" alt="" @click="showClip = true">
+                <div class="song-details-clip" v-if="activeSong.clip" @click="showClip = true">
+                    <img :src="`https://img.youtube.com/vi/${getClipID(activeSong.clip)}/0.jpg`" alt="">
                 </div>
                 <div v-if="showClip" class="add-song-form" @click="hideForm">
                     <div class="clip-popup">
@@ -25,6 +25,9 @@
                     v-if="activeSong">
                     <b>Добавлено:</b> {{ dateFormat(activeSong.date_create) }}
                 </div>
+                <div class="song-one__date">
+                    <b>Прослушиваний:</b> {{ activeSong.listeningCnt }}
+                </div>
                 <div class="song-one__composer" v-if="activeSong.composer">
                     <b>Музыка: </b>{{ activeSong.composer }}
                 </div>
@@ -33,6 +36,18 @@
                 </div>
                 <div class="song-one__singer" v-if="activeSong.singer">
                     <b>Исполняет: </b>{{ activeSong.singer }}
+                </div>
+                <div class="song-one__singer" v-if="activeSong.description">
+                    <p>{{ activeSong.description }}</p>
+                </div>
+                <div class="requst-block">
+                    <button
+                        class="requst-button"
+                        @click="showForm = true"
+                    >
+                        Запрос прав для трансляции
+                    </button>
+                    <RequestForm :hideRequestForm="hideRequestForm" v-if="showForm" />
                 </div>
             </div>
         </div>
@@ -43,15 +58,18 @@
 import { defineComponent } from 'vue';
 import { mapMutations, mapState } from 'vuex';
 import PlaybackPanel from './song-one-components/PlaybackPanel.vue';
+import RequestForm from './song-one-components/RequestForm.vue';
 
 export default defineComponent({
     name: 'SongOne',
     components: {
         PlaybackPanel,
+        RequestForm,
     },
     data() {
         return {
             showClip: false,
+            showForm: false,
         }
     },
     computed: {
@@ -63,6 +81,12 @@ export default defineComponent({
             const element = event.target as HTMLElement;
             if (element.classList.contains('add-song-form') || element.classList.contains('close-popup')) {
                 this.showClip = false;
+            }
+        },
+        hideRequestForm(event:Event) {
+            const element = event.target as HTMLElement;
+            if (element.classList.contains('add-song-form') || element.classList.contains('close-popup')) {
+                this.showForm = false;
             }
         },
         dateFormat(dateCreate: number) {
@@ -96,7 +120,7 @@ export default defineComponent({
     cursor: pointer;
     font-size: 18px;
     font-weight: 700;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     display: flex;
     align-items: center;
 
@@ -147,5 +171,20 @@ export default defineComponent({
 
 .song-details-right {
     width: calc(50% - 15px);
+}
+
+.requst-block {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.requst-button {
+    background: #0F87DE;
+    font-size: 18px;
+    color: #fff;
+    border-radius: 5px;
+    height: 40px;
+    padding: 0 20px;
 }
 </style>

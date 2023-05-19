@@ -8,7 +8,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { mapActions, mapMutations } from 'vuex';
+import { mapActions, mapMutations, mapState } from 'vuex';
+import { ISong } from '@/store';
 
 import Side from './components/Side.vue';
 import Header from './components/Header.vue';
@@ -21,14 +22,21 @@ export default defineComponent({
         Side,
         Body,
     },
+    computed: {
+        ...mapState(['songs']),
+    },
     methods: {
         ...mapActions(['getList']),
-        ...mapMutations(['SET_IS_ADMIN']),
+        ...mapMutations(['SET_IS_ADMIN', 'SET_ACTIVE']),
     },
     mounted() {
         document.title = '🎵 Живая музыка и хорошие песни';
         this.getList().then(() => {
-            console.log('load');
+            if (window.location.hash) {
+                const id = parseInt(window.location.hash.slice(1), 10);
+                const song = this.songs.find((el: ISong) => el.id === id);
+                this.SET_ACTIVE(song);
+            }
         })
     },
 });

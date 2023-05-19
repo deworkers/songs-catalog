@@ -115,14 +115,24 @@ const store = createStore({
         },
         SET_ACTIVE(state:State, payload:ISong) {
             state.activeSong = payload;
+            if (payload) {
+                window.location.hash = `${payload.id}`;
+            } else {
+                window.location.hash = '';
+            }
         },
         SET_PLAY(state:State, index: number) {
             if (!state.playbackSong || state.playbackIndex != index) {
                 state.playbackIndex = index;
                 state.playbackSong = state.songs[index];
-                audio.src = state.playbackSong.song;
-                audio.currentTime = 0;
-                audio.play();
+                if (state.playbackSong.song) {
+                    store.dispatch('setListening', state.playbackSong.id);
+                    audio.src = state.playbackSong.song;
+                    audio.currentTime = 0;
+                    audio.play();
+                } else {
+                    store.commit('SET_NEXT');
+                }
             } else {
                 audio.play();
             }
@@ -154,9 +164,13 @@ const store = createStore({
                 state.playbackIndex = 0;
             }
             state.playbackSong = state.songs[state.playbackIndex];
-            audio.src = state.playbackSong.song;
-            audio.currentTime = 0;
-            audio.play();
+            if (state.playbackSong.song) {
+                audio.src = state.playbackSong.song;
+                audio.currentTime = 0;
+                audio.play();
+            } else {
+                store.commit('SET_NEXT');
+            }
         },
         SET_PREW(state:State) {
             if (state.playbackIndex > 0) {
@@ -165,9 +179,13 @@ const store = createStore({
                 state.playbackIndex = state.songs.length - 1;
             }
             state.playbackSong = state.songs[state.playbackIndex];
-            audio.src = state.playbackSong.song;
-            audio.currentTime = 0;
-            audio.play();
+            if (state.playbackSong.song) {
+                audio.src = state.playbackSong.song;
+                audio.currentTime = 0;
+                audio.play();
+            } else {
+                store.commit('SET_PREW');
+            }
         },
         SET_IS_ADMIN(state:State, payload: boolean) {
             state.isAdmin = payload;
@@ -175,11 +193,14 @@ const store = createStore({
     },
     actions: {
         async getList({ commit }, params) {
+            if (store.state.activeSong) {
+                commit('SET_ACTIVE', null);
+            }
             await axios.get('/songs/', {
                     params: params
                 })
                 .then(({data}) => {
-                    commit('SET_SONGS', data.items)
+                    commit('SET_SONGS', data.items);
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -201,9 +222,18 @@ const store = createStore({
                     console.log(error);
                 })
         },
-        async edit({ commit, state }, payload: {formData : FormData, id : number}) {
-
-            await axios.post(`/song/${payload.id}`, payload.formData, {
+        
+        async setListening({ commit, state }, id: number) {
+            await axios.get(`/songListening/${id}`)
+                .then((response) => {
+                    console.log(response);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
+        async sendForm({ commit, state }, payload: {formData : FormData}) {
+            await axios.post(`/site/contact/`, payload.formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

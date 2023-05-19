@@ -33,5 +33,7 @@ aside {
 
 main {
     width: 75%;
+    height: 100%;
+    overflow: auto;
 }
 </style>
