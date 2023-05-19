@@ -3,14 +3,14 @@
         <div class="search-panel">
             <input
                 id="search-request"
-                v-model="searchRequest"
+                v-model="request"
                 class="search-input"
                 type="text"
                 placeholder="Искать песню"
-                @keypress.enter="search(searchRequest)"
+                @keypress.enter="search(request)"
             />
             <button
-                @click="search(searchRequest)"
+                @click="search(request)"
                 class="search-button">
             </button>
         </div>
@@ -19,24 +19,38 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations, mapState } from 'vuex';
 
 export default defineComponent({
     name: 'SearchPage',
     data() {
         return {
-            searchRequest: '',
+            request: '',
         };
+    },
+    computed: {
+        ...mapState(['searchRequest']),
     },
     methods: {
         ...mapActions(['getList']),
-        search(searchRequest: string): void {
-            if (searchRequest.length > 2) {
+        ...mapMutations(['SET_SEARCH_REQUEST']),
+        search(request: string): void {
+            if (request.length > 2) {
                 this.getList({
-                    search: searchRequest,
+                    search: request,
                 }).then(() => {
-                    console.log('load');
+                    this.SET_SEARCH_REQUEST(request);
+                    this.$router.push({
+                        name: 'search',
+                    });
                 })
+            }
+        },
+    },
+    watch: {
+        searchRequest(newValue) {
+            if (!newValue) {
+                this.request = '';
             }
         },
     },

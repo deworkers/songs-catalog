@@ -1,8 +1,10 @@
 <template>
     <div class="song-details">
-        <div class="song-details-back" @click="SET_ACTIVE(null)">
+        <router-link
+            class="song-details-back"
+            :to="{ name: 'list' }">
             {{ activeSong.name }}
-        </div>
+        </router-link>
         <div class="song-details-body">
             <div class="song-details-left">
                 <div class="song-details-cover" v-if="activeSong.cover && !activeSong.clip">
@@ -16,6 +18,15 @@
                         <div class="close-popup" @click="hideForm"></div>
                         <iframe width="800" height="500" :src="`https://www.youtube.com/embed/${getClipID(activeSong.clip)}`" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                     </div>
+                </div>
+                <div class="requst-block">
+                    <button
+                        class="requst-button"
+                        @click="showForm = true"
+                    >
+                        Запрос прав для трансляции
+                    </button>
+                    <RequestForm :hideRequestForm="hideRequestForm" v-if="showForm" />
                 </div>
             </div>
             <div class="song-details-right">
@@ -39,15 +50,6 @@
                 </div>
                 <div class="song-one__singer" v-if="activeSong.description">
                     <p>{{ activeSong.description }}</p>
-                </div>
-                <div class="requst-block">
-                    <button
-                        class="requst-button"
-                        @click="showForm = true"
-                    >
-                        Запрос прав для трансляции
-                    </button>
-                    <RequestForm :hideRequestForm="hideRequestForm" v-if="showForm" />
                 </div>
             </div>
         </div>
@@ -116,13 +118,15 @@ export default defineComponent({
     padding: 15px;
 }
 
-.song-details-back {
+.song-details-back,
+a.song-details-back  {
     cursor: pointer;
     font-size: 18px;
     font-weight: 700;
     margin-bottom: 15px;
-    display: flex;
+    display: flex !important;
     align-items: center;
+    color: #000 !important;
 
     &::before {
         content: "";

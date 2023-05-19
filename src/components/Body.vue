@@ -1,7 +1,6 @@
 <template>
     <main>
-        <SongList v-if="!activeSong" />
-        <SongOne v-else />
+        <SongList />
     </main>
 </template>
 
@@ -9,13 +8,11 @@
 import { defineComponent } from 'vue';
 import { mapState } from 'vuex';
 import SongList from './SongList.vue';
-import SongOne from './SongOne.vue';
 
 export default defineComponent({
     name: 'BodyComponent',
     components: {
         SongList,
-        SongOne,
     },
     computed: {
         ...mapState(['activeSong']),

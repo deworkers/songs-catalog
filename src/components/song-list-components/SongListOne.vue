@@ -15,7 +15,11 @@
             <img :src="`https://img.youtube.com/vi/${clipId}/0.jpg`" alt="">
         </div>
         <div class="song-one-right">
-            <div class="song-one__title" @click="SET_ACTIVE(song)">{{ song.name }}</div>
+            <router-link
+                class="song-one__title"
+                :to="{ name: 'song', params: { id: song.id }}">
+                {{ song.name }}
+            </router-link>
             <div class="song-one__date">{{ dateFormat }}</div>
             <div class="song-one__composer" v-if="song.composer">
                 <b>Музыка: </b>{{ song.composer }}
@@ -125,11 +129,13 @@ export default defineComponent({
     width: calc(100% - 140px);
 }
 
-.song-one__title {
+a.song-one__title {
+    display: block;
     font-size: 18px;
     font-weight: 700;
-    text-decoration: underline;
+    text-decoration: underline !important;
     margin-bottom: 5px;
+    color: #000;
     cursor: pointer;
 }
 

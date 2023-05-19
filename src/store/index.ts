@@ -84,6 +84,7 @@ export interface IPlayer {
 export interface State extends IPlayer {
     songs: ISong[],
     isAdmin: boolean,
+    searchRequest: string | null,
 }
 
 declare global {
@@ -105,6 +106,7 @@ const store = createStore({
             duration: 0,
             timer: '00:00',
             progress: 0,
+            searchRequest: null,
         }/* eslint-disable */
     },
     getters: {
@@ -115,11 +117,6 @@ const store = createStore({
         },
         SET_ACTIVE(state:State, payload:ISong) {
             state.activeSong = payload;
-            if (payload) {
-                window.location.hash = `${payload.id}`;
-            } else {
-                window.location.hash = '';
-            }
         },
         SET_PLAY(state:State, index: number) {
             if (!state.playbackSong || state.playbackIndex != index) {
@@ -189,6 +186,9 @@ const store = createStore({
         },
         SET_IS_ADMIN(state:State, payload: boolean) {
             state.isAdmin = payload;
+        },
+        SET_SEARCH_REQUEST(state:State, payload: string | null) {
+            state.searchRequest = payload;
         }
     },
     actions: {

@@ -14,7 +14,24 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapMutations, mapState } from 'vuex';
+import { RouteLocationRaw } from 'vue-router';
 import { ISong } from '@/store';
+
+function switchObject(objectArray: ISong[], currentObjectId: number, direction: 'next' | 'prev') : number | void {
+    const currentIndex = objectArray.findIndex((obj) => obj.id === currentObjectId);
+    let switchedIndex = -1;
+
+    if (direction === 'next') {
+        switchedIndex = currentIndex + 1;
+        if (switchedIndex >= objectArray.length) switchedIndex = 0;
+    } else if (direction === 'prev') {
+        switchedIndex = currentIndex - 1;
+        if (switchedIndex < 0) switchedIndex = objectArray.length - 1;
+    }
+
+    const switchedObject = objectArray[switchedIndex];
+    return switchedObject.id;
+}
 
 export default defineComponent({
     name: 'PlaybackPanel',
@@ -26,10 +43,20 @@ export default defineComponent({
     methods: {
         ...mapMutations(['SET_ACTIVE', 'SET_PLAY', 'SET_PAUSE']),
         backward() {
-            console.log('backward');
+            const id = switchObject(this.songs, this.activeSong.id, 'prev');
+            const song = this.songs.find((el: ISong) => el.id === id);
+            this.SET_ACTIVE(song);
+            this.$router.push({
+                name: 'song', params: { id },
+            } as RouteLocationRaw)
         },
         forward() {
-            console.log('forward');
+            const id = switchObject(this.songs, this.activeSong.id, 'next');
+            const song = this.songs.find((el: ISong) => el.id === id);
+            this.SET_ACTIVE(song);
+            this.$router.push({
+                name: 'song', params: { id },
+            } as RouteLocationRaw)
         },
         play() {
             const index = this.songs.findIndex((el: ISong) => el.id === this.activeSong.id);

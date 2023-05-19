@@ -36,6 +36,10 @@ export default defineComponent({
             this.active = param;
             this.getList({
                 order: param,
+            }).then(() => {
+                this.$router.push({
+                    name: 'list',
+                });
             });
         },
     },
