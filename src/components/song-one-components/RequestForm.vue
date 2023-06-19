@@ -29,7 +29,7 @@
                     >
                 </div>
             </div>
-            <div class="edit-form-bottom">
+            <div class="form-bottom">
                 <button
                     class="add-song-prev"
                     @click="hideFormHandler"

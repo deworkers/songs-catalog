@@ -12,7 +12,6 @@
             >
                 {{ song.name }}
             </div>
-            <div class="song-one__date">{{ dateFormat(song.date_create) }}</div>
             <div class="song-one__composer" v-if="song.composer">
                 <b>Музыка: </b>{{ song.composer }}
             </div>
@@ -63,14 +62,19 @@ export default defineComponent({
 <style lang="less">
 .song-one-playback {
     display: flex;
-    padding: 15px;
-    height: 105px;
+    padding: 10px;
+    height: 80px;
     overflow: hidden;
     position: relative;
     background: #F5F5F5;
 
+    .song-one-cover {
+        width: 60px;
+        height: 60px;
+    }
+
     .song-one-right {
-        width: calc(100% - 90px);
+        width: calc(100% - 80px);
     }
 
     &::before {

@@ -1,6 +1,9 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import store from '@/store'
 import ListView from '../views/ListView.vue'
+import SearchView from '../views/SearchView.vue'
+import SongView from '../views/SongView.vue'
+import LoginView from '../views/LoginView.vue'
+import NotFound from '../views/NotFound.vue'
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -11,18 +14,25 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/search/',
         name: 'search',
-        component: () => import(/* webpackChunkName: "about" */ '../views/SearchView.vue'),
+        component: SearchView,
     },
     {
         path: '/song/:id',
         name: 'song',
-        component: () => import(/* webpackChunkName: "about" */ '../views/SongView.vue'),
-        beforeEnter: (to) => {
-            console.log(to);
-            const id = Array.isArray(to.params.id) ? to.params.id[0] : to.params.id;
-            const song = store.state.songs.find((el) => el.id === parseInt(id, 10));
-            store.commit('SET_ACTIVE', song)
-        },
+        component: SongView,
+    },
+    {
+        path: '/login/',
+        name: 'login',
+        component: LoginView,
+    },
+    {
+        path: '/404',
+        component: NotFound,
+    },
+    {
+        path: '/:catchAll(.*)',
+        redirect: '/404',
     },
 ]
 

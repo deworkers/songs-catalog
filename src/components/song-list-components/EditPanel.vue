@@ -1,11 +1,16 @@
 <template>
     <div class="edit-panel" v-click-outside="clickOutside">
-        <div @click="deleteHandler" class="edit-panel-elem">Удалить</div>
+        <div @click="setShowConfirm(true)" class="edit-panel-elem">Удалить</div>
         <div @click="setShowForm(true)" class="edit-panel-elem">Редактировать</div>
         <EditForm
             v-if="showForm"
             :setShowForm="setShowForm"
             :song="song"
+        />
+        <ConfirmDelete
+            v-if="showConfirm"
+            :setShowConfirm="setShowConfirm"
+            :delete="deleteHandler"
         />
     </div>
 </template>
@@ -16,6 +21,7 @@ import { ISong } from '@/store/index'
 import vClickOutside from '@baiguangteng/vue3-click-outside';
 import { mapActions } from 'vuex';
 import EditForm from './EditForm.vue'
+import ConfirmDelete from './ConfirmDelete.vue'
 
 export default defineComponent({
     name: 'EditPanel',
@@ -34,14 +40,16 @@ export default defineComponent({
     directives: {
         clickOutside: vClickOutside,
     },
+    components: {
+        EditForm,
+        ConfirmDelete,
+    },
     data() {
         return {
             mounted: false,
             showForm: false,
+            showConfirm: false,
         }
-    },
-    components: {
-        EditForm,
     },
     computed: {
     },
@@ -67,6 +75,9 @@ export default defineComponent({
         },
         setShowForm(show: boolean) {
             this.showForm = show;
+        },
+        setShowConfirm(show: boolean) {
+            this.showConfirm = show;
         },
     },
 });

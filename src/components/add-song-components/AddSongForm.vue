@@ -2,7 +2,9 @@
     <div class="add-song-form" @click="hideForm">
         <div class="add-song-body">
             <div class="close-popup" @click="hideForm"></div>
-            <h2 class="add-song-title">Добавить песню</h2>
+            <h2 class="add-song-title">
+                Добавить {{ originalId ? 'другую версию песни' : 'песню' }}
+            </h2>
             <div class="steps">
                 <div :class="['steps-marker', step >= 0 ? 'active' : '']"></div>
                 <div :class="['steps-marker', step >= 1 ? 'active' : '']"></div>
@@ -10,6 +12,7 @@
                 <div :class="['steps-marker', step >= 3 ? 'active' : '']"></div>
                 <div :class="['steps-marker', step >= 4 ? 'active' : '']"></div>
                 <div :class="['steps-marker', step >= 5 ? 'active' : '']"></div>
+                <div :class="['steps-marker', step >= 6 ? 'active' : '']"></div>
             </div>
             <div class="steps-tabs">
                 <div class="steps-tab" v-if="step == 0">
@@ -68,7 +71,13 @@
                     </div>
                 </div>
                 <div class="steps-tab" v-if="step == 5">
-                    <div class="steps-tab-title">6. Вставьте ссылку на клип</div>
+                    <div class="steps-tab-title">6. Введите описание</div>
+                    <div class="steps-tab-body">
+                        <input name="singer" type="text" v-model="form.description">
+                    </div>
+                </div>
+                <div class="steps-tab" v-if="step == 6">
+                    <div class="steps-tab-title">7. Вставьте ссылку на клип</div>
                     <div class="steps-tab-body">
                         <div class="clip-form">
                             <input type="text" v-model="form.clip">
@@ -142,13 +151,17 @@ export default defineComponent({
         setShowForm: {
             type: Function,
         },
+        originalId: {
+            type: Number,
+            default: null,
+        },
     },
     components: {
     },
     data() {
         return {
             step: 0,
-            maxSteps: 5,
+            maxSteps: 6,
             form: {
                 name: '' as string,
                 composer: '' as string,
@@ -156,7 +169,7 @@ export default defineComponent({
                 singer: '' as string,
                 clip: '' as string,
                 description: '' as string,
-                originalId: '' as string,
+                originalId: null as number | null,
             },
             song: null as IFile | null,
             cover: null as IFile | null,
@@ -167,7 +180,7 @@ export default defineComponent({
     computed: {
     },
     methods: {
-        ...mapActions(['getList']),
+        ...mapActions(['getSongs']),
         hideForm(event:Event) {
             const element = event.target as HTMLElement;
             if (this.setShowForm && (element.classList.contains('add-song-form') || element.classList.contains('close-popup'))) {
@@ -182,12 +195,12 @@ export default defineComponent({
                     this.valid = false;
                 }
             } else if (this.step === 1) {
-                if (this.song) {
+                if (this.song || this.originalId) {
                     this.valid = true;
                 } else {
                     this.valid = false;
                 }
-            } else if (this.step === 5) {
+            } else if (this.step === 6) {
                 if (this.cover || this.form.clip) {
                     this.valid = true;
                 } else {
@@ -205,6 +218,7 @@ export default defineComponent({
         },
         prev() {
             if (this.step > 0) {
+                this.valid = true;
                 this.step -= 1;
             }
         },
@@ -223,7 +237,9 @@ export default defineComponent({
             this.formData.append('Song[singer]', this.form.singer);
             this.formData.append('Song[clip]', this.form.clip);
             this.formData.append('Song[description]', this.form.description);
-            this.formData.append('Song[originalId]', this.form.originalId);
+            if (this.originalId) {
+                this.formData.append('Song[originalId]', this.originalId.toString());
+            }
         },
         submit() {
             this.validate();
@@ -234,11 +250,10 @@ export default defineComponent({
                         'Content-Type': 'multipart/form-data',
                     },
                 })
-                    .then((response) => {
-                        console.log(response);
+                    .then(() => {
                         if (this.setShowForm) {
                             this.setShowForm(false);
-                            this.getList().then(() => {
+                            this.getSongs().then(() => {
                                 console.log('load');
                             })
                         }
@@ -258,6 +273,7 @@ export default defineComponent({
                     type: song.type,
                 };
                 this.formData.append('Song[songFile]', song);
+                this.valid = true;
             } else {
                 this.song = null;
                 this.formData.delete('Song[songFile]');
@@ -272,6 +288,7 @@ export default defineComponent({
                     size: cover.size,
                     type: cover.type,
                 };
+                this.valid = true;
                 this.formData.append('Song[coverFile]', cover);
             } else {
                 this.cover = null;
@@ -290,6 +307,14 @@ export default defineComponent({
             this.formData.delete('Song[songFile]');
         },
     },
+    watch: {
+        form: {
+            deep: true,
+            handler() {
+                this.valid = true;
+            },
+        },
+    },
 });
 </script>
 
@@ -305,6 +330,7 @@ export default defineComponent({
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: auto;
 }
 
 .add-song-body {
@@ -489,10 +515,11 @@ export default defineComponent({
     position: absolute;
     top: 0;
     right: 0;
-    background: url('/src/assets/close.svg') no-repeat 50%;
+    background: url('/src/assets/close.svg') no-repeat 8px 8px #fff;
     width: 35px;
     height: 35px;
     cursor: pointer;
+    border-radius: 10px;
 }
 
 .error {

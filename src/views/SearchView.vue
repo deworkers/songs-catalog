@@ -8,14 +8,14 @@
                 Результаты поиска по запросу: {{ searchRequest }}
             </div>
         </div>
-        <SongList />
+        <SongList :isSearch="true" />
     </main>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapState, mapMutations, mapActions } from 'vuex';
-import SongList from '../components/SongList.vue';
+import SongList from '../layouts/SongList.vue';
 
 export default defineComponent({
     name: 'SearchView',
@@ -27,14 +27,12 @@ export default defineComponent({
     },
     methods: {
         ...mapMutations(['SET_SEARCH_REQUEST']),
-        ...mapActions(['getList']),
+        ...mapActions(['getSongs']),
         clickToListHandler() {
             this.SET_SEARCH_REQUEST(null);
-            this.getList().then(() => {
-                this.$router.push({
-                    name: 'list',
-                });
-            })
+            this.$router.push({
+                name: 'list',
+            });
         },
     },
     mounted() {
@@ -49,10 +47,6 @@ export default defineComponent({
 </script>
 
 <style lang="less">
-.song-details {
-    padding: 15px 15px 0;
-}
-
 .song-details-back {
     cursor: pointer;
     font-size: 18px;

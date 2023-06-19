@@ -1,0 +1,221 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Song API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/song/": {
+      "post": {
+        "summary": "Создание новой песни",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Song"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/song/{id}": {
+      "post": {
+        "summary": "Редактирование песни",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID песни для редактирования"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Song"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/songs/": {
+      "get": {
+        "summary": "Получить список песен",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "order",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "new",
+                "popular",
+                "withClip"
+              ]
+            },
+            "description": "Порядок сортировки (new, popular, withClip)"
+          },
+          {
+            "in": "query",
+            "name": "search",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Строка поиска по названию"
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Номер страницы (по 20 песен на странице)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/song/{id}/": {
+      "get": {
+        "summary": "Получить полный объект песни",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID песни"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Песня не найдена"
+          }
+        }
+      }
+    },
+    "/song/delete/{id}/": {
+      "get": {
+        "summary": "Удаление песни",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID песни для удаления"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/songListening/{id}/": {
+      "get": {
+        "summary": "Отправить данные о прослушивании песни",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID песни"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Song": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "song": {
+            "type": "string"
+          },
+          "composer": {
+            "type": "string",
+            "nullable": true
+          },
+          "author": {
+            "type": "string",
+            "nullable": true
+          },
+          "singer": {
+            "type": "string",
+            "nullable": true
+          },
+          "clip": {
+            "type": "string",
+            "nullable": true
+          },
+          "cover": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string"
+          },
+          "date_create": {
+            "type": "integer"
+          },
+          "date_modify": {
+            "type": "integer"
+          },
+          "listeningCnt": {
+            "type": "integer"
+          },
+          "originalId": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      }
+    }
+  }
+}

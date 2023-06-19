@@ -1,6 +1,5 @@
 <template>
-    <div>
-        <Song v-if="playbackSong" :song="playbackSong" />
+    <div class="player">
         <div class="progress" ref="container" @click="moveTo">
             <div class="progress-line" :style="{ width: progress + '%' }"></div>
         </div>
@@ -31,7 +30,16 @@
                 >
                 </button>
             </div>
+            <input
+                v-model="localVolume"
+                type="range"
+                step="0.05"
+                min="0"
+                max="1"
+                name="volume"
+            />
         </div>
+        <Song v-if="playbackSong" :song="playbackSong" />
     </div>
 </template>
 
@@ -48,15 +56,16 @@ export default defineComponent({
         return {
             shuffled: false,
             repeated: false,
+            localVolume: 1,
         };
     },
     computed: {
-        ...mapState(['playbackSong', 'playbackIndex', 'songs', 'isPlaying', 'muted', 'duration', 'timer', 'progress']),
+        ...mapState(['playbackSong', 'playbackIndex', 'songs', 'isPlaying', 'muted', 'duration', 'timer', 'progress', 'volume']),
     },
     methods: {
-        ...mapMutations(['SET_NEXT', 'SET_PREW', 'SET_PLAY', 'SET_PAUSE', 'MOVE_TO', 'MUTE']),
+        ...mapMutations(['SET_NEXT', 'SET_PREW', 'SET_PLAY', 'SET_PAUSE', 'MOVE_TO', 'MUTE', 'SET_VOLUME']),
         play() {
-            this.SET_PLAY(0);
+            this.SET_PLAY(this.playbackSong ? this.playbackIndex : 0);
         },
         pause() {
             this.SET_PAUSE();
@@ -89,10 +98,32 @@ export default defineComponent({
             console.log('repeat');
         },
     },
+    mounted() {
+        this.localVolume = this.volume;
+    },
+    watch: {
+        localVolume() {
+            this.SET_VOLUME(this.localVolume);
+        },
+    },
 });
 </script>
 
 <style lang="less">
+.player {
+    display: flex;
+    flex-wrap: wrap;
+    background: #F5F5F5;
+}
+
+.player-left {
+    width: 30%;
+}
+
+.song-one-playback {
+    width: 70%;
+}
+
 .progress {
     width: 100%;
     height: 10px;
@@ -116,6 +147,8 @@ export default defineComponent({
     justify-content: space-between;
     padding: 10px;
     background: #394546;
+    width: 30%;
+    height: 80px;
 }
 
 .control-play {
@@ -279,5 +312,91 @@ export default defineComponent({
             background-size: contain;
         }
     }
+}
+
+input[type=range] {
+  -webkit-appearance: none;
+}
+input[type=range]:focus {
+  outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 8px;
+  cursor: pointer;
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  background: #fff;
+  border-radius: 25px;
+  border: 0px solid #000101;
+}
+input[type=range]::-webkit-slider-thumb {
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  border: 0px solid #000000;
+  height: 16px;
+  width: 16px;
+  border-radius: 8px;
+  background: #0f87de;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -3.6px;
+}
+input[type=range]:hover::-webkit-slider-runnable-track {
+  background: #ddd;
+}
+input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 12.8px;
+  cursor: pointer;
+  animate: 0.2s;
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  background: #fff;
+  border-radius: 25px;
+  border: 0px solid #000101;
+}
+input[type=range]::-moz-range-thumb {
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  border: 0px solid #000000;
+  height: 20px;
+  width: 39px;
+  border-radius: 7px;
+  background: #0f87de;
+  cursor: pointer;
+}
+input[type=range]::-ms-track {
+  width: 100%;
+  height: 12.8px;
+  cursor: pointer;
+  animate: 0.2s;
+  background: transparent;
+  border-color: transparent;
+  border-width: 39px 0;
+  color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+  background: #0f87de;
+  border: 0px solid #000101;
+  border-radius: 50px;
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+}
+input[type=range]::-ms-fill-upper {
+  background: #fff;
+  border: 0px solid #000101;
+  border-radius: 50px;
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+}
+input[type=range]::-ms-thumb {
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  border: 0px solid #000000;
+  height: 20px;
+  width: 39px;
+  border-radius: 7px;
+  background: #65001c;
+  cursor: pointer;
+}
+input[type=range]:hover::-ms-fill-lower {
+  background: #ddd;
+}
+input[type=range]:hover::-ms-fill-upper {
+  background: #ddd;
 }
 </style>

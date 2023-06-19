@@ -19,7 +19,11 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { mapActions, mapMutations, mapState } from 'vuex';
+import {
+    mapActions,
+    mapMutations,
+    mapState,
+} from 'vuex';
 
 export default defineComponent({
     name: 'SearchPage',
@@ -32,19 +36,13 @@ export default defineComponent({
         ...mapState(['searchRequest']),
     },
     methods: {
-        ...mapActions(['getList']),
+        ...mapActions(['getSongs']),
         ...mapMutations(['SET_SEARCH_REQUEST']),
         search(request: string): void {
-            if (request.length > 2) {
-                this.getList({
-                    search: request,
-                }).then(() => {
-                    this.SET_SEARCH_REQUEST(request);
-                    this.$router.push({
-                        name: 'search',
-                    });
-                })
-            }
+            this.SET_SEARCH_REQUEST(request);
+            this.$router.push({
+                name: 'search',
+            });
         },
     },
     watch: {
@@ -59,7 +57,7 @@ export default defineComponent({
 
 <style lang="less">
 .search {
-    width: 75%;
+    width: 70%;
     background: #d0e1e3;
 }
 
@@ -75,6 +73,10 @@ export default defineComponent({
     background: #394546;
     color: #fff;
     padding: 0 20px;
+}
+
+.search-input::placeholder {
+   color:    #fff;
 }
 
 .search-button {

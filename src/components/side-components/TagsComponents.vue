@@ -1,7 +1,7 @@
 <template>
     <div class="tag-list">
         <div
-            :class="['tag-one', active === key ? 'active' : '']"
+            :class="['tag-one', activeTag === key ? 'active' : '']"
             v-for="(tag, key, index) in tags"
             :key="index"
             @click="filterBy(key)"
@@ -14,7 +14,7 @@
 <script lang="ts">
 
 import { defineComponent } from 'vue';
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations, mapState } from 'vuex';
 
 export default defineComponent({
     name: 'TagsComponents',
@@ -30,11 +30,16 @@ export default defineComponent({
             },
         }
     },
+    computed: {
+        ...mapState(['activeTag']),
+    },
     methods: {
-        ...mapActions(['getList']),
+        ...mapActions(['getSongs']),
+        ...mapMutations(['SET_ACTIVE_TAG']),
         filterBy(param:string) {
             this.active = param;
-            this.getList({
+            this.SET_ACTIVE_TAG(param);
+            this.getSongs({
                 order: param,
             }).then(() => {
                 this.$router.push({

@@ -1,5 +1,7 @@
 import { createStore } from 'vuex';
 import axios from 'axios';
+// eslint-disable-next-line
+import audio from './audio';
 
 const data = {
     items: [
@@ -52,8 +54,6 @@ const data = {
     pages: 1,
 }
 
-const audio = new Audio();
-
 export interface ISong {
     id: number
     name: string,
@@ -63,7 +63,7 @@ export interface ISong {
     singer: string | null,
     clip: string | null,
     cover: string | null,
-    description: string | null,
+    description: string,
     'date_create': number,
     'date_modify': number,
     listeningCnt: number,
@@ -78,13 +78,17 @@ export interface IPlayer {
     muted: boolean,
     duration: number,
     timer: string,
-    progress: number,
+    progress: string,
+    volume: number,
 }
 
 export interface State extends IPlayer {
     songs: ISong[],
     isAdmin: boolean,
+    page: number | null,
+    allPages: number | null,
     searchRequest: string | null,
+    activeTag: string | null,
 }
 
 declare global {
@@ -96,42 +100,65 @@ declare global {
 const store = createStore({
     state():State {
         return {
-            songs: data.items,
+            songs: [],
+            page: null,
+            allPages: null,
+            activeTag: 'new',
             isAdmin: window.isAdmin,
             activeSong: null, // показываем подробную информацию
             playbackSong: null, // проигрывается
             playbackIndex: 0,
             isPlaying: false,
             muted: false,
+            volume: 1,
             duration: 0,
             timer: '00:00',
-            progress: 0,
+            progress: '0',
             searchRequest: null,
         }/* eslint-disable */
     },
     getters: {
+        searchResult(state:State) {
+            if (!state.searchRequest) {
+                return state.songs;
+            } else {
+                const regexp = new RegExp(state.searchRequest, 'i');
+                return state.songs.filter((song:ISong) => song.name.match(regexp));
+            }
+        }
     },
     mutations: {
         SET_SONGS(state:State, payload:ISong[]) {
             state.songs = payload;
         },
-        SET_ACTIVE(state:State, payload:ISong) {
+        SET_ACTIVE(state:State, payload:ISong | null) {
             state.activeSong = payload;
         },
         SET_PLAY(state:State, index: number) {
-            if (!state.playbackSong || state.playbackIndex != index) {
+            if (state.playbackSong && audio.paused
+                && (state.playbackIndex === -1 || state.playbackSong.id === state.songs[index].id)) {
+                audio.play();
+            } else {
                 state.playbackIndex = index;
                 state.playbackSong = state.songs[index];
                 if (state.playbackSong.song) {
-                    store.dispatch('setListening', state.playbackSong.id);
                     audio.src = state.playbackSong.song;
                     audio.currentTime = 0;
                     audio.play();
+                    store.dispatch('setListening', state.playbackSong.id);
                 } else {
                     store.commit('SET_NEXT');
                 }
-            } else {
+            }
+        },
+        SET_PLAY_COVER(state:State, song: ISong) {
+            state.playbackIndex = -1;
+            state.playbackSong = song;
+            if (state.playbackSong.song) {
+                audio.src = state.playbackSong.song;
+                audio.currentTime = 0;
                 audio.play();
+                store.dispatch('setListening', state.playbackSong.id);
             }
         },
         SET_PAUSE(state:State) {
@@ -154,6 +181,10 @@ const store = createStore({
                 audio.muted = false;
             }
         },
+        SET_VOLUME(state:State, volume: number) {
+            state.volume = volume;
+            audio.volume = volume;
+        },
         SET_NEXT(state:State) {
             if (state.playbackIndex < state.songs.length - 1) {
                 state.playbackIndex++;
@@ -165,6 +196,7 @@ const store = createStore({
                 audio.src = state.playbackSong.song;
                 audio.currentTime = 0;
                 audio.play();
+                store.dispatch('setListening', state.playbackSong.id);
             } else {
                 store.commit('SET_NEXT');
             }
@@ -180,6 +212,7 @@ const store = createStore({
                 audio.src = state.playbackSong.song;
                 audio.currentTime = 0;
                 audio.play();
+                store.dispatch('setListening', state.playbackSong.id);
             } else {
                 store.commit('SET_PREW');
             }
@@ -189,31 +222,51 @@ const store = createStore({
         },
         SET_SEARCH_REQUEST(state:State, payload: string | null) {
             state.searchRequest = payload;
-        }
+        },
+        SET_PAGE(state:State, payload: number | null) {
+            state.page = payload;
+        },
+        SET_ALL_PAGES(state:State, payload: number | null) {
+            state.allPages = payload;
+        },
+        SET_ACTIVE_TAG(state:State, payload: string | null) {
+            state.activeTag = payload;
+        },
     },
     actions: {
-        async getList({ commit }, params) {
+        getSongs({ commit }, params) {
             if (store.state.activeSong) {
                 commit('SET_ACTIVE', null);
             }
-            await axios.get('/songs/', {
+            return axios.get('/songs/', {
                     params: params
                 })
                 .then(({data}) => {
                     commit('SET_SONGS', data.items);
+                    commit('SET_PAGE', data.page);
+                    commit('SET_ALL_PAGES', data.allPages);
                 })
                 .catch(function (error) {
                     console.log(error);
                 })
         },
-        async delete({ commit, state }, id : number) {
-            await axios.get('/song/delete/', {
+        getSong({ commit }, id: number) {
+            return axios.get(`/song/${id}`)
+                .then(({data}) => {
+                    commit('SET_ACTIVE', data);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+        },
+        delete({ commit, state }, id : number) {
+            return axios.get('/song/delete/', {
                     params: {
                         id: id
                     }
                 })
                 .then(() => {
-                    const songs = state.songs.filter((elem) => {
+                    const songs = state.songs.filter((elem:ISong) => {
                         return elem.id !== id
                     });
                     commit('SET_SONGS', songs);
@@ -222,18 +275,8 @@ const store = createStore({
                     console.log(error);
                 })
         },
-        
-        async setListening({ commit, state }, id: number) {
-            await axios.get(`/songListening/${id}`)
-                .then((response) => {
-                    console.log(response);
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        },
-        async sendForm({ commit, state }, payload: {formData : FormData}) {
-            await axios.post(`/site/contact/`, payload.formData, {
+        edit({ commit, state }, payload: {formData : FormData, id : number}) {
+            return axios.post(`/song/${payload.id}`, payload.formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -245,42 +288,43 @@ const store = createStore({
                     console.log(error);
                 });
         },
+        setListening({ commit, state }, id: number) {
+            return axios.get(`/songListening/${id}`)
+                .then((response) => {
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
+        sendForm({ commit, state }, payload: {formData : FormData}) {
+            return axios.post(`/site/contact/`, payload.formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+                .then((response) => {
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
+        login({ commit, state }, payload: {formData : FormData}) {
+            return new Promise((resolve, reject) => {
+                axios.post(`/site/login/`, payload.formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                })
+                    .then((response) => {
+                        resolve(response.data);
+                        commit('SET_IS_ADMIN', true);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            });
+        },
     }
 });
-
-audio.addEventListener('playing', () => {
-    store.state.isPlaying = true;
-});
-
-audio.addEventListener('pause', () => {
-    store.state.isPlaying = false;
-});
-
-audio.addEventListener('ended', () => {
-    store.state.isPlaying = false;
-});
-
-audio.addEventListener('timeupdate', () => {
-    if (audio) {
-        store.state.duration = audio.duration;
-        store.state.timer = secondsToMinutes(audio.currentTime);
-        if (store.state.isPlaying && store.state.playbackSong) {
-            store.state.progress = Math.round((audio.currentTime * 100) / store.state.duration);
-            document.title = `${store.state.timer} - ${store.state.playbackSong.name}`;
-        }
-    }
-});
-
-audio.addEventListener("ended", function(){
-    store.commit('SET_NEXT');
-});
-
-function secondsToMinutes(seconds: number) {
-    const minutes = Math.round(seconds / 60);
-    const remainderSeconds = Math.round(seconds % 60);
-    const formattedMinutes = `${minutes.toString().padStart(3, '0').slice(-2)}`;
-    const formattedSeconds = `${remainderSeconds.toString().padStart(3, '0').slice(-2)}`;
-    return `${formattedMinutes}:${formattedSeconds}`;
-}
 
 export default store;

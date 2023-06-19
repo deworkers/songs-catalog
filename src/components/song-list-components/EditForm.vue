@@ -13,6 +13,14 @@
                     <input name="song" type="file" v-on:change="selectFile($event)">
                 </div>
                 <div class="edit-form-input">
+                    <label>Ссылка на клип</label>
+                    <input name="cover" type="text" v-model="localForm.clip">
+                </div>
+                <div class="edit-form-input">
+                    <label>Обложка</label>
+                    <input name="clip" type="file" v-on:change="selectCover($event)">
+                </div>
+                <div class="edit-form-input">
                     <label>Автор слов</label>
                     <input name="author" type="text" v-model="localForm.author">
                 </div>
@@ -25,23 +33,27 @@
                     <input name="singer" type="text" v-model="localForm.singer">
                 </div>
                 <div class="edit-form-input">
-                    <label>Ссылка на клип</label>
-                    <input name="cover" type="text" v-model="localForm.clip">
-                </div>
-                <div class="edit-form-input">
-                    <label>Обложка</label>
-                    <input name="clip" type="file" v-on:change="selectCover($event)">
-                </div>
-                <div class="edit-form-input">
                     <label>Описание</label>
-                    <input
+                    <textarea
                         name="description"
                         type="text"
                         v-model="localForm.description"
+                    ></textarea>
+                </div>
+                <div class="edit-form-input">
+                    <label>Файл текста песни и табулатуры</label>
+                    <input name="text" type="file" v-on:change="selectText($event)">
+                </div>
+                <div class="edit-form-input">
+                    <label>ID оригинала</label>
+                    <input
+                        name="originalId"
+                        type="text"
+                        v-model="localForm.originalId"
                     >
                 </div>
             </div>
-            <div class="edit-form-bottom">
+            <div class="form-bottom">
                 <button
                     class="add-song-prev"
                     @click="hideForm"
@@ -83,7 +95,7 @@ export default defineComponent({
         }
     },
     methods: {
-        ...mapActions(['getList', 'edit']),
+        ...mapActions(['getSongs', 'edit']),
         hideForm(event:Event) {
             const element = event.target as HTMLElement;
             if (this.setShowForm && (element.classList.contains('add-song-form') || element.classList.contains('close-popup') || element.classList.contains('add-song-prev'))) {
@@ -108,30 +120,54 @@ export default defineComponent({
                 this.formData.delete('Song[coverFile]');
             }
         },
+        selectText(event: Event) {
+            const element = event.target as HTMLInputElement;
+            if (element.files) {
+                const textFile = element.files[0];
+                this.formData.append('Song[textFile]', textFile);
+            } else {
+                this.formData.delete('Song[textFile]');
+            }
+        },
         submit() {
             if (this.song) {
                 this.formData.append('Song[name]', this.localForm.name);
                 if (this.localForm.composer) {
                     this.formData.append('Song[composer]', this.localForm.composer);
+                } else {
+                    this.formData.append('Song[composer]', '');
                 }
                 if (this.localForm.author) {
                     this.formData.append('Song[author]', this.localForm.author);
+                } else {
+                    this.formData.append('Song[author]', '');
                 }
                 if (this.localForm.singer) {
                     this.formData.append('Song[singer]', this.localForm.singer);
+                } else {
+                    this.formData.append('Song[singer]', '');
                 }
                 if (this.localForm.clip) {
                     this.formData.append('Song[clip]', this.localForm.clip);
+                } else {
+                    this.formData.append('Song[clip]', '');
                 }
                 if (this.localForm.description) {
                     this.formData.append('Song[description]', this.localForm.description);
+                } else {
+                    this.formData.append('Song[description]', '');
+                }
+                if (this.localForm.originalId) {
+                    this.formData.append('Song[originalId]', this.localForm.originalId);
+                } else {
+                    this.formData.append('Song[originalId]', '');
                 }
                 this.edit({
                     formData: this.formData,
                     id: this.song.id,
                 })
                     .then(() => {
-                        this.getList();
+                        this.getSongs();
                         if (this.setShowForm) {
                             this.setShowForm(false);
                         }
@@ -171,9 +207,17 @@ export default defineComponent({
     input[type="file"] {
         padding: 5px;
     }
+
+    textarea {
+        border: 1px solid #D9D9D9;
+        width: calc(100% - 140px);
+        border-radius: 5px;
+        padding: 10px;
+        height: 120px;
+    }
 }
 
-.edit-form-bottom {
+.form-bottom {
     display: flex;
     justify-content: space-between;
     padding: 20px 0 0;

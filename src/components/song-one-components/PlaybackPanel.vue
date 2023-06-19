@@ -1,19 +1,20 @@
 <template>
-    <div class="playback" v-if="activeSong.song">
+    <div class="playback">
+        <h2 class="playback-title">Проиграть аудиоверсию</h2>
         <button class="playback-backward" @click="backward"></button>
         <button
             class="playback-pause"
             @click="pause"
             v-if="isPlaying && activeSong.id === playbackSong.id"
         ></button>
-        <button class="playback-play" @click="play" v-else></button>
+        <button class="playback-play" @click="play" v-else :disabled="!activeSong.song"></button>
         <button class="playback-forward" @click="forward"></button>
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { mapMutations, mapState } from 'vuex';
+import { mapActions, mapMutations, mapState } from 'vuex';
 import { RouteLocationRaw } from 'vue-router';
 import { ISong } from '@/store';
 
@@ -42,21 +43,22 @@ export default defineComponent({
     },
     methods: {
         ...mapMutations(['SET_ACTIVE', 'SET_PLAY', 'SET_PAUSE']),
+        ...mapActions(['getSong']),
         backward() {
             const id = switchObject(this.songs, this.activeSong.id, 'prev');
-            const song = this.songs.find((el: ISong) => el.id === id);
-            this.SET_ACTIVE(song);
-            this.$router.push({
-                name: 'song', params: { id },
-            } as RouteLocationRaw)
+            this.getSong(id).then(() => {
+                this.$router.push({
+                    name: 'song', params: { id },
+                } as RouteLocationRaw)
+            });
         },
         forward() {
             const id = switchObject(this.songs, this.activeSong.id, 'next');
-            const song = this.songs.find((el: ISong) => el.id === id);
-            this.SET_ACTIVE(song);
-            this.$router.push({
-                name: 'song', params: { id },
-            } as RouteLocationRaw)
+            this.getSong(id).then(() => {
+                this.$router.push({
+                    name: 'song', params: { id },
+                } as RouteLocationRaw)
+            });
         },
         play() {
             const index = this.songs.findIndex((el: ISong) => el.id === this.activeSong.id);
@@ -72,9 +74,20 @@ export default defineComponent({
 <style lang="less">
 .playback {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    padding: 50px 0px;
+    padding: 30px 0px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+
+.playback-title {
+    width: 100%;
+    text-align: center;
+    padding-bottom: 20px;
+    font-size: 18px;
 }
 
 .playback-play {
@@ -97,6 +110,10 @@ export default defineComponent({
     transition: opacity 0.1s ease-in;
     &:hover {
         opacity: 0.7;
+    }
+    &:disabled {
+        opacity: 0.2;
+        cursor: default;
     }
 }
 

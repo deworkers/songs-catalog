@@ -1,6 +1,11 @@
 <template>
-    <div class="song-one">
-        <div v-if="song.song">
+    <div
+        :class="[
+            'song-one', isCover ? 'song-one--cover' : '',
+            activeSong && activeSong.id === song.id ? 'active' : ''
+        ]"
+    >
+        <div v-if="song.song && song.originalId">
             <div
                 class="song-one-pause"
                 v-if="playbackSong && playbackSong.id == song.id && isPlaying"
@@ -8,18 +13,36 @@
             ></div>
             <div class="song-one-play" @click="play" v-else></div>
         </div>
-        <div class="song-one-cover" v-if="song.cover && !song.clip">
-            <img :src="song.cover" alt="">
+        <div
+            @click="openSong"
+            class="song-one-cover"
+            v-if="song.cover_small && !song.clip"
+        >
+            <img :src="song.cover_small" alt="">
         </div>
-        <div class="song-one-cover" v-if="clipId">
+        <div
+            @click="openSong"
+            class="song-one-cover"
+            v-if="song.clip"
+        >
+            <div class="song-one-video" @click="showClipHandler" v-if="song.originalId"></div>
             <img :src="`https://img.youtube.com/vi/${clipId}/0.jpg`" alt="">
+            <ShowClip
+                v-if="showClip"
+                :clip="song.clip"
+                :hideClip="hideClip"
+            />
         </div>
         <div class="song-one-right">
             <router-link
+                v-if="!song.originalId"
                 class="song-one__title"
                 :to="{ name: 'song', params: { id: song.id }}">
                 {{ song.name }}
             </router-link>
+            <div class="song-one__title" v-else>
+                {{ song.name }}
+            </div>
             <div class="song-one__date">{{ dateFormat }}</div>
             <div class="song-one__composer" v-if="song.composer">
                 <b>Музыка: </b>{{ song.composer }}
@@ -48,27 +71,34 @@ import { defineComponent } from 'vue';
 import { ISong } from '@/store';
 import { mapMutations, mapState } from 'vuex';
 import EditPanel from './EditPanel.vue'
+import ShowClip from '../song-one-components/ShowClip.vue'
 
 export default defineComponent({
     name: 'SongListOne',
     components: {
         EditPanel,
+        ShowClip,
     },
     props: {
         song: {
             type: Object as () => ISong,
             required: true,
         },
+        isCover: {
+            type: Boolean,
+            default: false,
+        },
     },
     data() {
         return {
             showPanel: false,
+            showClip: false,
         }
     },
     computed: {
-        ...mapState(['isAdmin', 'playbackSong', 'isPlaying', 'songs']),
+        ...mapState(['isAdmin', 'playbackSong', 'isPlaying', 'songs', 'activeSong']),
         dateFormat() : string {
-            const date = new Date(this.song.date_create * 1000);
+            const date = new Date(this.song.date_modify * 1000);
             const day = date.getDate().toString().padStart(2, '0');
             const month = (date.getMonth() + 1).toString().padStart(2, '0');
             const year = date.getFullYear();
@@ -87,7 +117,7 @@ export default defineComponent({
         },
     },
     methods: {
-        ...mapMutations(['SET_ACTIVE', 'SET_PLAY', 'SET_PAUSE']),
+        ...mapMutations(['SET_PLAY', 'SET_PAUSE', 'SET_PLAY_COVER']),
         setShowPanel(show: boolean) {
             this.showPanel = show;
         },
@@ -96,7 +126,29 @@ export default defineComponent({
         },
         play() {
             const index = this.songs.findIndex((el: ISong) => el.id === this.song.id);
-            this.SET_PLAY(index);
+            if (index > 0) {
+                this.SET_PLAY(index);
+            } else {
+                this.SET_PLAY_COVER(this.song);
+            }
+        },
+        showClipHandler() {
+            this.showClip = true;
+            this.SET_PAUSE();
+        },
+        hideClip(event:Event) {
+            const element = event.target as HTMLElement;
+            if (element.classList.contains('add-song-form') || element.classList.contains('close-popup')) {
+                this.showClip = false;
+            }
+        },
+        openSong() {
+            if (!this.song.originalId) {
+                this.$router.push({
+                    name: 'song',
+                    params: { id: this.song.id },
+                });
+            }
         },
     },
 });
@@ -108,6 +160,19 @@ export default defineComponent({
     margin: 15px;
     width: calc(50% - 30px);
     position: relative;
+
+    &--cover {
+        width: 100%;
+        margin: 15px 0;
+    }
+
+    &.active {
+        background: #ddd;
+
+        .song-one-edit {
+            background: url('/src/assets/edit-active.svg') no-repeat 50%;
+        }
+    }
 }
 
 .song-one-cover {
@@ -125,14 +190,37 @@ export default defineComponent({
     }
 }
 
+.song-one-video {
+    position: absolute;
+    background: #0F87DE;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    top: 25px;
+    left: 25px;
+    cursor: pointer;
+    &::before {
+        content: "";
+        background: url('/src/assets/has-video-white.png') no-repeat 55% 50%;
+        background-size: 16px;
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
+}
+
 .song-one-right {
     width: calc(100% - 140px);
 }
 
-a.song-one__title {
-    display: block;
+.song-one__title {
     font-size: 18px;
     font-weight: 700;
+    margin-bottom: 5px;
+}
+
+a.song-one__title {
+    display: block;
     text-decoration: underline !important;
     margin-bottom: 5px;
     color: #000;
