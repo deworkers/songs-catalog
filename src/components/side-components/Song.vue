@@ -1,5 +1,5 @@
 <template>
-    <div class="song-one-playback">
+    <div class="song-one-playback" @click="openSong">
         <div class="song-one-cover" v-if="song.cover && !song.clip">
             <img :src="song.cover" alt="">
         </div>
@@ -55,6 +55,12 @@ export default defineComponent({
             }
             return null;
         },
+        openSong() {
+            this.$router.push({
+                name: 'song',
+                params: { id: this.song.id },
+            });
+        },
     },
 });
 </script>
@@ -67,6 +73,7 @@ export default defineComponent({
     overflow: hidden;
     position: relative;
     background: #F5F5F5;
+    cursor: pointer;
 
     .song-one-cover {
         width: 60px;

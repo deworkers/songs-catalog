@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --watch",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "mock": "node mock-server.js"
   },
   "dependencies": {
     "@baiguangteng/vue3-click-outside": "^1.2.5",
@@ -13,6 +14,7 @@
     "axios": "^1.4.0",
     "core-js": "^3.8.3",
     "vue": "^3.2.13",
+    "vue-multiselect": "^3.0.0-beta.2",
     "vue-router": "^4.0.3",
     "vuex": "^4.0.0"
   },
@@ -31,6 +33,7 @@
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-vue": "^8.0.3",
     "eslint-plugin-vuejs-accessibility": "^1.1.0",
+    "json-server": "^0.17.3",
     "less": "^4.0.0",
     "less-loader": "^8.0.0",
     "typescript": "~4.5.5"

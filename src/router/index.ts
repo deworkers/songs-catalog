@@ -4,6 +4,7 @@ import SearchView from '../views/SearchView.vue'
 import SongView from '../views/SongView.vue'
 import LoginView from '../views/LoginView.vue'
 import NotFound from '../views/NotFound.vue'
+import GroupView from '../views/GroupView.vue'
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -20,6 +21,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/song/:id',
         name: 'song',
         component: SongView,
+    },
+    {
+        path: '/group/:id',
+        name: 'group',
+        component: GroupView,
     },
     {
         path: '/login/',

@@ -1,0 +1,259 @@
+{
+    "songs": {
+        "items": [{
+                "id": 1,
+                "name": "Сумасшедший февраль",
+                "song": "https://www.avtoall.ru/upload/iblock/7d2/FEVRAL-DUET-MIX-04.mp3",
+                "composer": "Рустам Неврединов",
+                "author": "Валерий Парфёнов и Олеся Борисова",
+                "singer": "Валерий Парфёнов и Олеся Борисова.",
+                "clip": null,
+                "cover": "https://bigpicture.ru/wp-content/uploads/2021/12/bigpicture_ru_music-people-girl-sunshine-scaled.jpg",
+                "cover_small": "https://bigpicture.ru/wp-content/uploads/2021/12/bigpicture_ru_music-people-girl-sunshine-scaled.jpg",
+                "description": "",
+                "date_create": 1684307885,
+                "date_modify": 1684307885,
+                "listeningCnt": 0,
+                "originalId": null
+            },
+            {
+                "id": 2,
+                "name": "Орёл и Орлица",
+                "song": "https://www.avtoall.ru/upload/iblock/368/SUDBI-DUET-MIX-01.mp3",
+                "composer": "Рустам Неврединов",
+                "author": "Валерий Парфёнов и Олеся Борисова",
+                "singer": "Валерий Парфёнов и Олеся Борисова.",
+                "clip": "https://www.youtube.com/watch?v=XXYlFuWEuKI",
+                "cover": null,
+                "description": "",
+                "date_create": 1684307885,
+                "date_modify": 1684307885,
+                "listeningCnt": 0,
+                "originalId": null
+            },
+            {
+                "id": 3,
+                "name": "Белые голуби",
+                "song": "https://www.avtoall.ru/upload/iblock/438/MARSEL-DUET-MIX-03.mp3",
+                "composer": "Рустам Неврединов",
+                "author": "Валерий Парфёнов и Олеся Борисова",
+                "singer": "Валерий Парфёнов и Олеся Борисова.",
+                "clip": null,
+                "cover": "https://bigpicture.ru/wp-content/uploads/2021/12/bigpicture_ru_music-people-girl-sunshine-scaled.jpg",
+                "cover_small": "https://bigpicture.ru/wp-content/uploads/2021/12/bigpicture_ru_music-people-girl-sunshine-scaled.jpg",
+                "description": "",
+                "date_create": 1684307885,
+                "date_modify": 1684307885,
+                "listeningCnt": 0,
+                "originalId": null
+            }
+        ],
+        "pages": 1,
+        "allPages": 1,
+        "groups": [{
+                "id": 1,
+                "cover": "https://vlpv.ru/files/covers/4736d6ac837de1f35889d1c1ed424117.jpg",
+                "name": "Название подборки",
+                "description": "Описание подборки в несколько слов"
+            },
+            {
+                "id": 2,
+                "cover": "https://vlpv.ru/files/covers/888f35bad1dfbb2d92f1c3480d1c8583.png",
+                "name": "Название подборки 2",
+                "description": "Описание подборки в несколько слов"
+            },
+            {
+                "id": 3,
+                "cover": "https://bigpicture.ru/wp-content/uploads/2021/12/bigpicture_ru_music-people-girl-sunshine-scaled.jpg",
+                "name": "Название подборки 3",
+                "description": "Описание подборки в несколько слов"
+            }
+        ]
+    },
+    "song": [{
+            "id": 1,
+            "name": "Сумасшедший февраль",
+            "song": "https://www.avtoall.ru/upload/iblock/7d2/FEVRAL-DUET-MIX-04.mp3",
+            "composer": "Рустам Неврединов",
+            "author": "Валерий Парфёнов и Олеся Борисова",
+            "singer": "Валерий Парфёнов и Олеся Борисова.",
+            "clip": null,
+            "cover": "https://bigpicture.ru/wp-content/uploads/2021/12/bigpicture_ru_music-people-girl-sunshine-scaled.jpg",
+            "cover_small": "https://bigpicture.ru/wp-content/uploads/2021/12/bigpicture_ru_music-people-girl-sunshine-scaled.jpg",
+            "covers": [{
+                "id": 2,
+                "name": "Орёл и Орлица",
+                "song": "https://www.avtoall.ru/upload/iblock/368/SUDBI-DUET-MIX-01.mp3",
+                "composer": "Рустам Неврединов",
+                "author": "Валерий Парфёнов и Олеся Борисова",
+                "singer": "Валерий Парфёнов и Олеся Борисова.",
+                "clip": "https://www.youtube.com/watch?v=XXYlFuWEuKI",
+                "cover": null,
+                "description": "",
+                "date_create": 1684307885,
+                "date_modify": 1684307885,
+                "listeningCnt": 0,
+                "originalId": "3"
+            }],
+            "description": "",
+            "date_create": 1684307885,
+            "date_modify": 1684307885,
+            "listeningCnt": 0,
+            "originalId": null
+        },
+        {
+            "id": 2,
+            "name": "Орёл и Орлица",
+            "song": "https://www.avtoall.ru/upload/iblock/368/SUDBI-DUET-MIX-01.mp3",
+            "composer": "Рустам Неврединов",
+            "author": "Валерий Парфёнов и Олеся Борисова",
+            "singer": "Валерий Парфёнов и Олеся Борисова.",
+            "clip": "https://www.youtube.com/watch?v=XXYlFuWEuKI",
+            "cover": null,
+            "description": "",
+            "date_create": 1684307885,
+            "date_modify": 1684307885,
+            "listeningCnt": 0,
+            "originalId": null
+        },
+        {
+            "id": 3,
+            "name": "Белые голуби",
+            "song": "https://www.avtoall.ru/upload/iblock/438/MARSEL-DUET-MIX-03.mp3",
+            "composer": "Рустам Неврединов",
+            "author": "Валерий Парфёнов и Олеся Борисова",
+            "singer": "Валерий Парфёнов и Олеся Борисова.",
+            "clip": null,
+            "cover": "https://bigpicture.ru/wp-content/uploads/2021/12/bigpicture_ru_music-people-girl-sunshine-scaled.jpg",
+            "cover_small": "https://bigpicture.ru/wp-content/uploads/2021/12/bigpicture_ru_music-people-girl-sunshine-scaled.jpg",
+            "description": "",
+            "date_create": 1684307885,
+            "date_modify": 1684307885,
+            "listeningCnt": 0,
+            "originalId": null
+        }
+    ],
+    "group": [{
+            "id": 1,
+            "cover": "https://vlpv.ru/files/covers/4736d6ac837de1f35889d1c1ed424117.jpg",
+            "name": "Название подборки",
+            "description": "Описание подборки в несколько слов",
+            "items": [
+                {
+                    "id": 2,
+                    "name": "Орёл и Орлица",
+                    "song": "https://www.avtoall.ru/upload/iblock/368/SUDBI-DUET-MIX-01.mp3",
+                    "composer": "Рустам Неврединов",
+                    "author": "Валерий Парфёнов и Олеся Борисова",
+                    "singer": "Валерий Парфёнов и Олеся Борисова.",
+                    "clip": "https://www.youtube.com/watch?v=XXYlFuWEuKI",
+                    "cover": null,
+                    "description": "",
+                    "date_create": 1684307885,
+                    "date_modify": 1684307885,
+                    "listeningCnt": 0,
+                    "originalId": null
+                },
+                {
+                    "id": 3,
+                    "name": "Белые голуби",
+                    "song": "https://www.avtoall.ru/upload/iblock/438/MARSEL-DUET-MIX-03.mp3",
+                    "composer": "Рустам Неврединов",
+                    "author": "Валерий Парфёнов и Олеся Борисова",
+                    "singer": "Валерий Парфёнов и Олеся Борисова.",
+                    "clip": null,
+                    "cover": "https://bigpicture.ru/wp-content/uploads/2021/12/bigpicture_ru_music-people-girl-sunshine-scaled.jpg",
+                    "cover_small": "https://bigpicture.ru/wp-content/uploads/2021/12/bigpicture_ru_music-people-girl-sunshine-scaled.jpg",
+                    "description": "",
+                    "date_create": 1684307885,
+                    "date_modify": 1684307885,
+                    "listeningCnt": 0,
+                    "originalId": null
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "cover": "https://vlpv.ru/files/covers/888f35bad1dfbb2d92f1c3480d1c8583.png",
+            "name": "Название подборки 2",
+            "description": "Описание подборки в несколько слов",
+            "items": [{
+                    "id": 1,
+                    "name": "Сумасшедший февраль",
+                    "song": "https://www.avtoall.ru/upload/iblock/7d2/FEVRAL-DUET-MIX-04.mp3",
+                    "composer": "Рустам Неврединов",
+                    "author": "Валерий Парфёнов и Олеся Борисова",
+                    "singer": "Валерий Парфёнов и Олеся Борисова.",
+                    "clip": null,
+                    "cover": "https://bigpicture.ru/wp-content/uploads/2021/12/bigpicture_ru_music-people-girl-sunshine-scaled.jpg",
+                    "cover_small": "https://bigpicture.ru/wp-content/uploads/2021/12/bigpicture_ru_music-people-girl-sunshine-scaled.jpg",
+                    "description": "",
+                    "date_create": 1684307885,
+                    "date_modify": 1684307885,
+                    "listeningCnt": 0,
+                    "originalId": null
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "cover": "https://bigpicture.ru/wp-content/uploads/2021/12/bigpicture_ru_music-people-girl-sunshine-scaled.jpg",
+            "name": "Название подборки 3",
+            "description": "Описание подборки в несколько слов",
+            "items": [{
+                    "id": 1,
+                    "name": "Сумасшедший февраль",
+                    "song": "https://www.avtoall.ru/upload/iblock/7d2/FEVRAL-DUET-MIX-04.mp3",
+                    "composer": "Рустам Неврединов",
+                    "author": "Валерий Парфёнов и Олеся Борисова",
+                    "singer": "Валерий Парфёнов и Олеся Борисова.",
+                    "clip": null,
+                    "cover": "https://bigpicture.ru/wp-content/uploads/2021/12/bigpicture_ru_music-people-girl-sunshine-scaled.jpg",
+                    "cover_small": "https://bigpicture.ru/wp-content/uploads/2021/12/bigpicture_ru_music-people-girl-sunshine-scaled.jpg",
+                    "description": "",
+                    "date_create": 1684307885,
+                    "date_modify": 1684307885,
+                    "listeningCnt": 0,
+                    "originalId": null
+                },
+                {
+                    "id": 3,
+                    "name": "Белые голуби",
+                    "song": "https://www.avtoall.ru/upload/iblock/438/MARSEL-DUET-MIX-03.mp3",
+                    "composer": "Рустам Неврединов",
+                    "author": "Валерий Парфёнов и Олеся Борисова",
+                    "singer": "Валерий Парфёнов и Олеся Борисова.",
+                    "clip": null,
+                    "cover": "https://vlpv.ru/files/covers/888f35bad1dfbb2d92f1c3480d1c8583.png",
+                    "cover_small": "https://vlpv.ru/files/covers/888f35bad1dfbb2d92f1c3480d1c8583.png",
+                    "description": "",
+                    "date_create": 1684307885,
+                    "date_modify": 1684307885,
+                    "listeningCnt": 0,
+                    "originalId": null
+                },
+                {
+                    "id": 2,
+                    "name": "Орёл и Орлица",
+                    "song": "https://www.avtoall.ru/upload/iblock/368/SUDBI-DUET-MIX-01.mp3",
+                    "composer": "Рустам Неврединов",
+                    "author": "Валерий Парфёнов и Олеся Борисова",
+                    "singer": "Валерий Парфёнов и Олеся Борисова.",
+                    "clip": null,
+                    "cover": "https://bigpicture.ru/wp-content/uploads/2021/12/bigpicture_ru_music-people-girl-sunshine-scaled.jpg",
+                    "cover_small": "https://bigpicture.ru/wp-content/uploads/2021/12/bigpicture_ru_music-people-girl-sunshine-scaled.jpg",
+                    "description": "",
+                    "date_create": 1684307885,
+                    "date_modify": 1684307885,
+                    "listeningCnt": 0,
+                    "originalId": null
+                }
+            ]
+        }
+    ],
+    "users": [{
+        "id": 1,
+        "username": "test",
+        "password": "test"
+    }]
+}

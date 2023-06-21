@@ -5,7 +5,7 @@
             activeSong && activeSong.id === song.id ? 'active' : ''
         ]"
     >
-        <div v-if="song.song && song.originalId">
+        <div v-if="song.song && (song.originalId || isGroupSong)">
             <div
                 class="song-one-pause"
                 v-if="playbackSong && playbackSong.id == song.id && isPlaying"
@@ -25,7 +25,11 @@
             class="song-one-cover"
             v-if="song.clip"
         >
-            <div class="song-one-video" @click="showClipHandler" v-if="song.originalId"></div>
+            <div
+                class="song-one-video"
+                @click="showClipHandler"
+                v-if="song.originalId || isGroupSong">
+            </div>
             <img :src="`https://img.youtube.com/vi/${clipId}/0.jpg`" alt="">
             <ShowClip
                 v-if="showClip"
@@ -35,7 +39,7 @@
         </div>
         <div class="song-one-right">
             <router-link
-                v-if="!song.originalId"
+                v-if="!song.originalId && !isGroupSong"
                 class="song-one__title"
                 :to="{ name: 'song', params: { id: song.id }}">
                 {{ song.name }}
@@ -88,6 +92,10 @@ export default defineComponent({
             type: Boolean,
             default: false,
         },
+        isGroupSong: {
+            type: Boolean,
+            default: false,
+        },
     },
     data() {
         return {
@@ -126,7 +134,7 @@ export default defineComponent({
         },
         play() {
             const index = this.songs.findIndex((el: ISong) => el.id === this.song.id);
-            if (index > 0) {
+            if (index > -1) {
                 this.SET_PLAY(index);
             } else {
                 this.SET_PLAY_COVER(this.song);
@@ -143,7 +151,7 @@ export default defineComponent({
             }
         },
         openSong() {
-            if (!this.song.originalId) {
+            if (!this.song.originalId && !this.isGroupSong) {
                 this.$router.push({
                     name: 'song',
                     params: { id: this.song.id },
@@ -184,6 +192,7 @@ export default defineComponent({
     align-items: center;
     justify-content: center;
     border-radius: 10px;
+    cursor: pointer;
 
     img {
         height: 100%;

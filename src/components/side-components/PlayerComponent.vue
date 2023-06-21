@@ -56,7 +56,7 @@ export default defineComponent({
         return {
             shuffled: false,
             repeated: false,
-            localVolume: 1,
+            localVolume: 0.5,
         };
     },
     computed: {

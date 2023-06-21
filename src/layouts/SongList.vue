@@ -24,7 +24,7 @@ export default defineComponent({
         AddSong,
     },
     computed: {
-        ...mapState(['songs', 'isAdmin', 'searchRequest']),
+        ...mapState(['songs', 'groups', 'isAdmin', 'searchRequest']),
         ...mapGetters(['searchResult']),
     },
 });

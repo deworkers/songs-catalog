@@ -3,56 +3,11 @@ import axios from 'axios';
 // eslint-disable-next-line
 import audio from './audio';
 
-const data = {
-    items: [
-        {
-            id: 1,
-            name: 'Сумасшедший февраль',
-            song: 'https://www.avtoall.ru/upload/iblock/7d2/FEVRAL-DUET-MIX-04.mp3',
-            composer: 'Рустам Неврединов',
-            author: 'Валерий Парфёнов и Олеся Борисова',
-            singer: 'Валерий Парфёнов и Олеся Борисова.',
-            clip: null,
-            cover: 'https://bigpicture.ru/wp-content/uploads/2021/12/bigpicture_ru_music-people-girl-sunshine-scaled.jpg',
-            description: null,
-            date_create: 1684307885,
-            date_modify: 1684307885,
-            listeningCnt: 0,
-            originalId: null,
-        },
-        {
-            id: 2,
-            name: 'Орёл и Орлица',
-            song: 'https://www.avtoall.ru/upload/iblock/368/SUDBI-DUET-MIX-01.mp3',
-            composer: 'Рустам Неврединов',
-            author: 'Валерий Парфёнов и Олеся Борисова',
-            singer: 'Валерий Парфёнов и Олеся Борисова.',
-            clip: 'https://www.youtube.com/watch?v=XXYlFuWEuKI',
-            cover: null,
-            description: null,
-            date_create: 1684307885,
-            date_modify: 1684307885,
-            listeningCnt: 0,
-            originalId: null,
-        },
-        {
-            id: 3,
-            name: 'Белые голуби',
-            song: 'https://www.avtoall.ru/upload/iblock/438/MARSEL-DUET-MIX-03.mp3',
-            composer: 'Рустам Неврединов',
-            author: 'Валерий Парфёнов и Олеся Борисова',
-            singer: 'Валерий Парфёнов и Олеся Борисова.',
-            clip: null,
-            cover: 'https://bigpicture.ru/wp-content/uploads/2021/12/bigpicture_ru_music-people-girl-sunshine-scaled.jpg',
-            description: null,
-            date_create: 1684307885,
-            date_modify: 1684307885,
-            listeningCnt: 0,
-            originalId: null,
-        },
-    ],
-    pages: 1,
-}
+const isProduction = process.env.NODE_ENV === 'production';
+
+const apiClient = axios.create({
+    baseURL: isProduction ? '/' : 'http://localhost:3000',
+});
 
 export interface ISong {
     id: number
@@ -62,12 +17,22 @@ export interface ISong {
     author: string | null,
     singer: string | null,
     clip: string | null,
+    'cover_small': string | null,
     cover: string | null,
     description: string,
     'date_create': number,
     'date_modify': number,
     listeningCnt: number,
     originalId: string | null,
+    originalUrl: string | null,
+    groups: number[],
+}
+
+export interface IGroup {
+    id: number
+    name: string,
+    description: string,
+    cover: string | null,
 }
 
 export interface IPlayer {
@@ -84,6 +49,8 @@ export interface IPlayer {
 
 export interface State extends IPlayer {
     songs: ISong[],
+    groups: IGroup[],
+    activeGroup: IGroup | null,
     isAdmin: boolean,
     page: number | null,
     allPages: number | null,
@@ -101,16 +68,18 @@ const store = createStore({
     state():State {
         return {
             songs: [],
+            groups: [],
             page: null,
             allPages: null,
             activeTag: 'new',
             isAdmin: window.isAdmin,
             activeSong: null, // показываем подробную информацию
+            activeGroup: null,
             playbackSong: null, // проигрывается
             playbackIndex: 0,
             isPlaying: false,
             muted: false,
-            volume: 1,
+            volume: 0.5,
             duration: 0,
             timer: '00:00',
             progress: '0',
@@ -131,8 +100,14 @@ const store = createStore({
         SET_SONGS(state:State, payload:ISong[]) {
             state.songs = payload;
         },
+        SET_GROUPS(state:State, payload:ISong[]) {
+            state.groups = payload;
+        },
         SET_ACTIVE(state:State, payload:ISong | null) {
             state.activeSong = payload;
+        },
+        SET_ACTIVE_GROUP(state:State, payload:ISong | null) {
+            state.activeGroup = payload;
         },
         SET_PLAY(state:State, index: number) {
             if (state.playbackSong && audio.paused
@@ -145,6 +120,7 @@ const store = createStore({
                     audio.src = state.playbackSong.song;
                     audio.currentTime = 0;
                     audio.play();
+                    store.commit('SET_VOLUME', 0.5);
                     store.dispatch('setListening', state.playbackSong.id);
                 } else {
                     store.commit('SET_NEXT');
@@ -238,11 +214,12 @@ const store = createStore({
             if (store.state.activeSong) {
                 commit('SET_ACTIVE', null);
             }
-            return axios.get('/songs/', {
+            return apiClient.get('/songs/', {
                     params: params
                 })
                 .then(({data}) => {
                     commit('SET_SONGS', data.items);
+                    commit('SET_GROUPS', data.groups);
                     commit('SET_PAGE', data.page);
                     commit('SET_ALL_PAGES', data.allPages);
                 })
@@ -251,7 +228,7 @@ const store = createStore({
                 })
         },
         getSong({ commit }, id: number) {
-            return axios.get(`/song/${id}`)
+            return apiClient.get(`/song/${id}`)
                 .then(({data}) => {
                     commit('SET_ACTIVE', data);
                 })
@@ -259,8 +236,17 @@ const store = createStore({
                     console.log(error);
                 })
         },
+        getGroup({ commit }, id: number) {
+            return apiClient.get(`/group/${id}`)
+                .then(({data}) => {
+                    commit('SET_ACTIVE_GROUP', data);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+        },
         delete({ commit, state }, id : number) {
-            return axios.get('/song/delete/', {
+            return apiClient.get('/song/delete/', {
                     params: {
                         id: id
                     }
@@ -276,7 +262,7 @@ const store = createStore({
                 })
         },
         edit({ commit, state }, payload: {formData : FormData, id : number}) {
-            return axios.post(`/song/${payload.id}`, payload.formData, {
+            return apiClient.post(`/song/${payload.id}`, payload.formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -289,7 +275,7 @@ const store = createStore({
                 });
         },
         setListening({ commit, state }, id: number) {
-            return axios.get(`/songListening/${id}`)
+            return apiClient.get(`/songListening/${id}`)
                 .then((response) => {
                 })
                 .catch((error) => {
@@ -297,7 +283,7 @@ const store = createStore({
                 });
         },
         sendForm({ commit, state }, payload: {formData : FormData}) {
-            return axios.post(`/site/contact/`, payload.formData, {
+            return apiClient.post(`/site/contact/`, payload.formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -310,7 +296,7 @@ const store = createStore({
         },
         login({ commit, state }, payload: {formData : FormData}) {
             return new Promise((resolve, reject) => {
-                axios.post(`/site/login/`, payload.formData, {
+                apiClient.post(`/site/login/`, payload.formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
