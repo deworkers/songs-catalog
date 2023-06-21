@@ -62,6 +62,7 @@
     
             .search {
                 width: 100%;
+                background: none;
             }
         }
     
@@ -89,11 +90,37 @@
         .control {
             width: 100%;
             order: 2;
+            height: 60px;
+        }
+        
+        .song-one__title {
+            font-size: 16px;
+            line-height: 16px;
+        }
+
+        .song-one__date {
+            font-size: 11px;
+        }
+
+        .song-one__composer,
+        .song-one__author,
+        .song-one__singer {
+            font-size: 12px;
         }
 
         .song-one-playback {
             width: 100%;
             order: 0;
+            padding: 8px;
+
+
+            .song-one-cover {
+                margin-right: 8px;
+            }
+        }
+
+        .song-details {
+            padding: 0;
         }
 
         .song-details-top {
@@ -113,7 +140,16 @@
 
         .song-details-grid {
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .song-details-title {
+            order: 1;
+            margin-top: -30px;
+            z-index: 1;
+            padding: 0 15px 5px;
+            font-size: 18px;
         }
 
         .song-details-left {
@@ -121,8 +157,44 @@
             margin-right: 0;
         }
 
+        .song-details-cover,
+        .song-details-clip {
+            width: 100%;
+            height: 250px;
+            margin-right: 0;
+            border-radius: 0;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+
+            img {
+                height: auto;
+                width: 100%;
+                display: block;
+            }
+
+            &::after {
+                content: "";
+                width: 100%;
+                height: 200px;
+                background: linear-gradient(0deg, #FFFFFF 2.59%, rgba(255, 255, 255, 0) 59.58%);
+                position: absolute;
+                bottom: 0;
+                left: 0;
+            }
+        }
+
         .song-details-right {
             width: 100%;
+            padding: 0 15px;
+            z-index: 1;
+        }
+
+        .cover-list {
+            padding: 0 15px;
         }
 
         .clip-popup {
@@ -202,6 +274,92 @@
 
         .playback {
             margin-top: 15px;
+        }
+
+        .group-view-list {
+            .song-one {
+                width: 100%;
+            }
+        }
+
+        .group-view-about {
+            padding: 0;
+            flex-wrap: wrap;
+        }
+
+        .group-cover {
+            width: 100%;
+            height: 250px;
+            margin-right: 0;
+            border-radius: 0;
+            position: relative;
+
+            img {
+                height: auto;
+                width: 100%;
+            }
+
+            &::before {
+                content: "";
+                width: 100%;
+                height: 200px;
+                background: linear-gradient(0deg, #FFFFFF 2.59%, rgba(255, 255, 255, 0) 59.58%);
+                position: absolute;
+                bottom: 0;
+                left: 0;
+            }
+        }
+
+        .song-details-back, a.song-details-back {
+            position: absolute;
+            z-index: 1;
+            color: #fff !important;
+            text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.5);
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 16px;
+            margin: 0;
+            padding: 15px;
+            &::before {
+                content: "";
+                width: 10px;
+                height: 10px;
+                border-left: 2px solid #fff;
+                border-top: 2px solid #fff;
+                transform: rotate(-45deg);
+            }
+        }
+
+        .group-view-about {
+            margin-bottom: 20px;
+        }
+
+        .group-about {
+            width: 100%;
+            position: relative;
+            margin-top: -30px;
+            padding: 0 15px;
+        }
+
+        .group-title {
+            font-size: 18px;
+        }
+
+        .group-description {
+            font-size: 14px;
+        }
+
+        .song-details-body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .song-details-top {
+            order: 2;
+            border-top: 1px solid #ddd;
+            border-bottom: none;
+            margin: 0;
+            padding: 15px 15px 0;
         }
     }
 }

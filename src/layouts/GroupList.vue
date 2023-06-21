@@ -49,7 +49,8 @@ export default defineComponent({
 
 <style lang="less">
 .groups {
-    padding: 20px 15px;
+    padding: 0 20px 15px;
+    border-bottom: 1px solid #ddd;
 }
 
 .groups-title {

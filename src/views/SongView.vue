@@ -30,6 +30,9 @@ export default defineComponent({
         songID() {
             return this.$route.params.id;
         },
+        isMobile() {
+            return window.innerWidth <= 760
+        },
     },
     methods: {
         ...mapActions(['getSong']),
@@ -43,6 +46,7 @@ export default defineComponent({
                 }
             });
         }
+        console.log(this.isMobile);
     },
     watch: {
         songs() {

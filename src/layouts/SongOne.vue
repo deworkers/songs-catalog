@@ -30,10 +30,10 @@
                     />
                 </div>
             </div>
-            <div class="song-details-title">
-                {{ activeSong.name }}
-            </div>
             <div class="song-details-grid">
+                <div class="song-details-title">
+                    {{ activeSong.name }}
+                </div>
                 <div class="song-details-left">
                     <div class="song-details-cover" v-if="activeSong.cover && !activeSong.clip">
                         <img :src="activeSong.cover" alt="">
@@ -57,27 +57,29 @@
                     />
                 </div>
                 <div class="song-details-right">
+                    <div class="song-details-about">
+                        <div
+                            class="song-one__date"
+                            v-if="activeSong">
+                            <b>Добавлено:</b> {{ dateFormat(activeSong.date_modify) }}
+                        </div>
+                        <div class="song-one__date">
+                            <b>Прослушиваний:</b> {{ activeSong.listeningCnt }}
+                        </div>
+                        <div class="song-one__composer" v-if="activeSong.composer">
+                            <b>Музыка: </b>{{ activeSong.composer }}
+                        </div>
+                        <div class="song-one__author" v-if="activeSong.author">
+                            <b>Слова: </b>{{ activeSong.author }}
+                        </div>
+                        <div class="song-one__singer" v-if="activeSong.singer">
+                            <b>Исполняет: </b>{{ activeSong.singer }}
+                        </div>
+                        <div class="song-one__text" v-if="activeSong.text">
+                            <a :href="activeSong.text" download>Скачать текст песни</a>
+                        </div>
+                    </div>
                     <PlaybackPanel />
-                    <div
-                        class="song-one__date"
-                        v-if="activeSong">
-                        <b>Добавлено:</b> {{ dateFormat(activeSong.date_modify) }}
-                    </div>
-                    <div class="song-one__date">
-                        <b>Прослушиваний:</b> {{ activeSong.listeningCnt }}
-                    </div>
-                    <div class="song-one__composer" v-if="activeSong.composer">
-                        <b>Музыка: </b>{{ activeSong.composer }}
-                    </div>
-                    <div class="song-one__author" v-if="activeSong.author">
-                        <b>Слова: </b>{{ activeSong.author }}
-                    </div>
-                    <div class="song-one__singer" v-if="activeSong.singer">
-                        <b>Исполняет: </b>{{ activeSong.singer }}
-                    </div>
-                    <div class="song-one__text" v-if="activeSong.text">
-                        <a :href="activeSong.text" download>Скачать текст песни</a>
-                    </div>
                 </div>
             </div>
             <div
@@ -208,11 +210,13 @@ a.song-details-back  {
 .song-details-title {
     font-size: 24px;
     font-weight: 700;
-    padding-bottom: 15px;
     width: 100%;
+    grid-column: span 2;
 }
 
 .song-details-cover {
+    border-radius: 10px;
+    overflow: hidden;
     img {
         width: 100%;
     }
@@ -271,8 +275,6 @@ a.song-details-back  {
 }
 
 .cover-list {
-    padding-top: 20px;
-
     h2 {
         font-size: 18px;
         margin-bottom: 15px;

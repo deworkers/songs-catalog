@@ -1,14 +1,12 @@
 <template>
     <div class="playback">
-        <h2 class="playback-title">Проиграть аудиоверсию</h2>
-        <button class="playback-backward" @click="backward"></button>
         <button
-            class="playback-pause"
-            @click="pause"
-            v-if="isPlaying && activeSong.id === playbackSong.id"
+        class="playback-pause"
+        @click="pause"
+        v-if="isPlaying && activeSong.id === playbackSong.id"
         ></button>
         <button class="playback-play" @click="play" v-else :disabled="!activeSong.song"></button>
-        <button class="playback-forward" @click="forward"></button>
+        <h2 class="playback-title">Слушать</h2>
     </div>
 </template>
 
@@ -78,34 +76,35 @@ export default defineComponent({
     align-items: center;
     justify-content: center;
     padding: 30px 0px;
-    border: 1px solid #ddd;
     border-radius: 8px;
-    margin-bottom: 25px;
+    margin-top: 25px;
 }
 
 .playback-title {
     width: 100%;
     text-align: center;
-    padding-bottom: 20px;
-    font-size: 18px;
+    padding-top: 20px;
+    font-size: 14px;
 }
 
 .playback-play {
     position: relative;
-    width: 50px;
-    height: 50px;
+    width: 75px;
+    height: 75px;
     cursor: pointer;
     margin: 0 10px;
+    border-radius: 50%;
+    background: #D0E1E3;
     &::before {
         content: '';
-        width: 40px;
-        height: 49px;
+        width: 30px;
+        height: 37px;
         background: url('/src/assets/play-black.png') no-repeat;
         background-size: contain;
         display: block;
         position: absolute;
-        top: 1px;
-        left: 8px;
+        top: 19px;
+        left: 27px;
     }
     transition: opacity 0.1s ease-in;
     &:hover {
@@ -119,20 +118,22 @@ export default defineComponent({
 
 .playback-pause {
     position: relative;
-    width: 50px;
-    height: 50px;
+    width: 75px;
+    height: 75px;
     cursor: pointer;
     margin: 0 10px;
+    border-radius: 50%;
+    background: #D0E1E3;
     &::before {
         content: '';
-        width: 28px;
-        height: 34px;
+        width: 24px;
+        height: 30px;
         background: url('/src/assets/pause-black.png') no-repeat;
         background-size: contain;
         display: block;
         position: absolute;
-        top: 8px;
-        left: 10px;
+        top: 24px;
+        left: 26px;
     }
     transition: opacity 0.1s ease-in;
     &:hover {
