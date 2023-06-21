@@ -49,7 +49,7 @@ export default defineComponent({
 
 <style lang="less">
 .groups {
-    padding: 0 20px 15px;
+    padding: 15px 20px 15px;
     border-bottom: 1px solid #ddd;
 }
 

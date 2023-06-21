@@ -119,6 +119,11 @@
             }
         }
 
+        .song-one-description {
+            font-size: 14px;
+            padding: 15px 15px;
+        }
+
         .song-details {
             padding: 0;
         }
@@ -147,7 +152,6 @@
         .song-details-title {
             order: 1;
             margin-top: -30px;
-            z-index: 1;
             padding: 0 15px 5px;
             font-size: 18px;
         }
@@ -155,6 +159,7 @@
         .song-details-left {
             width: 100%;
             margin-right: 0;
+            z-index: -1;
         }
 
         .song-details-cover,
@@ -190,7 +195,6 @@
         .song-details-right {
             width: 100%;
             padding: 0 15px;
-            z-index: 1;
         }
 
         .cover-list {
@@ -328,6 +332,22 @@
                 border-top: 2px solid #fff;
                 transform: rotate(-45deg);
             }
+            &.fixed {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                background: rgba(0, 0, 0, 0.0);
+                transition: background 0.3s;
+            }
+
+            &.fixed-bg {
+                background: rgba(0, 0, 0, 0.7);
+            }
+        }
+
+        .groups {
+            padding: 0 15px 20px;
         }
 
         .group-view-about {
@@ -360,6 +380,20 @@
             border-bottom: none;
             margin: 0;
             padding: 15px 15px 0;
+        }
+
+        .playback-play.fixed,
+        .playback-pause.fixed {
+            position: fixed;
+            top: 13px;
+            left: 50%;
+            margin-left: -32.5px;
+            z-index: 10;
+            transform: scale(0.75);
+        }
+
+        .playback {
+            height: 152px;
         }
     }
 }

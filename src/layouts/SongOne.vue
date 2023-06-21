@@ -1,7 +1,11 @@
 <template>
     <div class="song-details">
         <router-link
-            class="song-details-back"
+            :class="[
+                'song-details-back',
+                scrollTop > 140 ? 'fixed' : '',
+                scrollTop > 300 ? 'fixed-bg': ''
+            ]"
             :to="{ name: 'list' }">
             К списку песен
         </router-link>
@@ -79,7 +83,7 @@
                             <a :href="activeSong.text" download>Скачать текст песни</a>
                         </div>
                     </div>
-                    <PlaybackPanel />
+                    <PlaybackPanel :scrollTop="scrollTop" />
                 </div>
             </div>
             <div
@@ -114,6 +118,7 @@ export default defineComponent({
             showForm: false,
             showAddCover: false,
             loading: false,
+            scrollTop: 0,
         }
     },
     computed: {
@@ -159,6 +164,11 @@ export default defineComponent({
         setShowAddCover(show: boolean) {
             this.showAddCover = show;
         },
+    },
+    mounted() {
+        window.addEventListener('scroll', () => {
+            this.scrollTop = document.documentElement.scrollTop;
+        });
     },
 });
 </script>
@@ -256,6 +266,7 @@ a.song-details-back  {
 .song-one-description {
     width: 100%;
     padding: 20px 0;
+    line-height: 22px;
 }
 
 .request-button {

@@ -1,11 +1,16 @@
 <template>
     <div class="playback">
         <button
-        class="playback-pause"
-        @click="pause"
-        v-if="isPlaying && activeSong.id === playbackSong.id"
-        ></button>
-        <button class="playback-play" @click="play" v-else :disabled="!activeSong.song"></button>
+            :class="['playback-pause', scrollTop > 496 ? 'fixed' : '',]"
+            @click="pause"
+            v-if="isPlaying && activeSong.id === playbackSong.id">
+        </button>
+        <button
+            :class="['playback-play', scrollTop > 496 ? 'fixed' : '',]"
+            @click="play"
+            v-else
+            :disabled="!activeSong.song">
+        </button>
         <h2 class="playback-title">Слушать</h2>
     </div>
 </template>
@@ -35,6 +40,12 @@ function switchObject(objectArray: ISong[], currentObjectId: number, direction: 
 export default defineComponent({
     name: 'PlaybackPanel',
     components: {
+    },
+    props: {
+        scrollTop: {
+            type: Number,
+            default: 0,
+        },
     },
     computed: {
         ...mapState(['isAdmin', 'playbackSong', 'isPlaying', 'songs', 'activeSong']),
@@ -83,27 +94,28 @@ export default defineComponent({
 .playback-title {
     width: 100%;
     text-align: center;
-    padding-top: 20px;
+    padding-top: 10px;
     font-size: 14px;
 }
 
 .playback-play {
     position: relative;
-    width: 75px;
-    height: 75px;
+    width: 65px;
+    height: 65px;
     cursor: pointer;
     margin: 0 10px;
     border-radius: 50%;
     background: #D0E1E3;
+    transition: all 0.3;
     &::before {
         content: '';
-        width: 30px;
-        height: 37px;
+        width: 25px;
+        height: 25px;
         background: url('/src/assets/play-black.png') no-repeat;
         background-size: contain;
         display: block;
         position: absolute;
-        top: 19px;
+        top: 21px;
         left: 27px;
     }
     transition: opacity 0.1s ease-in;
@@ -118,21 +130,22 @@ export default defineComponent({
 
 .playback-pause {
     position: relative;
-    width: 75px;
-    height: 75px;
+    width: 65px;
+    height: 65px;
     cursor: pointer;
     margin: 0 10px;
     border-radius: 50%;
     background: #D0E1E3;
+    transition: all 0.3;
     &::before {
         content: '';
-        width: 24px;
-        height: 30px;
+        width: 20px;
+        height: 20px;
         background: url('/src/assets/pause-black.png') no-repeat;
         background-size: contain;
         display: block;
         position: absolute;
-        top: 24px;
+        top: 23px;
         left: 26px;
     }
     transition: opacity 0.1s ease-in;

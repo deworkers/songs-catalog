@@ -3,8 +3,11 @@
         <div class="song-details">
             <div
                 @click="clickToListHandler()"
-                class="song-details-back"
-                >
+                :class="[
+                    'song-details-back',
+                    scrollTop > 140 ? 'fixed' : '',
+                    scrollTop > 300 ? 'fixed-bg': ''
+                ]">
                 К списку песен
             </div>
         </div>
@@ -42,6 +45,11 @@ export default defineComponent({
     components: {
         SongListOne,
     },
+    data() {
+        return {
+            scrollTop: 0,
+        }
+    },
     computed: {
         ...mapState(['activeGroup', 'songs']),
         groupID() {
@@ -59,6 +67,9 @@ export default defineComponent({
         },
     },
     mounted() {
+        window.addEventListener('scroll', () => {
+            this.scrollTop = document.documentElement.scrollTop;
+        });
         if (this.songs.length > 0) {
             this.getGroup(this.$route.params.id).then(() => {
                 const element = document.querySelector('.song-one.active');
