@@ -1,6 +1,6 @@
 <template>
     <main>
-        <GroupList v-if="groups.length > 0" />
+        <GroupList v-if="groups.length > 0 || isAdmin" />
         <SongList />
         <Pagination />
     </main>
@@ -22,7 +22,7 @@ export default defineComponent({
         GroupList,
     },
     computed: {
-        ...mapState(['searchRequest', 'groups']),
+        ...mapState(['searchRequest', 'groups', 'isAdmin']),
     },
     methods: {
         ...mapMutations(['SET_ACTIVE']),

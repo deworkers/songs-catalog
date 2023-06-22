@@ -1,12 +1,12 @@
 <template>
     <div class="playback">
         <button
-            :class="['playback-pause', scrollTop > 496 ? 'fixed' : '',]"
+            :class="['playback-pause', scrollTop > 290 ? 'fixed' : '',]"
             @click="pause"
             v-if="isPlaying && activeSong.id === playbackSong.id">
         </button>
         <button
-            :class="['playback-play', scrollTop > 496 ? 'fixed' : '',]"
+            :class="['playback-play', scrollTop > 290 ? 'fixed' : '',]"
             @click="play"
             v-else
             :disabled="!activeSong.song">

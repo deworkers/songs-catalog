@@ -102,6 +102,11 @@
             font-size: 11px;
         }
 
+        .song-one__listening {
+            font-size: 11px;
+            text-align: center;
+        }
+
         .song-one__composer,
         .song-one__author,
         .song-one__singer {
@@ -112,6 +117,8 @@
             width: 100%;
             order: 0;
             padding: 8px;
+            height: auto;
+            min-height: 80px;
 
 
             .song-one-cover {
@@ -154,12 +161,13 @@
             margin-top: -30px;
             padding: 0 15px 5px;
             font-size: 18px;
+            z-index: 1;
+            text-align: center;
         }
 
         .song-details-left {
             width: 100%;
             margin-right: 0;
-            z-index: -1;
         }
 
         .song-details-cover,
@@ -177,7 +185,7 @@
 
             img {
                 height: auto;
-                width: 100%;
+                width: 110%;
                 display: block;
             }
 
@@ -190,6 +198,11 @@
                 bottom: 0;
                 left: 0;
             }
+        }
+
+        .song-details-about {
+            position: relative;
+            z-index: 1;
         }
 
         .song-details-right {
@@ -277,7 +290,7 @@
         }
 
         .playback {
-            margin-top: 15px;
+            margin-top: 0;
         }
 
         .group-view-list {
@@ -316,21 +329,18 @@
 
         .song-details-back, a.song-details-back {
             position: absolute;
-            z-index: 1;
+            z-index: 10;
             color: #fff !important;
-            text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.5);
+            text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.9);
             font-weight: 700;
             font-size: 14px;
             line-height: 16px;
             margin: 0;
             padding: 15px;
             &::before {
-                content: "";
-                width: 10px;
-                height: 10px;
-                border-left: 2px solid #fff;
-                border-top: 2px solid #fff;
-                transform: rotate(-45deg);
+                background: url('/src/assets/arrow-white.png') no-repeat;
+                width: 14px;
+                height: 20px;
             }
             &.fixed {
                 position: fixed;

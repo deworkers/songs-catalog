@@ -3,8 +3,8 @@
         <router-link
             :class="[
                 'song-details-back',
-                scrollTop > 140 ? 'fixed' : '',
-                scrollTop > 300 ? 'fixed-bg': ''
+                scrollTop > 0 ? 'fixed' : '',
+                scrollTop > 180 ? 'fixed-bg': ''
             ]"
             :to="{ name: 'list' }">
             К списку песен
@@ -64,19 +64,19 @@
                     <div class="song-details-about">
                         <div
                             class="song-one__date"
-                            v-if="activeSong">
+                            v-if="activeSong && !isMobile">
                             <b>Добавлено:</b> {{ dateFormat(activeSong.date_modify) }}
                         </div>
-                        <div class="song-one__date">
+                        <div class="song-one__listening">
                             <b>Прослушиваний:</b> {{ activeSong.listeningCnt }}
                         </div>
-                        <div class="song-one__composer" v-if="activeSong.composer">
+                        <div class="song-one__composer" v-if="activeSong.composer && !isMobile">
                             <b>Музыка: </b>{{ activeSong.composer }}
                         </div>
-                        <div class="song-one__author" v-if="activeSong.author">
+                        <div class="song-one__author" v-if="activeSong.author && !isMobile">
                             <b>Слова: </b>{{ activeSong.author }}
                         </div>
-                        <div class="song-one__singer" v-if="activeSong.singer">
+                        <div class="song-one__singer" v-if="activeSong.singer && !isMobile">
                             <b>Исполняет: </b>{{ activeSong.singer }}
                         </div>
                         <div class="song-one__text" v-if="activeSong.text">
@@ -123,6 +123,9 @@ export default defineComponent({
     },
     computed: {
         ...mapState(['activeSong', 'isAdmin']),
+        isMobile() {
+            return window.innerWidth <= 760
+        },
     },
     methods: {
         ...mapMutations(['SET_ACTIVE', 'SET_PAUSE']),

@@ -1,7 +1,7 @@
 <template>
-    <Header />
+    <Header v-if="view === 'list' || !isMobile" />
     <div class="main-body">
-        <router-view/>
+        <router-view></router-view>
         <PlayerComponent />
     </div>
 </template>
@@ -18,6 +18,19 @@ export default defineComponent({
     components: {
         Header,
         PlayerComponent,
+    },
+    data() {
+        return {
+            transitionName: 'slide-right',
+        }
+    },
+    computed: {
+        view() {
+            return this.$router.currentRoute.value.name
+        },
+        isMobile() {
+            return window.innerWidth <= 760
+        },
     },
     methods: {
         ...mapActions(['getSongs']),

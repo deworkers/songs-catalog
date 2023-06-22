@@ -18,7 +18,7 @@
                     {{ group.description }}
                 </div>
             </div>
-            <AddGroup/>
+            <AddGroup v-if="isAdmin"/>
         </div>
     </div>
 </template>
@@ -34,7 +34,7 @@ export default defineComponent({
         AddGroup,
     },
     computed: {
-        ...mapState(['groups']),
+        ...mapState(['groups', 'isAdmin']),
     },
     methods: {
         openGroup(id: number) {

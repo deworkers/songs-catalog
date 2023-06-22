@@ -5,8 +5,8 @@
                 @click="clickToListHandler()"
                 :class="[
                     'song-details-back',
-                    scrollTop > 140 ? 'fixed' : '',
-                    scrollTop > 300 ? 'fixed-bg': ''
+                    scrollTop > 0 ? 'fixed' : '',
+                    scrollTop > 180 ? 'fixed-bg': ''
                 ]">
                 К списку песен
             </div>

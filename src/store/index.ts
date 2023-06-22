@@ -56,6 +56,7 @@ export interface State extends IPlayer {
     allPages: number | null,
     searchRequest: string | null,
     activeTag: string | null,
+    scrollPosition: number,
 }
 
 declare global {
@@ -84,6 +85,7 @@ const store = createStore({
             timer: '00:00',
             progress: '0',
             searchRequest: null,
+            scrollPosition: 0,
         }/* eslint-disable */
     },
     getters: {
@@ -208,6 +210,9 @@ const store = createStore({
         SET_ACTIVE_TAG(state:State, payload: string | null) {
             state.activeTag = payload;
         },
+        SET_SCROLL_POSITION(state:State, payload: number) {
+            state.scrollPosition = payload;
+        }
     },
     actions: {
         getSongs({ commit }, params) {
