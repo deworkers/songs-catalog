@@ -54,7 +54,7 @@
                 </div>
                 <div class="edit-form-input">
                     <label>Ссылка на оригинал песни</label>
-                    <input name="singer" type="text" v-model="localForm.originalUrl">
+                    <input name="singer" type="text" v-model="localForm.original_file_url">
                 </div>
                 <div class="edit-form-input">
                     <label>Файл текста песни и табулатуры</label>
@@ -90,7 +90,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import Multiselect from 'vue-multiselect';
-import { ISong, IGroup } from '@/store/index';
+import { ISong, IGroup } from '@/store/types';
 import { mapActions, mapState } from 'vuex';
 
 export default defineComponent({
@@ -160,8 +160,7 @@ export default defineComponent({
                 this.formData.append('Song[clip]', this.localForm.clip ? this.localForm.clip : '');
                 this.formData.append('Song[description]', this.localForm.description ? this.localForm.description : '');
                 this.formData.append('Song[originalId]', this.localForm.originalId ? this.localForm.originalId : '');
-                this.formData.append('Song[originalUrl]', this.localForm.originalUrl ? this.localForm.originalUrl : '');
-                this.formData.append('Song[groups]', JSON.stringify(this.localForm.groups));
+                this.formData.append('Song[original_file_url]', this.localForm.original_file_url ? this.localForm.original_file_url : '');
 
                 this.edit({
                     formData: this.formData,
@@ -179,15 +178,18 @@ export default defineComponent({
     mounted() {
         if (this.song) {
             this.localForm = JSON.parse(JSON.stringify(this.song))
+            this.selectedGroups = this.song.groups;
         }
     },
     watch: {
         selectedGroups() {
-            console.log(this.selectedGroups);
-            this.localForm.groups = [];
-            this.selectedGroups.forEach((group) => {
-                this.localForm.groups.push(group.id);
+            // this.localForm.groups = [];
+            this.formData.delete('Song[groups]');
+            const groups: number[] = []
+            this.selectedGroups.forEach((group: IGroup) => {
+                groups.push(group.id);
             });
+            this.formData.append('Song[groups]', JSON.stringify(groups));
         },
     },
 });
@@ -319,6 +321,10 @@ export default defineComponent({
     position: relative;
     cursor: pointer;
     white-space: nowrap;
+}
+
+.multiselect__option--selected {
+    background: #ddd;
 }
 
 .multiselect__select {

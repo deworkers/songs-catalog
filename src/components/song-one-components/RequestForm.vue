@@ -7,7 +7,7 @@
                 ref="close"
             ></div>
             <h2 class="add-song-title">Запрос прав для трансляции</h2>
-            <div>
+            <div v-if="!isSend">
                 <div class="edit-form-input">
                     <label>Ваше имя</label>
                     <input
@@ -29,7 +29,7 @@
                     >
                 </div>
             </div>
-            <div class="form-bottom">
+            <div class="form-bottom" v-if="!isSend">
                 <button
                     class="add-song-prev"
                     @click="hideFormHandler"
@@ -43,6 +43,13 @@
                 >
                     Отправить
                 </button>
+            </div>
+            <div class="request-after" v-if="isSend">
+                <div class="request-after-message">
+                    Запрос прав на трансляцию успешно оправлен,<br>
+                    мы свяжемся с вами в ближайшее время
+                </div>
+                <a :href="fileUrl" download>Скачать песню в высоком качестве</a>
             </div>
         </div>
     </div>
@@ -59,6 +66,13 @@ export default defineComponent({
         hideRequestForm: {
             type: Function,
         },
+        songId: {
+            type: Number,
+        },
+        fileUrl: {
+            type: String,
+            default: null,
+        },
     },
     directives: {
         mask: vMask,
@@ -71,6 +85,7 @@ export default defineComponent({
             },
             isValid: false,
             phoneReg: /^\+7\(\d{3}\)\d{3}\s?\d{2}\s?\d{2}$/,
+            isSend: false,
         }
     },
     methods: {
@@ -91,15 +106,11 @@ export default defineComponent({
             const formData = new FormData();
             formData.append('ContactForm[name]', this.form.name);
             formData.append('ContactForm[phone]', this.form.phone);
+            formData.append('ContactForm[songId]', String(this.songId));
             this.sendForm({ formData }).then(() => {
-                const { close } = this.$refs as { close: HTMLButtonElement };
-                close.click();
+                this.isSend = true;
             });
         },
-    },
-    components: {
-    },
-    computed: {
     },
 });
 </script>
@@ -109,5 +120,18 @@ export default defineComponent({
     &:disabled {
         opacity: 0.5;
     }
+}
+
+.request-after {
+    text-align: center;
+
+    a {
+        text-decoration: underline;
+    }
+}
+
+.request-after-message {
+    font-size: 20px;
+    margin-bottom: 20px;
 }
 </style>

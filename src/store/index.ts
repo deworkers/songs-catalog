@@ -2,66 +2,17 @@ import { createStore } from 'vuex';
 import axios from 'axios';
 // eslint-disable-next-line
 import audio from './audio';
+import { IGroup, ISong, State } from './types';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
 const apiClient = axios.create({
     baseURL: isProduction ? '/' : 'http://localhost:3000',
 });
-
-export interface ISong {
-    id: number
-    name: string,
-    song: string,
-    composer: string | null,
-    author: string | null,
-    singer: string | null,
-    clip: string | null,
-    'cover_small': string | null,
-    cover: string | null,
-    description: string,
-    'date_create': number,
-    'date_modify': number,
-    listeningCnt: number,
-    originalId: string | null,
-    originalUrl: string | null,
-    groups: number[],
-}
-
-export interface IGroup {
-    id: number
-    name: string,
-    description: string,
-    cover: string | null,
-}
-
-export interface IPlayer {
-    activeSong: ISong | null,
-    playbackSong: ISong | null,
-    playbackIndex: number,
-    isPlaying: boolean,
-    muted: boolean,
-    duration: number,
-    timer: string,
-    progress: string,
-    volume: number,
-}
-
-export interface State extends IPlayer {
-    songs: ISong[],
-    groups: IGroup[],
-    activeGroup: IGroup | null,
-    isAdmin: boolean,
-    page: number | null,
-    allPages: number | null,
-    searchRequest: string | null,
-    activeTag: string | null,
-    scrollPosition: number,
-}
-
 declare global {
     interface Window {
       isAdmin: boolean;
+      userId: string;
     }
 }
 
@@ -70,10 +21,12 @@ const store = createStore({
         return {
             songs: [],
             groups: [],
+            playList: [],
             page: null,
             allPages: null,
             activeTag: 'new',
             isAdmin: window.isAdmin,
+            userID: window.userId,
             activeSong: null, // показываем подробную информацию
             activeGroup: null,
             playbackSong: null, // проигрывается
@@ -102,13 +55,17 @@ const store = createStore({
         SET_SONGS(state:State, payload:ISong[]) {
             state.songs = payload;
         },
-        SET_GROUPS(state:State, payload:ISong[]) {
+        SET_PLAY_LIST(state:State, payload:ISong[]) {
+            state.playList = payload;
+            state.playbackIndex = -99;
+        },
+        SET_GROUPS(state:State, payload:IGroup[]) {
             state.groups = payload;
         },
         SET_ACTIVE(state:State, payload:ISong | null) {
             state.activeSong = payload;
         },
-        SET_ACTIVE_GROUP(state:State, payload:ISong | null) {
+        SET_ACTIVE_GROUP(state:State, payload:IGroup | null) {
             state.activeGroup = payload;
         },
         SET_PLAY(state:State, index: number) {
@@ -117,12 +74,12 @@ const store = createStore({
                 audio.play();
             } else {
                 state.playbackIndex = index;
-                state.playbackSong = state.songs[index];
+                state.playbackSong = state.playList[index];
                 if (state.playbackSong.song) {
                     audio.src = state.playbackSong.song;
                     audio.currentTime = 0;
+                    audio.volume = state.volume;
                     audio.play();
-                    store.commit('SET_VOLUME', 0.5);
                     store.dispatch('setListening', state.playbackSong.id);
                 } else {
                     store.commit('SET_NEXT');
@@ -164,12 +121,13 @@ const store = createStore({
             audio.volume = volume;
         },
         SET_NEXT(state:State) {
-            if (state.playbackIndex < state.songs.length - 1) {
+            if (state.playbackIndex < state.playList.length - 1 && state.playbackIndex > -1) {
                 state.playbackIndex++;
             } else {
                 state.playbackIndex = 0;
             }
-            state.playbackSong = state.songs[state.playbackIndex];
+
+            state.playbackSong = state.playList[state.playbackIndex];
             if (state.playbackSong.song) {
                 audio.src = state.playbackSong.song;
                 audio.currentTime = 0;
@@ -183,9 +141,9 @@ const store = createStore({
             if (state.playbackIndex > 0) {
                 state.playbackIndex--;
             } else {
-                state.playbackIndex = state.songs.length - 1;
+                state.playbackIndex = state.playList.length - 1;
             }
-            state.playbackSong = state.songs[state.playbackIndex];
+            state.playbackSong = state.playList[state.playbackIndex];
             if (state.playbackSong.song) {
                 audio.src = state.playbackSong.song;
                 audio.currentTime = 0;
@@ -224,6 +182,7 @@ const store = createStore({
                 })
                 .then(({data}) => {
                     commit('SET_SONGS', data.items);
+                    commit('SET_PLAY_LIST', data.items);
                     commit('SET_GROUPS', data.groups);
                     commit('SET_PAGE', data.page);
                     commit('SET_ALL_PAGES', data.allPages);
@@ -245,6 +204,7 @@ const store = createStore({
             return apiClient.get(`/group/${id}`)
                 .then(({data}) => {
                     commit('SET_ACTIVE_GROUP', data);
+                    commit('SET_PLAY_LIST', data.songs);
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -314,6 +274,35 @@ const store = createStore({
                         console.log(error);
                     });
             });
+        },
+        deleteGroup({ commit, state }, id : number) {
+            return apiClient.get('/group/delete/', {
+                    params: {
+                        id: id
+                    }
+                })
+                .then(() => {
+                    const groups = state.groups.filter((elem:IGroup) => {
+                        return elem.id !== id
+                    });
+                    commit('SET_GROUPS', groups);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+        },
+        editGroup({ commit, state }, payload: {formData : FormData, id : number}) {
+            return apiClient.post(`/group/${payload.id}`, payload.formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+                .then((response) => {
+                    console.log(response);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         },
     }
 });

@@ -5,7 +5,7 @@
             activeSong && activeSong.id === song.id ? 'active' : ''
         ]"
     >
-        <div v-if="song.song && (song.originalId || isGroupSong)">
+        <div v-if="!song.clip && (isGroupSong || song.originalId)">
             <div
                 class="song-one-pause"
                 v-if="playbackSong && playbackSong.id == song.id && isPlaying"
@@ -72,7 +72,7 @@
 <script lang="ts">
 
 import { defineComponent } from 'vue';
-import { ISong } from '@/store';
+import { ISong } from '@/store/types';
 import { mapMutations, mapState } from 'vuex';
 import EditPanel from './EditPanel.vue'
 import ShowClip from '../song-one-components/ShowClip.vue'
@@ -104,7 +104,7 @@ export default defineComponent({
         }
     },
     computed: {
-        ...mapState(['isAdmin', 'playbackSong', 'isPlaying', 'songs', 'activeSong']),
+        ...mapState(['isAdmin', 'playbackSong', 'isPlaying', 'playList', 'activeSong']),
         dateFormat() : string {
             const date = new Date(this.song.date_modify * 1000);
             const day = date.getDate().toString().padStart(2, '0');
@@ -133,7 +133,7 @@ export default defineComponent({
             this.SET_PAUSE();
         },
         play() {
-            const index = this.songs.findIndex((el: ISong) => el.id === this.song.id);
+            const index = this.playList.findIndex((el: ISong) => el.id === this.song.id);
             if (index > -1) {
                 this.SET_PLAY(index);
             } else {

@@ -21,11 +21,18 @@
                 <div class="group-about">
                     <div class="group-title">{{ activeGroup.name }}</div>
                     <div class="group-description">{{ activeGroup.description }}</div>
+                    <a
+                        target="_blank"
+                        v-if="activeGroup.playlist"
+                        :href="activeGroup.playlist"
+                        class="youtube-button">
+                        Открыть плейлист на YouTube
+                    </a>
                 </div>
             </div>
             <div class="group-view-list">
                 <SongListOne
-                    v-for="song in activeGroup.items"
+                    v-for="song in activeGroup.songs"
                     :key="song.id"
                     :song="song"
                     :isGroupSong="true"
@@ -95,7 +102,7 @@ export default defineComponent({
 
 <style lang="less">
 .group-view {
-    height: calc(100% - 60px);
+    height: calc(100% - 50px);
     overflow-y: auto;
 }
 
@@ -114,10 +121,11 @@ export default defineComponent({
     align-items: center;
     justify-content: center;
     margin-right: 20px;
+    background: #0F87DE;
 
     img {
         display: block;
-        height: 250px;
+        height: 110%;
     }
 }
 
@@ -138,5 +146,27 @@ export default defineComponent({
 .group-view-list {
     display: flex;
     flex-wrap: wrap;
+}
+
+.youtube-button {
+    font-size: 20px;
+    line-height: 16px;
+    border-radius: 10px;
+    height: 40px;
+    padding: 25px 10px;
+    margin-right: 15px;
+    display: inline-flex;
+    color: #ff0000;
+    border: 2px solid #ff0000;
+    align-items: center;
+    &::before {
+        content: "";
+        background: url('/src/assets/youTube.png') no-repeat;
+        width: 46px;
+        height: 32px;
+        background-size: contain;
+        display: block;
+        margin-right: 10px;
+    }
 }
 </style>

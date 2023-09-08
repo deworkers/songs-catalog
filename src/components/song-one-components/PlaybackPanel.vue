@@ -12,6 +12,11 @@
             :disabled="!activeSong.song">
         </button>
         <h2 class="playback-title">Слушать</h2>
+        <ShowClip
+            v-if="showClip"
+            :clip="activeSong.clip"
+            :hideClip="hideClip"
+        />
     </div>
 </template>
 
@@ -19,7 +24,8 @@
 import { defineComponent } from 'vue';
 import { mapActions, mapMutations, mapState } from 'vuex';
 import { RouteLocationRaw } from 'vue-router';
-import { ISong } from '@/store';
+import { ISong } from '@/store/types';
+import ShowClip from './ShowClip.vue';
 
 function switchObject(objectArray: ISong[], currentObjectId: number, direction: 'next' | 'prev') : number | void {
     const currentIndex = objectArray.findIndex((obj) => obj.id === currentObjectId);
@@ -40,12 +46,18 @@ function switchObject(objectArray: ISong[], currentObjectId: number, direction: 
 export default defineComponent({
     name: 'PlaybackPanel',
     components: {
+        ShowClip,
     },
     props: {
         scrollTop: {
             type: Number,
             default: 0,
         },
+    },
+    data() {
+        return {
+            showClip: false,
+        }
     },
     computed: {
         ...mapState(['isAdmin', 'playbackSong', 'isPlaying', 'songs', 'activeSong']),
@@ -70,11 +82,25 @@ export default defineComponent({
             });
         },
         play() {
-            const index = this.songs.findIndex((el: ISong) => el.id === this.activeSong.id);
-            this.SET_PLAY(index);
+            if (!this.activeSong.clip) {
+                const index = this.songs.findIndex((el: ISong) => el.id === this.activeSong.id);
+                this.SET_PLAY(index);
+            } else {
+                this.showClipHandler();
+            }
         },
         pause() {
             this.SET_PAUSE();
+        },
+        showClipHandler() {
+            this.showClip = true;
+            this.SET_PAUSE();
+        },
+        hideClip(event:Event) {
+            const element = event.target as HTMLElement;
+            if (element.classList.contains('add-song-form') || element.classList.contains('close-popup')) {
+                this.showClip = false;
+            }
         },
     },
 });

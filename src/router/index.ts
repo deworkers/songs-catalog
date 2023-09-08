@@ -8,17 +8,30 @@ import GroupView from '../views/GroupView.vue'
 
 import store from '../store/index'
 
+const isMobile: boolean = window.innerWidth <= 760;
+
 const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
         name: 'list',
         component: ListView,
         beforeEnter: (to, from, next) => {
+            store.commit('SET_PLAY_LIST', store.state.songs);
             setTimeout(() => {
-                window.scrollTo({
-                    top: store.state.scrollPosition,
-                    behavior: 'smooth',
-                })
+                if (isMobile) {
+                    window.scrollTo({
+                        top: store.state.scrollPosition,
+                        behavior: 'smooth',
+                    })
+                } else {
+                    const element = document.querySelector('main');
+                    if (element) {
+                        element.scrollTo({
+                            top: store.state.scrollPosition,
+                            behavior: 'smooth',
+                        })
+                    }
+                }
             }, 1);
             next();
         },
@@ -33,7 +46,14 @@ const routes: Array<RouteRecordRaw> = [
         name: 'song',
         component: SongView,
         beforeEnter: (to, from, next) => {
-            store.commit('SET_SCROLL_POSITION', document.documentElement.scrollTop);
+            if (isMobile) {
+                store.commit('SET_SCROLL_POSITION', document.documentElement.scrollTop);
+            } else {
+                const element = document.querySelector('main');
+                if (element) {
+                    store.commit('SET_SCROLL_POSITION', element.scrollTop);
+                }
+            }
             next();
         },
     },
@@ -42,7 +62,14 @@ const routes: Array<RouteRecordRaw> = [
         name: 'group',
         component: GroupView,
         beforeEnter: (to, from, next) => {
-            store.commit('SET_SCROLL_POSITION', document.documentElement.scrollTop);
+            if (isMobile) {
+                store.commit('SET_SCROLL_POSITION', document.documentElement.scrollTop);
+            } else {
+                const element = document.querySelector('main');
+                if (element) {
+                    store.commit('SET_SCROLL_POSITION', element.scrollTop);
+                }
+            }
             next();
         },
     },

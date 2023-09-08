@@ -11,14 +11,21 @@
         </router-link>
         <div class="song-details-body">
             <div class="song-details-top">
-                <div class="request-block">
+                <div
+                    class="request-block"
+                    v-if="activeSong.original_file_url"
+                >
                     <button
                         class="request-button"
                         @click="showForm = true"
                     >
                         Запрос прав для трансляции
                     </button>
-                    <RequestForm :hideRequestForm="hideRequestForm" v-if="showForm" />
+                    <RequestForm
+                        :hideRequestForm="hideRequestForm"
+                        :songId="activeSong.id"
+                        :fileUrl="activeSong.original_file_url"
+                        v-if="showForm" />
                 </div>
                 <div class="request-block" v-if="isAdmin">
                     <button
@@ -42,7 +49,9 @@
                     <div class="song-details-cover" v-if="activeSong.cover && !activeSong.clip">
                         <img :src="activeSong.cover" alt="">
                     </div>
-                    <div class="song-details-clip" v-if="activeSong.clip" @click="showClipHandler">
+                    <div
+                        class="song-details-clip"
+                        v-if="activeSong.clip">
                         <img :src="`https://img.youtube.com/vi/${getClipID(activeSong.clip)}/0.jpg`" alt="">
                     </div>
                     <ShowClip
@@ -90,6 +99,12 @@
                 class="song-one-description" v-if="activeSong.description"
                 v-html="activeSong.description"
             ></div>
+            <div v-if="true">
+                <CommentsComponent
+                    :songId="activeSong.id"
+                    :comments="activeSong.comments"
+                />
+            </div>
         </div>
     </div>
 </template>
@@ -99,7 +114,7 @@ import { defineComponent } from 'vue';
 import { mapMutations, mapState, mapActions } from 'vuex';
 import PlaybackPanel from '../components/song-one-components/PlaybackPanel.vue';
 import RequestForm from '../components/song-one-components/RequestForm.vue';
-import ShowClip from '../components/song-one-components/ShowClip.vue';
+import CommentsComponent from '../components/song-one-components/CommentsComponent.vue';
 import AddSongForm from '../components/add-song-components/AddSongForm.vue';
 import SongListOne from '../components/song-list-components/SongListOne.vue';
 
@@ -110,7 +125,7 @@ export default defineComponent({
         RequestForm,
         AddSongForm,
         SongListOne,
-        ShowClip,
+        CommentsComponent,
     },
     data() {
         return {
@@ -188,7 +203,6 @@ a.song-details-back  {
     cursor: pointer;
     font-size: 18px;
     font-weight: 700;
-    margin-bottom: 15px;
     display: flex !important;
     align-items: center;
     color: #000 !important;
@@ -216,7 +230,7 @@ a.song-details-back  {
     display: flex;
     padding-bottom: 15px;
     border-bottom: 1px solid #ddd;
-    margin-bottom: 15px;
+    margin: 15px 0;
     flex-wrap: wrap;
 }
 
@@ -236,21 +250,9 @@ a.song-details-back  {
 }
 
 .song-details-clip {
-    cursor: pointer;
     position: relative;
     img {
         width: 100%;
-    }
-    &::before {
-        content: "";
-        background: url('/src/assets/youTube.png') no-repeat;
-        width: 72px;
-        height: 50px;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        margin-left: -36px;
-        margin-top: -25px;
     }
 }
 
@@ -268,7 +270,7 @@ a.song-details-back  {
 
 .song-one-description {
     width: 100%;
-    padding: 20px 0;
+    padding: 20px 0 0;
     line-height: 22px;
 }
 
@@ -280,6 +282,7 @@ a.song-details-back  {
     height: 40px;
     padding: 10px 20px;
     margin-right: 15px;
+    display: inline-block;
 }
 
 .clip-popup {

@@ -34,8 +34,6 @@ export default defineComponent({
 .song-list {
     display: flex;
     flex-wrap: wrap;
-    height: calc(100% - 60px);
-    overflow-y: auto;
     align-content: flex-start;
 }
 </style>

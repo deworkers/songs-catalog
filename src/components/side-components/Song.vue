@@ -27,7 +27,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { ISong } from '@/store';
+import { ISong } from '@/store/types';
 
 export default defineComponent({
     name: 'SongInfo',

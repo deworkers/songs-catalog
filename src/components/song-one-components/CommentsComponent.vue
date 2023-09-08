@@ -1,0 +1,100 @@
+<template>
+    <div class="comments">
+        <div class="comments-top">
+            <div class="comments-top-count">
+                {{ comments.length }}
+                {{declOfNum(comments.length, ['комментарий', 'комментария', 'комментариев'])}}
+            </div>
+            <div class="comments-top-sort" v-if="comments.length > 1">
+                <select v-model="sort">
+                    <option value="date_create">Сначала новые</option>
+                    <option value="vote_count">Сначала популярные</option>
+                </select>
+            </div>
+        </div>
+        <CommentForm :songId="songId" />
+        <div>
+            <CommentOne
+                v-for="comment in sortedList"
+                :key="comment.id"
+                :comment="comment"
+            />
+        </div>
+    </div>
+</template>
+
+<script lang="ts">
+import { defineComponent, ref, computed } from 'vue';
+import { IComment } from '@/store/types';
+import declOfNum from '@/utils/declOfNum';
+import CommentOne from './comment-components/CommentOne.vue';
+import CommentForm from './comment-components/CommentForm.vue';
+
+export default defineComponent({
+    name: 'CommentsComponent',
+    props: {
+        comments: {
+            type: Array as ()=> IComment[],
+            required: true,
+        },
+        songId: {
+            type: Number,
+            required: true,
+        },
+    },
+    components: {
+        CommentOne,
+        CommentForm,
+    },
+    setup(props) {
+        const sort = ref('date_create');
+        const message = ref('');
+
+        const sortedList = computed(() => {
+            const commentsCopy = [...props.comments];
+            return commentsCopy.sort((a:IComment, b:IComment) => {
+                if (sort.value === 'date_create') {
+                    return b.date_create - a.date_create;
+                }
+                if (sort.value === 'vote_count') {
+                    return b.vote_count - a.vote_count;
+                }
+                return 1;
+            });
+        });
+
+        return {
+            sort,
+            message,
+            sortedList,
+            declOfNum,
+        };
+    },
+});
+</script>
+
+<style lang="less">
+.comments-top {
+    display: flex;
+    align-items: center;
+    padding: 20px 0;
+}
+
+.comments-top-count {
+    margin-right: 30px;
+    font-size: 20px;
+}
+
+.comments-top-sort {
+    font-size: 18px;
+    select {
+        padding: 5px;
+        background: #ddd;
+        border-radius: 5px;
+    }
+
+    option {
+        background: #fff;
+    }
+}
+</style>

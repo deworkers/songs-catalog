@@ -114,6 +114,20 @@ export default defineComponent({
     display: flex;
     flex-wrap: wrap;
     background: #F5F5F5;
+
+    .song-one__title {
+        font-size: 16px;
+    }
+
+    .song-one__composer,
+    .song-one__author,
+    .song-one__singer {
+        font-size: 12px;
+    }
+
+    .song-one-playback {
+        padding: 8px;
+    }
 }
 
 .player-left {

@@ -2,22 +2,11 @@
     <div class="groups">
         <div class="groups-title">Подборки</div>
         <div class="group-list">
-            <div
+            <GroupListOne
                 v-for="group in groups"
                 :key="group.id"
-                class="group-one"
-                @click="openGroup(group.id)"
-            >
-                <div class="group-one__cover">
-                    <img :src="group.cover" alt="">
-                </div>
-                <div class="group-one__name">
-                    {{ group.name }}
-                </div>
-                <div class="group-one__description">
-                    {{ group.description }}
-                </div>
-            </div>
+                :group="group"
+            />
             <AddGroup v-if="isAdmin"/>
         </div>
     </div>
@@ -27,22 +16,18 @@
 import { defineComponent } from 'vue';
 import { mapState } from 'vuex';
 import AddGroup from '../components/group-list-components/AddGroup.vue';
+import GroupListOne from '../components/group-list-components/GroupListOne.vue';
 
 export default defineComponent({
     name: 'GroupOne',
     components: {
         AddGroup,
+        GroupListOne,
     },
     computed: {
         ...mapState(['groups', 'isAdmin']),
     },
     methods: {
-        openGroup(id: number) {
-            this.$router.push({
-                name: 'group',
-                params: { id },
-            });
-        },
     },
 });
 </script>
@@ -68,6 +53,7 @@ export default defineComponent({
     width: 150px;
     margin-right: 15px;
     cursor: pointer;
+    position: relative;
 
     &:last-child {
         margin-right: 0;
@@ -83,6 +69,7 @@ export default defineComponent({
     align-items: center;
     justify-content: center;
     margin-bottom: 10px;
+    background: #0f87de;
 
     img {
         display: block;
@@ -98,5 +85,18 @@ export default defineComponent({
 
 .group-one__description {
     font-size: 14px;
+}
+
+.group-edit-panel {
+    font-size: 14px;
+    padding: 10px;
+    background: #ddd;
+    border-radius: 8px;
+}
+
+.group-edit-one {
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 5px 0;
 }
 </style>

@@ -5,7 +5,7 @@
         <EditForm
             v-if="showForm"
             :setShowForm="setShowForm"
-            :song="song"
+            :group="group"
         />
         <ConfirmDelete
             v-if="showConfirm"
@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { ISong } from '@/store/types'
+import { IGroup } from '@/store/types'
 import vClickOutside from '@baiguangteng/vue3-click-outside';
 import { mapActions } from 'vuex';
 import EditForm from './EditForm.vue'
@@ -33,8 +33,8 @@ export default defineComponent({
             type: Boolean,
             default: false,
         },
-        song: {
-            type: Object as PropType<ISong>,
+        group: {
+            type: Object as PropType<IGroup>,
         },
     },
     directives: {
@@ -54,7 +54,7 @@ export default defineComponent({
     computed: {
     },
     methods: {
-        ...mapActions(['delete']),
+        ...mapActions(['deleteGroup']),
         clickOutside() {
             if (this.setShowPanel && this.mounted) {
                 this.setShowPanel(false);
@@ -63,8 +63,8 @@ export default defineComponent({
             }
         },
         deleteHandler() {
-            if (this.song) {
-                this.delete(this.song.id);
+            if (this.group) {
+                this.deleteGroup(this.group.id);
             }
         },
         showFormHandler() {

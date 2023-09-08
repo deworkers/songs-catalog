@@ -1,6 +1,6 @@
 <template>
     <main>
-        <GroupList v-if="groups.length > 0 || isAdmin" />
+        <GroupList v-if="isAdmin || groups.length > 0" />
         <SongList />
         <Pagination />
     </main>
