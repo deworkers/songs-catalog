@@ -99,7 +99,7 @@
                 class="song-one-description" v-if="activeSong.description"
                 v-html="activeSong.description"
             ></div>
-            <div v-if="true">
+            <div>
                 <CommentsComponent
                     :songId="activeSong.id"
                     :comments="activeSong.comments"

@@ -1,8 +1,8 @@
 <template>
-    <div class="add-song-form" @click="hideForm">
+    <div class="add-song-form" @click.stop="hideForm">
         <div class="delete-song-body">
-            <div class="close-popup" @click="hideForm"></div>
-            <h2 class="add-song-title">Уверены что хотите удалить эту песню?</h2>
+            <div class="close-popup" @click.stop="hideForm"></div>
+            <h2 class="add-song-title">{{ title }}</h2>
             <div class="form-bottom">
                 <button
                     class="add-song-prev"
@@ -12,9 +12,9 @@
                 </button>
                 <button
                     class="add-song-next"
-                    @click="deleteHandler"
+                    @click="actionHandler"
                 >
-                    Удалить
+                    {{ actionTitle}}
                 </button>
             </div>
         </div>
@@ -32,8 +32,16 @@ export default defineComponent({
         setShowConfirm: {
             type: Function,
         },
-        delete: {
+        action: {
             type: Function,
+        },
+        title: {
+            type: String,
+            default: 'Подтвердите это действие',
+        },
+        actionTitle: {
+            type: String,
+            default: 'Подтвердить',
         },
     },
     methods: {
@@ -43,9 +51,9 @@ export default defineComponent({
                 this.setShowConfirm(false);
             }
         },
-        deleteHandler() {
-            if (this.delete) {
-                this.delete();
+        actionHandler() {
+            if (this.action) {
+                this.action();
             }
         },
     },

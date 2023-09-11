@@ -42,6 +42,13 @@ export default defineComponent({
             type: Number,
             required: true,
         },
+        setShowForm: {
+            type: Function,
+        },
+        parentID: {
+            type: Number,
+            default: 0,
+        },
     },
     setup(props) {
         const store = useStore();
@@ -57,6 +64,9 @@ export default defineComponent({
         const clearInput = (): void => {
             message.value = '';
             setActive(false);
+            if (props.setShowForm) {
+                props.setShowForm(false);
+            }
         }
 
         const textarea = ref<null | HTMLTextAreaElement>(null);
@@ -80,9 +90,10 @@ export default defineComponent({
         const submitForm = () => {
             if (message.value.length > 2) {
                 axios.post('/comment/', {
-                    '[Comment]author': userID.value,
-                    '[Comment]text': message.value,
-                    '[Comment]song_id': songId.value,
+                    'Comment[author]': userID.value,
+                    'Comment[text]': message.value,
+                    'Comment[song_id]': songId.value,
+                    'Comment[parent_id]': props.parentID ? props.parentID : null,
                 }, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
@@ -90,7 +101,7 @@ export default defineComponent({
                 })
                     .then(() => {
                         clearInput();
-                        store.dispatch('getSong', songId.value)
+                        store.dispatch('getSong', songId.value);
                     })
                     .catch((error) => {
                         console.log(error);

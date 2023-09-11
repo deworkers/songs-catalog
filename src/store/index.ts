@@ -304,6 +304,32 @@ const store = createStore({
                     console.log(error);
                 });
         },
+        deleteComment({ dispatch }, payload: {id : number, song_id : number}) {
+            return apiClient.get(`/comment/delete/${payload.id}`)
+                .then(() => {
+                    dispatch('getSong', payload.song_id);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+        },
+        editComment({ dispatch },payload: {
+            data : Object,
+            id : number,
+            song_id : number
+        }) {
+            return apiClient.post(`/comment/${payload.id}/`, payload.data, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+                .then((response) => {
+                    dispatch('getSong', payload.song_id);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
     }
 });
 

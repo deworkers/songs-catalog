@@ -1,25 +1,58 @@
 <template>
     <div class="edit-panel" v-click-outside="clickOutside">
-        <div class="edit-panel-elem">Удалить</div>
-        <div class="edit-panel-elem">Редактировать</div>
+        <div
+            class="edit-panel-elem" @click="setShowForm(true)"
+        >
+            Редактировать
+        </div>
         <div
             class="edit-panel-elem"
-            v-if="statusProp === 'moderation' || statusProp === 'reject'"
+            v-if="isAdmin && statusProp === 'moderation' || statusProp === 'reject'"
+            @click="editHandler({
+                'Comment[status]': 'active',
+            })"
         >
             Опубликовать
         </div>
         <div
             class="edit-panel-elem"
-            v-if="statusProp === 'active'"
+            v-if="isAdmin && statusProp === 'moderation' || statusProp === 'active'"
+            @click="editHandler({
+                'Comment[status]': 'reject',
+            })"
         >
             Скрыть
         </div>
+        <div class="edit-panel-elem" @click="setShowConfirm(true)">Удалить</div>
+        <ConfirmComponent
+            v-if="showConfirm"
+            :setShowConfirm="setShowConfirm"
+            :action="deleteHandler"
+            :actionTitle="'Удалить'"
+            :title="'Уверены что хотите удалить этoт кометнарий?'"
+        />
+        <EditForm
+            v-if="showForm"
+            :setShowForm="setShowForm"
+            :comment="comment"
+            :edit="editHandler"
+        />
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref } from 'vue'
+import {
+    defineComponent,
+    PropType,
+    ref,
+    toRefs,
+    computed,
+} from 'vue';
+import { useStore } from 'vuex';
+import { IComment } from '@/store/types';
 import vClickOutside from '@baiguangteng/vue3-click-outside';
+import ConfirmComponent from '../../common-components/ConfirmComponent.vue';
+import EditForm from './EditForm.vue';
 
 export default defineComponent({
     props: {
@@ -33,11 +66,23 @@ export default defineComponent({
         showMenu: {
             type: Boolean,
         },
+        comment: {
+            type: Object as ()=> IComment,
+            require: true,
+        },
+    },
+    components: {
+        ConfirmComponent,
+        EditForm,
     },
     directives: {
         clickOutside: vClickOutside,
     },
     setup(props) {
+        const { comment } = toRefs(props);
+        const store = useStore();
+        const isAdmin = computed(() => store.state.isAdmin);
+
         const mounted = ref(false);
 
         const clickOutside = () => {
@@ -47,9 +92,49 @@ export default defineComponent({
                 mounted.value = true;
             }
         }
+
+        const showConfirm = ref(false);
+        const setShowConfirm = (show: boolean) : void => {
+            showConfirm.value = show;
+        }
+
+        const showForm = ref(false);
+        const setShowForm = (show: boolean) : void => {
+            showForm.value = show;
+        }
+
+        const deleteHandler = () => {
+            if (comment.value) {
+                store.dispatch('deleteComment', {
+                    id: comment.value.id,
+                    song_id: comment.value.song_id,
+                });
+            }
+        }
+
+        const editHandler = (data : object) => {
+            if (comment.value) {
+                store.dispatch('editComment', {
+                    id: comment.value.id,
+                    song_id: comment.value.song_id,
+                    data,
+                }).then(() => {
+                    setShowForm(false);
+                    props.setShowMenu(false);
+                });
+            }
+        }
+
         return {
             clickOutside,
             mounted,
+            showConfirm,
+            setShowConfirm,
+            deleteHandler,
+            editHandler,
+            showForm,
+            setShowForm,
+            isAdmin,
         }
     },
 })

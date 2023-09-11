@@ -7,10 +7,12 @@
             :setShowForm="setShowForm"
             :song="song"
         />
-        <ConfirmDelete
+        <ConfirmComponent
             v-if="showConfirm"
             :setShowConfirm="setShowConfirm"
-            :delete="deleteHandler"
+            :action="deleteHandler"
+            :actionTitle="'Удалить'"
+            :title="'Уверены что хотите удалить эту песню?'"
         />
     </div>
 </template>
@@ -21,7 +23,7 @@ import { ISong } from '@/store/types'
 import vClickOutside from '@baiguangteng/vue3-click-outside';
 import { mapActions } from 'vuex';
 import EditForm from './EditForm.vue'
-import ConfirmDelete from './ConfirmDelete.vue'
+import ConfirmComponent from '../common-components/ConfirmComponent.vue';
 
 export default defineComponent({
     name: 'EditPanel',
@@ -42,7 +44,7 @@ export default defineComponent({
     },
     components: {
         EditForm,
-        ConfirmDelete,
+        ConfirmComponent,
     },
     data() {
         return {

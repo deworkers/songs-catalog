@@ -7,21 +7,23 @@
             :setShowForm="setShowForm"
             :group="group"
         />
-        <ConfirmDelete
+        <ConfirmComponent
             v-if="showConfirm"
             :setShowConfirm="setShowConfirm"
-            :delete="deleteHandler"
+            :action="deleteHandler"
+            :actionTitle="'Удалить'"
+            :title="'Уверены что хотите удалить эту подборку?'"
         />
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { IGroup } from '@/store/types'
+import { IGroup } from '@/store/types';
 import vClickOutside from '@baiguangteng/vue3-click-outside';
 import { mapActions } from 'vuex';
-import EditForm from './EditForm.vue'
-import ConfirmDelete from './ConfirmDelete.vue'
+import EditForm from './EditForm.vue';
+import ConfirmComponent from '../common-components/ConfirmComponent.vue';
 
 export default defineComponent({
     name: 'EditPanel',
@@ -42,7 +44,7 @@ export default defineComponent({
     },
     components: {
         EditForm,
-        ConfirmDelete,
+        ConfirmComponent,
     },
     data() {
         return {
@@ -91,11 +93,14 @@ export default defineComponent({
     right: 0;
     border-radius: 5px;
     box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    z-index: 10;
 }
 
 .edit-panel-elem {
     padding: 10px;
     border-bottom: 1px solid #ddd;
+    cursor: pointer;
+
     &:hover {
         background: #ddd;
     }

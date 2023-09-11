@@ -107,26 +107,82 @@
             "date_modify": 1684307885,
             "listeningCnt": 0,
             "originalId": null,
-            "comments": [
-                {
-                  "id": "15",
-                  "author": "d991a301d0f57f8f6b4fa8015cb733ea",
-                  "text": "За прошедшие годы текст Lorem Ipsum получил много версий. Некоторые версии появились по ошибке, некоторые - намеренно (например, юмористические варианты).",
-                  "status": "moderation",
-                  "song_id": "261",
-                  "vote_count": 0,
-                  "date_create": "1694003123",
-                  "date_modify": "1694003123"
+            "comments": [{
+                    "id": 15,
+                    "author": "d991a301d0f57f8f6b4fa8015cb733ea",
+                    "text": "тест",
+                    "status": "moderation",
+                    "song_id": 261,
+                    "vote_count": 0,
+                    "date_create": 1694003123,
+                    "date_modify": 1694003123,
+                    "parent_id": 0,
+                    "replays_list": [{
+                        "id": 19,
+                        "author": "test user",
+                        "text": "test user 2",
+                        "status": "moderation",
+                        "song_id": 261,
+                        "vote_count": 0,
+                        "date_create": 1694003112,
+                        "date_modify": 1694003112,
+                        "parent_id": 15
+                    }]
                 },
                 {
-                  "id": "17",
-                  "author": "test user",
-                  "text": "Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum используют потому",
-                  "status": "active",
-                  "song_id": "261",
-                  "vote_count": 5,
-                  "date_create": "1694003106",
-                  "date_modify": "1694003106"
+                    "id": 17,
+                    "author": "test user",
+                    "text": "test user",
+                    "status": "active",
+                    "song_id": 261,
+                    "vote_count": 0,
+                    "date_create": 1694003106,
+                    "date_modify": 1694003106,
+                    "parent_id": 0,
+                    "replays_list": [{
+                        "id": 21,
+                        "author": "Test sub",
+                        "text": "123",
+                        "status": "active",
+                        "song_id": 261,
+                        "vote_count": 0,
+                        "date_create": 1694003112,
+                        "date_modify": 1694003112,
+                        "parent_id": 17
+                    }]
+                },
+                {
+                    "id": 23,
+                    "author": "d991a301d0f57f8f6b4fa8015cb733ea",
+                    "text": "ntcn wer",
+                    "status": "reject",
+                    "song_id": 261,
+                    "vote_count": 1,
+                    "date_create": 1694169329,
+                    "date_modify": 1694172024,
+                    "parent_id": 0
+                },
+                {
+                    "id": 25,
+                    "author": "d991a301d0f57f8f6b4fa8015cb733ea",
+                    "text": "тест с форнта",
+                    "status": "moderation",
+                    "song_id": 261,
+                    "vote_count": 1,
+                    "date_create": 1694169375,
+                    "date_modify": 1694171888,
+                    "parent_id": 0
+                },
+                {
+                    "id": 27,
+                    "author": "d991a301d0f57f8f6b4fa8015cb733ea",
+                    "text": "тест с фронта",
+                    "status": "moderation",
+                    "song_id": 261,
+                    "vote_count": 1,
+                    "date_create": 1694169675,
+                    "date_modify": 1694171867,
+                    "parent_id": 0
                 }
             ]
         },
@@ -169,8 +225,7 @@
             "cover": "https://vlpv.ru/files/covers/4736d6ac837de1f35889d1c1ed424117.jpg",
             "name": "Название подборки",
             "description": "Описание подборки в несколько слов",
-            "items": [
-                {
+            "items": [{
                     "id": 2,
                     "name": "Орёл и Орлица",
                     "song": "https://www.avtoall.ru/upload/iblock/368/SUDBI-DUET-MIX-01.mp3",
@@ -209,22 +264,21 @@
             "name": "Название подборки 2",
             "description": "Описание подборки в несколько слов",
             "items": [{
-                    "id": 1,
-                    "name": "Сумасшедший февраль",
-                    "song": "https://www.avtoall.ru/upload/iblock/7d2/FEVRAL-DUET-MIX-04.mp3",
-                    "composer": "Рустам Неврединов",
-                    "author": "Валерий Парфёнов и Олеся Борисова",
-                    "singer": "Валерий Парфёнов и Олеся Борисова.",
-                    "clip": null,
-                    "cover": "https://bigpicture.ru/wp-content/uploads/2021/12/bigpicture_ru_music-people-girl-sunshine-scaled.jpg",
-                    "cover_small": "https://bigpicture.ru/wp-content/uploads/2021/12/bigpicture_ru_music-people-girl-sunshine-scaled.jpg",
-                    "description": "",
-                    "date_create": 1684307885,
-                    "date_modify": 1684307885,
-                    "listeningCnt": 0,
-                    "originalId": null
-                }
-            ]
+                "id": 1,
+                "name": "Сумасшедший февраль",
+                "song": "https://www.avtoall.ru/upload/iblock/7d2/FEVRAL-DUET-MIX-04.mp3",
+                "composer": "Рустам Неврединов",
+                "author": "Валерий Парфёнов и Олеся Борисова",
+                "singer": "Валерий Парфёнов и Олеся Борисова.",
+                "clip": null,
+                "cover": "https://bigpicture.ru/wp-content/uploads/2021/12/bigpicture_ru_music-people-girl-sunshine-scaled.jpg",
+                "cover_small": "https://bigpicture.ru/wp-content/uploads/2021/12/bigpicture_ru_music-people-girl-sunshine-scaled.jpg",
+                "description": "",
+                "date_create": 1684307885,
+                "date_modify": 1684307885,
+                "listeningCnt": 0,
+                "originalId": null
+            }]
         },
         {
             "id": 3,

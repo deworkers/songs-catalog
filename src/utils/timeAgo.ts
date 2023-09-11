@@ -22,5 +22,5 @@ export default (timestamp: number) => {
     if (minutes > 0) {
         return `${minutes} ${declOfNum(minutes, ['минуту', 'минуты', 'минут'])} назад`;
     }
-    return `${seconds} ${declOfNum(seconds, ['секуну', 'секунды', 'секунд'])} назад`;
+    return 'только что';
 };

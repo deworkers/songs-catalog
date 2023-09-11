@@ -19,6 +19,8 @@ export interface IComment extends BaseTypes {
     status: Status,
     'song_id': number,
     'vote_count': number,
+    'replays_list' : IComment[],
+    'parent_id': number,
 }
 export interface ISong extends BaseTypes {
     name: string,

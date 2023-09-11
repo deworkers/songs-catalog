@@ -14,11 +14,17 @@
         </div>
         <CommentForm :songId="songId" />
         <div>
-            <CommentOne
+            <div
                 v-for="comment in sortedList"
                 :key="comment.id"
-                :comment="comment"
-            />
+            >
+                <CommentOne
+                    :comment="comment"
+                />
+                <CommentReplace
+                    :replays="comment.replays_list"
+                />
+            </div>
         </div>
     </div>
 </template>
@@ -28,6 +34,7 @@ import { defineComponent, ref, computed } from 'vue';
 import { IComment } from '@/store/types';
 import declOfNum from '@/utils/declOfNum';
 import CommentOne from './comment-components/CommentOne.vue';
+import CommentReplace from './comment-components/CommentReplace.vue';
 import CommentForm from './comment-components/CommentForm.vue';
 
 export default defineComponent({
@@ -45,6 +52,7 @@ export default defineComponent({
     components: {
         CommentOne,
         CommentForm,
+        CommentReplace,
     },
     setup(props) {
         const sort = ref('date_create');

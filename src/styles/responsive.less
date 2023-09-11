@@ -221,7 +221,8 @@
 
         .add-song-form {
             padding: 15px;
-            display: block;
+            display: flex;
+            align-items: center;
             overflow-y: auto;
         }
 
@@ -412,6 +413,67 @@
 
         .youtube-button {
             font-size: 16px;
+            width: 100%;
+        }
+
+        .comments {
+            padding: 0 15px;
+        }
+
+        .comments-top {
+            display: block;
+        }
+
+        .comments-top-count {
+            margin-right: 0;
+            margin-bottom: 15px;
+        }
+
+        .comments-top-sort {
+
+        }
+
+        .comment-one {
+            .comments-add {
+                order: 2;
+            }
+        }
+
+        .comment-one-body {
+            width: 100%;
+            order: 1;
+        }
+
+        .comment-one-edit {
+            width: 100%;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            order: 0;
+        }
+
+        .comments-add {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .comments-add__input {
+            margin: 0;
+        }
+
+        .comments-add__input.active {
+            width: 100%;
+            margin: 0 0 10px;
+        }
+
+        .comments-add__confirm {
+            width: 70%;
+        }
+        
+        .comments-add__abort {
+            width: calc(30% - 10px);
+        }
+
+        .delete-song-body {
             width: 100%;
         }
     }

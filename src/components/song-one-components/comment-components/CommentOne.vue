@@ -1,5 +1,8 @@
 <template>
-    <div v-if="comment" class="comment-one">
+    <div
+        v-if="comment"
+        :class="['comment-one', comment.status]"
+    >
         <div class="comment-one-body">
             <div class="comment-one__date">
                 {{ timeAgo(comment.date_create) }}
@@ -8,12 +11,19 @@
                 {{ comment.text }}
             </div>
             <div class="comment-one__vote">
-                <button class="comment-one__vote-button" @click="voteHandler"></button>
+                <button
+                    class="comment-one__vote-button"
+                    @click="voteHandler"
+                ></button>
                 {{ comment.vote_count }}
-                <button class="comment-one__answer">Ответить</button>
+                <button
+                    v-if="comment.parent_id === 0"
+                    class="comment-one__answer"
+                    @click="setShowForm(true)"
+                >Ответить</button>
             </div>
         </div>
-        <div class="comment-one-edit" v-if="isAdmin">
+        <div class="comment-one-edit" v-if="isAdmin || comment.author === userID">
             <div :class="['comment-one-status', comment.status]">
                 {{ showStatus(comment.status) }}
             </div>
@@ -23,8 +33,16 @@
                 :statusProp="comment.status"
                 :setShowMenu="setShowMenu"
                 :showMenu="showMenu"
+                :comment="comment"
             />
         </div>
+
+        <CommentForm
+            v-if="showForm && comment.parent_id === 0"
+            :parentID="comment.id"
+            :songId="comment.song_id"
+            :setShowForm="setShowForm"
+        />
     </div>
 </template>
 
@@ -40,6 +58,7 @@ import {
 import { useStore } from 'vuex';
 import axios from 'axios';
 import EditMenu from './EditMenu.vue';
+import CommentForm from './CommentForm.vue';
 
 export const showStatus = (status: string): string => {
     switch (status) {
@@ -49,7 +68,7 @@ export const showStatus = (status: string): string => {
         case 'moderation':
             return 'На модерации';
 
-        case 'inactive':
+        case 'reject':
             return 'Скрыт';
 
         default:
@@ -65,6 +84,7 @@ export default defineComponent({
     },
     components: {
         EditMenu,
+        CommentForm,
     },
     setup(props) {
         const { comment } = toRefs(props)
@@ -73,17 +93,12 @@ export default defineComponent({
         const userID = computed(() => store.state.userID);
 
         const voteHandler = () => {
-            axios.post('/vote/', {
-                '[Vote]author': userID.value,
-                '[Vote]comment_id': comment.value?.id,
-            }, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            })
-                .then(() => {
-                    if (comment.value) {
-                        comment.value.vote_count += 1
+            axios.get(`/comment/vote/${comment.value?.id}/`)
+                .then(({ data }) => {
+                    if (data.status === 200) {
+                        if (comment.value) {
+                            comment.value.vote_count += 1
+                        }
                     }
                 })
                 .catch((error) => {
@@ -96,6 +111,11 @@ export default defineComponent({
             showMenu.value = show;
         }
 
+        const showForm = ref(false);
+        const setShowForm = (show: boolean):void => {
+            showForm.value = show;
+        }
+
         return {
             timeAgo,
             showStatus,
@@ -104,6 +124,8 @@ export default defineComponent({
             userID,
             showMenu,
             setShowMenu,
+            showForm,
+            setShowForm,
         };
     },
 })
@@ -118,10 +140,18 @@ export default defineComponent({
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
+    flex-wrap: wrap;
+
+    &.reject {
+        .comment-one-body {
+            opacity: 0.3;
+        }
+    }
 
     &__date {
         font-size: 16px;
         margin-bottom: 10px;
+        color: #6f7f81;
     }
 
     &__text {
@@ -165,12 +195,22 @@ export default defineComponent({
             background: #D0E1E3;
         }
     }
+
+    .comments-add {
+        width: 100%;
+        padding: 15px 0 0;
+    }
+}
+
+.comment-one-body {
+    width: calc(100% - 185px);
 }
 
 .comment-one-edit {
     display: flex;
     align-items: center;
     position: relative;
+    width: 185px;
 
     .song-one-edit {
         height: 100%;
@@ -190,7 +230,7 @@ export default defineComponent({
     &.moderation {
         background: #f9bb03;
     }
-    &.inactive {
+    &.reject {
         background: #d0e1e3;
         color: #6f7f81;
     }
