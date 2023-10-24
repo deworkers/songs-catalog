@@ -339,6 +339,8 @@ export default defineComponent({
     border-radius: 10px;
     width: 800px;
     position: relative;
+    max-height: 100%;
+    overflow: auto;
 }
 
 .add-song-title {

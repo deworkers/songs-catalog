@@ -135,9 +135,12 @@ export default defineComponent({
         play() {
             const index = this.playList.findIndex((el: ISong) => el.id === this.song.id);
             if (index > -1) {
-                this.SET_PLAY(index);
+                this.SET_PLAY(index, 'list');
             } else {
-                this.SET_PLAY_COVER(this.song);
+                this.SET_PLAY_COVER({
+                    sondg: this.song,
+                    source: 'list',
+                });
             }
         },
         showClipHandler() {
@@ -223,7 +226,7 @@ export default defineComponent({
 }
 
 .song-one__title {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 700;
     margin-bottom: 5px;
 }
@@ -237,23 +240,28 @@ a.song-one__title {
 }
 
 .song-one__date {
-    font-size: 12px;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.song-one__listening {
+    font-size: 15px;
     margin-bottom: 5px;
 }
 
 .song-one__composer {
     color: #707070;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .song-one__author {
     color: #707070;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .song-one__singer {
     color: #707070;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .song-one-edit {

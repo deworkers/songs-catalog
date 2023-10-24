@@ -78,9 +78,8 @@ export default defineComponent({
 }
 
 .group-one__name {
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 700;
-    margin-bottom: 5px;
 }
 
 .group-one__description {

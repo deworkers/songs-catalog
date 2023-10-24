@@ -117,6 +117,7 @@ import RequestForm from '../components/song-one-components/RequestForm.vue';
 import CommentsComponent from '../components/song-one-components/CommentsComponent.vue';
 import AddSongForm from '../components/add-song-components/AddSongForm.vue';
 import SongListOne from '../components/song-list-components/SongListOne.vue';
+import ShowClip from '../components/song-one-components/ShowClip.vue';
 
 export default defineComponent({
     name: 'SongOne',
@@ -126,6 +127,7 @@ export default defineComponent({
         AddSongForm,
         SongListOne,
         CommentsComponent,
+        ShowClip,
     },
     data() {
         return {

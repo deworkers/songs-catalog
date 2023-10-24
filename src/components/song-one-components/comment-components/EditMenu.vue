@@ -29,7 +29,7 @@
             :setShowConfirm="setShowConfirm"
             :action="deleteHandler"
             :actionTitle="'Удалить'"
-            :title="'Уверены что хотите удалить этoт кометнарий?'"
+            :title="'Уверены что хотите удалить этoт комментарий?'"
         />
         <EditForm
             v-if="showForm"

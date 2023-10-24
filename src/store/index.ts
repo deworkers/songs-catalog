@@ -1,5 +1,6 @@
 import { createStore } from 'vuex';
 import axios from 'axios';
+import * as amplitude from '@amplitude/analytics-browser';
 // eslint-disable-next-line
 import audio from './audio';
 import { IGroup, ISong, State } from './types';
@@ -68,7 +69,7 @@ const store = createStore({
         SET_ACTIVE_GROUP(state:State, payload:IGroup | null) {
             state.activeGroup = payload;
         },
-        SET_PLAY(state:State, index: number) {
+        SET_PLAY(state:State, index: number, source: string = 'player') {
             if (state.playbackSong && audio.paused
                 && (state.playbackIndex === -1 || state.playbackSong.id === state.songs[index].id)) {
                 audio.play();
@@ -81,19 +82,28 @@ const store = createStore({
                     audio.volume = state.volume;
                     audio.play();
                     store.dispatch('setListening', state.playbackSong.id);
+
+                    amplitude.track('Play song', {
+                        source: source,
+                        songName: state.playbackSong.name,
+                    });
                 } else {
                     store.commit('SET_NEXT');
                 }
             }
         },
-        SET_PLAY_COVER(state:State, song: ISong) {
+        SET_PLAY_COVER(state:State, payload: {song: ISong, source: string}) {
             state.playbackIndex = -1;
-            state.playbackSong = song;
+            state.playbackSong = payload.song;
             if (state.playbackSong.song) {
                 audio.src = state.playbackSong.song;
                 audio.currentTime = 0;
                 audio.play();
                 store.dispatch('setListening', state.playbackSong.id);
+                amplitude.track('Play song', {
+                    source: payload.source,
+                    songName: state.playbackSong.name,
+                });
             }
         },
         SET_PAUSE(state:State) {
@@ -104,7 +114,7 @@ const store = createStore({
                 }
             }, 100);
         },
-        MOVE_TO(state:State, currentTime: number) {
+        MOVE_TO({}, currentTime: number) {
             audio.currentTime = currentTime;
         },
         MUTE(state:State) {
@@ -133,6 +143,11 @@ const store = createStore({
                 audio.currentTime = 0;
                 audio.play();
                 store.dispatch('setListening', state.playbackSong.id);
+
+                amplitude.track('Play song', {
+                    source: 'player',
+                    songName: state.playbackSong.name,
+                });
             } else {
                 store.commit('SET_NEXT');
             }
@@ -149,6 +164,11 @@ const store = createStore({
                 audio.currentTime = 0;
                 audio.play();
                 store.dispatch('setListening', state.playbackSong.id);
+                
+                amplitude.track('Play song', {
+                    source: 'player',
+                    songName: state.playbackSong.name,
+                });
             } else {
                 store.commit('SET_PREW');
             }
@@ -226,7 +246,7 @@ const store = createStore({
                     console.log(error);
                 })
         },
-        edit({ commit, state }, payload: {formData : FormData, id : number}) {
+        edit({}, payload: {formData : FormData, id : number}) {
             return apiClient.post(`/song/${payload.id}`, payload.formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -239,28 +259,28 @@ const store = createStore({
                     console.log(error);
                 });
         },
-        setListening({ commit, state }, id: number) {
+        setListening({}, id: number) {
             return apiClient.get(`/songListening/${id}`)
-                .then((response) => {
+                .then(() => {
                 })
                 .catch((error) => {
                     console.log(error);
                 });
         },
-        sendForm({ commit, state }, payload: {formData : FormData}) {
+        sendForm({}, payload: {formData : FormData}) {
             return apiClient.post(`/site/contact/`, payload.formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             })
-                .then((response) => {
+                .then(() => {
                 })
                 .catch((error) => {
                     console.log(error);
                 });
         },
-        login({ commit, state }, payload: {formData : FormData}) {
-            return new Promise((resolve, reject) => {
+        login({ commit }, payload: {formData : FormData}) {
+            return new Promise((resolve) => {
                 apiClient.post(`/site/login/`, payload.formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
@@ -291,7 +311,7 @@ const store = createStore({
                     console.log(error);
                 })
         },
-        editGroup({ commit, state }, payload: {formData : FormData, id : number}) {
+        editGroup({}, payload: {formData : FormData, id : number}) {
             return apiClient.post(`/group/${payload.id}`, payload.formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -323,7 +343,7 @@ const store = createStore({
                     'Content-Type': 'multipart/form-data',
                 },
             })
-                .then((response) => {
+                .then(() => {
                     dispatch('getSong', payload.song_id);
                 })
                 .catch((error) => {

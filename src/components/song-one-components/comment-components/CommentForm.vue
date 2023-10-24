@@ -8,9 +8,11 @@
             @input="adjustTextareaHeight"
             placeholder="Введите комментарий"
             ref="textarea"
+            maxlength='255'
         ></textarea>
         <button
             v-if="active"
+            :disabled="!isValid"
             type="button"
             class="comments-add__confirm"
             @click="submitForm"
@@ -61,6 +63,8 @@ export default defineComponent({
         }
 
         const message = ref('');
+        const isValid = computed(() => message.value.length > 0);
+
         const clearInput = (): void => {
             message.value = '';
             setActive(false);
@@ -111,6 +115,7 @@ export default defineComponent({
 
         return {
             message,
+            isValid,
             active,
             userID,
             textarea,
@@ -160,6 +165,12 @@ export default defineComponent({
         height: 40px;
         width: 230px;
         margin-right: 10px;
+
+        &:disabled {
+            cursor: wait;
+            color: #000;
+            background: #D9D9D9;
+        }
     }
 }
 

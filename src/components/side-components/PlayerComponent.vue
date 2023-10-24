@@ -14,16 +14,6 @@
                 {{ timer }}
             </div>
             <div class="control-right">
-                <!-- <button
-                    :class="['control-shuffle', shuffled ? 'active' : '']"
-                    @click="shuffle"
-                >
-                </button>
-                <button
-                    :class="['control-repeat', repeated ? 'active' : '']"
-                    @click="repeat"
-                >
-                </button> -->
                 <button
                     :class="['control-mute', muted ? 'active' : '']"
                     @click="mute"
@@ -31,6 +21,7 @@
                 </button>
             </div>
             <input
+                v-show="!isSafari"
                 v-model="localVolume"
                 type="range"
                 step="0.05"
@@ -46,7 +37,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapMutations, mapState } from 'vuex';
-import Song from './Song.vue'
+import Song from './Song.vue';
 
 export default defineComponent({
     components: {
@@ -61,11 +52,14 @@ export default defineComponent({
     },
     computed: {
         ...mapState(['playbackSong', 'playbackIndex', 'songs', 'isPlaying', 'muted', 'duration', 'timer', 'progress', 'volume']),
+        isSafari() {
+            return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+        },
     },
     methods: {
         ...mapMutations(['SET_NEXT', 'SET_PREW', 'SET_PLAY', 'SET_PAUSE', 'MOVE_TO', 'MUTE', 'SET_VOLUME']),
         play() {
-            this.SET_PLAY(this.playbackSong ? this.playbackIndex : 0);
+            this.SET_PLAY(this.playbackSong ? this.playbackIndex : 0, 'player');
         },
         pause() {
             this.SET_PAUSE();

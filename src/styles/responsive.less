@@ -92,25 +92,33 @@
             order: 2;
             height: 60px;
         }
+
+        .song-one-right {
+            width: calc(100% - 90px);
+        }
         
         .song-one__title {
-            font-size: 16px;
-            line-height: 16px;
+            font-size: 18px;
+            line-height: 20px;
         }
 
         .song-one__date {
-            font-size: 11px;
+            font-size: 14px;
         }
 
         .song-one__listening {
-            font-size: 11px;
+            font-size: 16px;
             text-align: center;
+        }
+
+        .playback-title {
+            font-size: 16px;
         }
 
         .song-one__composer,
         .song-one__author,
         .song-one__singer {
-            font-size: 12px;
+            font-size: 14px;
         }
 
         .song-one-playback {
@@ -160,7 +168,7 @@
             order: 1;
             margin-top: -30px;
             padding: 0 15px 5px;
-            font-size: 18px;
+            font-size: 28px;
             z-index: 1;
             text-align: center;
         }
@@ -338,10 +346,10 @@
             color: #fff !important;
             text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.9);
             font-weight: 700;
-            font-size: 14px;
-            line-height: 16px;
+            font-size: 18px;
+            line-height: 18px;
             margin: 0;
-            padding: 15px;
+            padding: 20px;
             &::before {
                 background: url('/src/assets/arrow-white.png') no-repeat;
                 width: 14px;
@@ -377,7 +385,13 @@
         }
 
         .group-title {
-            font-size: 18px;
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .groups-title {
+            font-size: 24px;
         }
 
         .group-description {
@@ -429,10 +443,6 @@
             margin-bottom: 15px;
         }
 
-        .comments-top-sort {
-
-        }
-
         .comment-one {
             .comments-add {
                 order: 2;
@@ -475,6 +485,10 @@
 
         .delete-song-body {
             width: 100%;
+        }
+
+        .group-one__name {
+            font-size: 18px;
         }
     }
 }

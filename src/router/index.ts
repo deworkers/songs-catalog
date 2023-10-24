@@ -15,7 +15,7 @@ const routes: Array<RouteRecordRaw> = [
         path: '/',
         name: 'list',
         component: ListView,
-        beforeEnter: (to, from, next) => {
+        beforeEnter: (_, __, next) => {
             store.commit('SET_PLAY_LIST', store.state.songs);
             setTimeout(() => {
                 if (isMobile) {
@@ -45,7 +45,7 @@ const routes: Array<RouteRecordRaw> = [
         path: '/song/:id',
         name: 'song',
         component: SongView,
-        beforeEnter: (to, from, next) => {
+        beforeEnter: (_, __, next) => {
             if (isMobile) {
                 store.commit('SET_SCROLL_POSITION', document.documentElement.scrollTop);
             } else {
@@ -61,7 +61,7 @@ const routes: Array<RouteRecordRaw> = [
         path: '/group/:id',
         name: 'group',
         component: GroupView,
-        beforeEnter: (to, from, next) => {
+        beforeEnter: (_, __, next) => {
             if (isMobile) {
                 store.commit('SET_SCROLL_POSITION', document.documentElement.scrollTop);
             } else {

@@ -24,6 +24,7 @@
 import { defineComponent } from 'vue';
 import { mapActions, mapMutations, mapState } from 'vuex';
 import { RouteLocationRaw } from 'vue-router';
+import * as amplitude from '@amplitude/analytics-browser';
 import { ISong } from '@/store/types';
 import ShowClip from './ShowClip.vue';
 
@@ -84,9 +85,13 @@ export default defineComponent({
         play() {
             if (!this.activeSong.clip) {
                 const index = this.songs.findIndex((el: ISong) => el.id === this.activeSong.id);
-                this.SET_PLAY(index);
+                this.SET_PLAY(index, 'song_card');
             } else {
                 this.showClipHandler();
+                amplitude.track('Show clip', {
+                    source: 'song_card',
+                    songName: this.activeSong.name,
+                });
             }
         },
         pause() {

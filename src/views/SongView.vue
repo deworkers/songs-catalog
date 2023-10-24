@@ -92,7 +92,7 @@ export default defineComponent({
     .song-one__composer,
     .song-one__author,
     .song-one__singer {
-        font-size: 12px;
+        font-size: 14px;
     }
 
     .song-one-play,

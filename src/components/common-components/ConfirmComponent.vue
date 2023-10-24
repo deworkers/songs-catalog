@@ -65,7 +65,7 @@ export default defineComponent({
     background: #fff;
     padding: 20px;
     border-radius: 10px;
-    width: 600px;
+    width: 650px;
     position: relative;
 }
 </style>

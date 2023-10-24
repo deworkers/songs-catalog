@@ -53,7 +53,7 @@ export default defineComponent({
 
     span {
         text-align: center;
-        font-size: 14px;
+        font-size: 16px;
     }
 }
 </style>
