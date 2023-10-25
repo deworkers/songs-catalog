@@ -2,30 +2,39 @@
     <main v-if="activeGroup">
         <div class="song-details">
             <div
-                @click="clickToListHandler()"
                 :class="[
                     'song-details-back',
                     scrollTop > 0 ? 'fixed' : '',
                     scrollTop > 180 ? 'fixed-bg': ''
-                ]">
+                ]"
+                @click="clickToListHandler()"
+            >
                 К списку песен
             </div>
         </div>
         <div
             class="group-view"
         >
-        <div class="group-view-about">
+            <div class="group-view-about">
                 <div class="group-cover">
-                    <img :src="activeGroup.cover" alt="">
+                    <img
+                        :src="activeGroup.cover"
+                        alt=""
+                    >
                 </div>
                 <div class="group-about">
-                    <div class="group-title">{{ activeGroup.name }}</div>
-                    <div class="group-description">{{ activeGroup.description }}</div>
+                    <div class="group-title">
+                        {{ activeGroup.name }}
+                    </div>
+                    <div class="group-description">
+                        {{ activeGroup.description }}
+                    </div>
                     <a
-                        target="_blank"
                         v-if="activeGroup.playlist"
+                        target="_blank"
                         :href="activeGroup.playlist"
-                        class="youtube-button">
+                        class="youtube-button"
+                    >
                         Открыть плейлист на YouTube
                     </a>
                 </div>
@@ -35,7 +44,7 @@
                     v-for="song in activeGroup.songs"
                     :key="song.id"
                     :song="song"
-                    :isGroupSong="true"
+                    :is-group-song="true"
                 />
             </div>
         </div>
@@ -55,7 +64,7 @@ export default defineComponent({
     data() {
         return {
             scrollTop: 0,
-        }
+        };
     },
     computed: {
         ...mapState(['activeGroup', 'songs']),
@@ -63,14 +72,14 @@ export default defineComponent({
             return this.$route.params.id;
         },
     },
-    methods: {
-        ...mapMutations(['SET_ACTIVE_GROUP']),
-        ...mapActions(['getGroup']),
-        clickToListHandler() {
-            this.SET_ACTIVE_GROUP(null);
-            this.$router.push({
-                name: 'list',
-            });
+    watch: {
+        songs() {
+            if (this.songs.length > 0) {
+                this.getGroup(this.$route.params.id);
+            }
+        },
+        groupID() {
+            this.getGroup(this.$route.params.id);
         },
     },
     mounted() {
@@ -86,14 +95,14 @@ export default defineComponent({
             });
         }
     },
-    watch: {
-        songs() {
-            if (this.songs.length > 0) {
-                this.getGroup(this.$route.params.id);
-            }
-        },
-        groupID() {
-            this.getGroup(this.$route.params.id);
+    methods: {
+        ...mapMutations(['SET_ACTIVE_GROUP']),
+        ...mapActions(['getGroup']),
+        clickToListHandler() {
+            this.SET_ACTIVE_GROUP(null);
+            this.$router.push({
+                name: 'list',
+            });
         },
     },
 });

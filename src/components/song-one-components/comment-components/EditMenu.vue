@@ -1,13 +1,17 @@
 <template>
-    <div class="edit-panel" v-click-outside="clickOutside">
+    <div
+        v-click-outside="clickOutside"
+        class="edit-panel"
+    >
         <div
-            class="edit-panel-elem" @click="setShowForm(true)"
+            class="edit-panel-elem"
+            @click="setShowForm(true)"
         >
             Редактировать
         </div>
         <div
-            class="edit-panel-elem"
             v-if="isAdmin && statusProp === 'moderation' || statusProp === 'reject'"
+            class="edit-panel-elem"
             @click="editHandler({
                 'Comment[status]': 'active',
             })"
@@ -15,25 +19,30 @@
             Опубликовать
         </div>
         <div
-            class="edit-panel-elem"
             v-if="isAdmin && statusProp === 'moderation' || statusProp === 'active'"
+            class="edit-panel-elem"
             @click="editHandler({
                 'Comment[status]': 'reject',
             })"
         >
             Скрыть
         </div>
-        <div class="edit-panel-elem" @click="setShowConfirm(true)">Удалить</div>
+        <div
+            class="edit-panel-elem"
+            @click="setShowConfirm(true)"
+        >
+            Удалить
+        </div>
         <ConfirmComponent
             v-if="showConfirm"
-            :setShowConfirm="setShowConfirm"
+            :set-show-confirm="setShowConfirm"
             :action="deleteHandler"
-            :actionTitle="'Удалить'"
+            :action-title="'Удалить'"
             :title="'Уверены что хотите удалить этoт комментарий?'"
         />
         <EditForm
             v-if="showForm"
-            :setShowForm="setShowForm"
+            :set-show-form="setShowForm"
             :comment="comment"
             :edit="editHandler"
         />
@@ -55,9 +64,18 @@ import ConfirmComponent from '../../common-components/ConfirmComponent.vue';
 import EditForm from './EditForm.vue';
 
 export default defineComponent({
+    components: {
+        ConfirmComponent,
+        EditForm,
+    },
+    directives: {
+        clickOutside: vClickOutside,
+    },
     props: {
         statusProp: {
             type: String,
+            default: '',
+            
         },
         setShowMenu: {
             type: Function as PropType<(show: boolean) => void>,
@@ -69,14 +87,8 @@ export default defineComponent({
         comment: {
             type: Object as ()=> IComment,
             require: true,
+            default: () => {},
         },
-    },
-    components: {
-        ConfirmComponent,
-        EditForm,
-    },
-    directives: {
-        clickOutside: vClickOutside,
     },
     setup(props) {
         const { comment } = toRefs(props);
@@ -91,17 +103,17 @@ export default defineComponent({
             } else {
                 mounted.value = true;
             }
-        }
+        };
 
         const showConfirm = ref(false);
         const setShowConfirm = (show: boolean) : void => {
             showConfirm.value = show;
-        }
+        };
 
         const showForm = ref(false);
         const setShowForm = (show: boolean) : void => {
             showForm.value = show;
-        }
+        };
 
         const deleteHandler = () => {
             if (comment.value) {
@@ -110,7 +122,7 @@ export default defineComponent({
                     song_id: comment.value.song_id,
                 });
             }
-        }
+        };
 
         const editHandler = (data : object) => {
             if (comment.value) {
@@ -123,7 +135,7 @@ export default defineComponent({
                     props.setShowMenu(false);
                 });
             }
-        }
+        };
 
         return {
             clickOutside,
@@ -135,9 +147,9 @@ export default defineComponent({
             showForm,
             setShowForm,
             isAdmin,
-        }
+        };
     },
-})
+});
 </script>
 
 <style scoped>

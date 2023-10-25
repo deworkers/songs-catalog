@@ -2,13 +2,13 @@
     <main>
         <div class="song-details">
             <div
-                @click="clickToListHandler()"
                 class="song-details-back"
-                >
+                @click="clickToListHandler()"
+            >
                 Результаты поиска по запросу: {{ searchRequest }}
             </div>
         </div>
-        <SongList :isSearch="true" />
+        <SongList :is-search="true" />
     </main>
 </template>
 
@@ -25,6 +25,13 @@ export default defineComponent({
     computed: {
         ...mapState(['searchRequest']),
     },
+    mounted() {
+        if (!this.searchRequest) {
+            this.$router.push({
+                name: 'list',
+            });
+        }
+    },
     methods: {
         ...mapMutations(['SET_SEARCH_REQUEST']),
         ...mapActions(['getSongs']),
@@ -34,13 +41,6 @@ export default defineComponent({
                 name: 'list',
             });
         },
-    },
-    mounted() {
-        if (!this.searchRequest) {
-            this.$router.push({
-                name: 'list',
-            });
-        }
     },
 });
 

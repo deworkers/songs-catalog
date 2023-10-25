@@ -1,55 +1,69 @@
 <template>
-    <div class="add-song-form" @click="hideFormHandler">
+    <div
+        class="add-song-form"
+        @click="hideFormHandler"
+    >
         <div class="add-song-body">
             <div
+                ref="close"
                 class="close-popup"
                 @click="hideFormHandler"
-                ref="close"
-            ></div>
-            <h2 class="add-song-title">Запрос прав для трансляции</h2>
+            />
+            <h2 class="add-song-title">
+                Запрос прав для трансляции
+            </h2>
             <div v-if="!isSend">
                 <div class="edit-form-input">
                     <label>Ваше имя</label>
                     <input
+                        v-model="form.name"
                         name="name"
                         type="text"
-                        v-model="form.name"
                         @input="valid"
                     >
                 </div>
                 <div class="edit-form-input">
                     <label>Телефон для связи</label>
                     <input
-                        name="phone"
-                        v-mask="{ mask: '+7(###)### ####', options: { guide: true} }"
-                        type="text"
                         v-model="form.phone"
+                        v-mask="{ mask: '+7(###)### ####', options: { guide: true} }"
+                        name="phone"
+                        type="text"
                         placeholder="+7(911)1234567"
                         @input="valid"
                     >
                 </div>
             </div>
-            <div class="form-bottom" v-if="!isSend">
+            <div
+                v-if="!isSend"
+                class="form-bottom"
+            >
                 <button
                     class="add-song-prev"
                     @click="hideFormHandler"
-                    >
+                >
                     Отменить
                 </button>
                 <button
                     class="add-song-next"
-                    @click="submit"
                     :disabled="!isValid"
+                    @click="submit"
                 >
                     Отправить
                 </button>
             </div>
-            <div class="request-after" v-if="isSend">
+            <div
+                v-if="isSend"
+                class="request-after"
+            >
                 <div class="request-after-message">
                     Запрос прав на трансляцию успешно оправлен,<br>
                     мы свяжемся с вами в ближайшее время
                 </div>
-                <a :href="fileUrl" download>Скачать песню в высоком качестве</a>
+                <a
+                    :href="fileUrl"
+                    download
+                >Скачать песню в высоком качестве</a>
             </div>
         </div>
     </div>
@@ -62,20 +76,22 @@ import { mapActions } from 'vuex';
 
 export default defineComponent({
     name: 'RequestForm',
+    directives: {
+        mask: vMask,
+    },
     props: {
         hideRequestForm: {
             type: Function,
+            default: () => {},
         },
         songId: {
             type: Number,
+            default: () => {},
         },
         fileUrl: {
             type: String,
             default: null,
         },
-    },
-    directives: {
-        mask: vMask,
     },
     data() {
         return {
@@ -86,7 +102,7 @@ export default defineComponent({
             isValid: false,
             phoneReg: /^\+7\(\d{3}\)\d{3}\s?\d{2}\s?\d{2}$/,
             isSend: false,
-        }
+        };
     },
     methods: {
         ...mapActions(['sendForm']),

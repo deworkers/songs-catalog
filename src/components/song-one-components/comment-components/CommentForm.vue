@@ -1,28 +1,32 @@
 <template>
     <div class="comments-add">
         <textarea
+            ref="textarea"
             v-model="message"
             type="text"
             :class="['comments-add__input', active ? 'active' : '']"
+            placeholder="Введите комментарий"
+            maxlength="255"
             @focus="setActive(true)"
             @input="adjustTextareaHeight"
-            placeholder="Введите комментарий"
-            ref="textarea"
-            maxlength='255'
-        ></textarea>
+        />
         <button
             v-if="active"
             :disabled="!isValid"
             type="button"
             class="comments-add__confirm"
             @click="submitForm"
-        >Оставить комментарий</button>
+        >
+            Оставить комментарий
+        </button>
         <button
             v-if="active"
             type="button"
             class="comments-add__abort"
             @click="clearInput()"
-        >Отмена</button>
+        >
+            Отмена
+        </button>
     </div>
 </template>
 
@@ -46,6 +50,7 @@ export default defineComponent({
         },
         setShowForm: {
             type: Function,
+            default: () => {},
         },
         parentID: {
             type: Number,
@@ -60,7 +65,7 @@ export default defineComponent({
         const active = ref(false);
         const setActive = (boolean: boolean): void => {
             active.value = boolean;
-        }
+        };
 
         const message = ref('');
         const isValid = computed(() => message.value.length > 0);
@@ -71,7 +76,7 @@ export default defineComponent({
             if (props.setShowForm) {
                 props.setShowForm(false);
             }
-        }
+        };
 
         const textarea = ref<null | HTMLTextAreaElement>(null);
         const adjustTextareaHeight = () => {
@@ -79,17 +84,17 @@ export default defineComponent({
                 textarea.value.style.minHeight = '0';
                 textarea.value.style.height = 'auto';
                 if (textarea.value.scrollHeight > 70) {
-                    textarea.value.style.height = `${textarea.value.scrollHeight}px`
+                    textarea.value.style.height = `${textarea.value.scrollHeight}px`;
                 } else {
                     textarea.value.style.height = '40px';
                 }
             }
         };
 
-        const { songId } = toRefs(props)
+        const { songId } = toRefs(props);
         watch(songId, () => {
             setActive(false);
-        })
+        });
 
         const submitForm = () => {
             if (message.value.length > 2) {
@@ -111,7 +116,7 @@ export default defineComponent({
                         console.log(error);
                     });
             }
-        }
+        };
 
         return {
             message,
@@ -123,9 +128,9 @@ export default defineComponent({
             setActive,
             adjustTextareaHeight,
             submitForm,
-        }
+        };
     },
-})
+});
 </script>
 
 <style lang="less">

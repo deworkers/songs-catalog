@@ -1,12 +1,12 @@
 <template>
     <div class="tag-list">
         <div
-            :class="['tag-one', activeTag === key ? 'active' : '']"
             v-for="(tag, key, index) in tags"
             :key="index"
+            :class="['tag-one', activeTag === key ? 'active' : '']"
             @click="filterBy(key)"
         >
-            {{tag}}
+            {{ tag }}
         </div>
     </div>
 </template>
@@ -28,7 +28,7 @@ export default defineComponent({
                 popular: 'Популярные',
                 withClip: 'С клипами',
             },
-        }
+        };
     },
     computed: {
         ...mapState(['activeTag']),

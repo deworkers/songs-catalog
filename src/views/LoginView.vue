@@ -2,33 +2,38 @@
     <main>
         <div class="auth">
             <div class="auth-body">
-                <h2 class="add-song-title">Авторизация</h2>
+                <h2 class="add-song-title">
+                    Авторизация
+                </h2>
                 <div class="edit-form-input">
                     <label>Логин</label>
                     <input
+                        v-model="username"
                         name="username"
                         type="text"
-                        v-model="username"
                         @input="valid"
                     >
                 </div>
                 <div class="edit-form-input">
                     <label>Пароль</label>
                     <input
+                        v-model="password"
                         name="password"
                         type="password"
-                        v-model="password"
                         @input="valid"
                     >
                 </div>
-                <div class="error-message" v-if="errorMessage">
+                <div
+                    v-if="errorMessage"
+                    class="error-message"
+                >
                     {{ errorMessage }}
                 </div>
                 <div class="form-bottom form-bottom--login">
                     <button
                         class="add-song-next"
-                        @click="submit"
                         :disabled="!isValid"
+                        @click="submit"
                     >
                         Авторизоваться
                     </button>
@@ -50,7 +55,7 @@ export default defineComponent({
             password: '',
             isValid: false,
             errorMessage: '',
-        }
+        };
     },
     methods: {
         ...mapActions(['login']),
@@ -63,7 +68,7 @@ export default defineComponent({
                 if (status === '200') {
                     this.$router.push('/');
                 } else {
-                    this.errorMessage = 'Неверная пара логин/пароль'
+                    this.errorMessage = 'Неверная пара логин/пароль';
                 }
             });
         },

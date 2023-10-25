@@ -1,13 +1,19 @@
 <template>
-    <div class="replays" v-if="replays && replays.length">
+    <div
+        v-if="replays && replays.length"
+        class="replays"
+    >
         <div
             :class="['replays-show', show ? 'active' : '']"
             @click="toggleShow"
         >
             {{ replays.length }}
-            {{declOfNum(replays.length, ['ответ', 'ответа', 'ответов'])}}
+            {{ declOfNum(replays.length, ['ответ', 'ответа', 'ответов']) }}
         </div>
-        <div class="replays-list" v-if="show">
+        <div
+            v-if="show"
+            class="replays-list"
+        >
             <CommentOne
                 v-for="replay in replays"
                 :key="replay.id"
@@ -18,33 +24,34 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref } from 'vue';
 import { IComment } from '@/store/types';
 import declOfNum from '@/utils/declOfNum';
 import CommentOne from './CommentOne.vue';
 
 export default defineComponent({
+    components: {
+        CommentOne,
+    },
     props: {
         replays: {
             type: Object as ()=> IComment[],
+            default: () => {}
         },
-    },
-    components: {
-        CommentOne,
     },
     setup() {
         const show = ref(false);
         const toggleShow = () => {
             show.value = !show.value;
-        }
+        };
 
         return {
             show,
             toggleShow,
             declOfNum,
-        }
+        };
     },
-})
+});
 </script>
 
 <style lang="less">

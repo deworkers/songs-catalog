@@ -8,11 +8,11 @@
                 type="text"
                 placeholder="Искать песню"
                 @keypress.enter="search(request)"
-            />
+            >
             <button
+                class="search-button"
                 @click="search(request)"
-                class="search-button">
-            </button>
+            />
         </div>
     </div>
 </template>
@@ -35,6 +35,13 @@ export default defineComponent({
     computed: {
         ...mapState(['searchRequest']),
     },
+    watch: {
+        searchRequest(newValue) {
+            if (!newValue) {
+                this.request = '';
+            }
+        },
+    },
     methods: {
         ...mapActions(['getSongs']),
         ...mapMutations(['SET_SEARCH_REQUEST']),
@@ -43,13 +50,6 @@ export default defineComponent({
             this.$router.push({
                 name: 'search',
             });
-        },
-    },
-    watch: {
-        searchRequest(newValue) {
-            if (!newValue) {
-                this.request = '';
-            }
         },
     },
 });

@@ -12,8 +12,8 @@ const apiClient = axios.create({
 });
 declare global {
     interface Window {
-      isAdmin: boolean;
-      userId: string;
+        isAdmin: boolean;
+        userId: string;
     }
 }
 

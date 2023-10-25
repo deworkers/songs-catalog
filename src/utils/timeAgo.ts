@@ -1,4 +1,4 @@
-import declOfNum from './declOfNum'
+import declOfNum from './declOfNum';
 
 export default (timestamp: number) => {
     const currentDate: number = Date.now();

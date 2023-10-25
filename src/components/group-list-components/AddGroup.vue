@@ -1,12 +1,18 @@
 <template>
     <div class="add-group">
-        <div class="add-group-button" @click="setShowForm(true)">
-            <img src="../../assets/add-song.svg" alt="">
+        <div
+            class="add-group-button"
+            @click="setShowForm(true)"
+        >
+            <img
+                src="../../assets/add-song.svg"
+                alt=""
+            >
             <span>Добавить подборку</span>
         </div>
         <AddGroupForm
             v-if="showForm"
-            :setShowForm="setShowForm"
+            :set-show-form="setShowForm"
         />
     </div>
 </template>
@@ -16,14 +22,14 @@ import { defineComponent } from 'vue';
 import AddGroupForm from './AddGroupForm.vue';
 
 export default defineComponent({
-    name: ' AddGroup',
+    name: 'AddGroup',
+    components: {
+        AddGroupForm,
+    },
     data() {
         return {
             showForm: false,
-        }
-    },
-    components: {
-        AddGroupForm,
+        };
     },
     computed: {
     },

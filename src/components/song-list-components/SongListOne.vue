@@ -7,62 +7,91 @@
     >
         <div v-if="!song.clip && (isGroupSong || song.originalId)">
             <div
-                class="song-one-pause"
                 v-if="playbackSong && playbackSong.id == song.id && isPlaying"
+                class="song-one-pause"
                 @click="pause"
-            ></div>
-            <div class="song-one-play" @click="play" v-else></div>
+            />
+            <div
+                v-else
+                class="song-one-play"
+                @click="play"
+            />
         </div>
         <div
-            @click="openSong"
-            class="song-one-cover"
             v-if="song.cover_small && !song.clip"
+            class="song-one-cover"
+            @click="openSong"
         >
-            <img :src="song.cover_small" alt="">
+            <img
+                :src="song.cover_small"
+                alt=""
+            >
         </div>
         <div
-            @click="openSong"
-            class="song-one-cover"
             v-if="song.clip"
+            class="song-one-cover"
+            @click="openSong"
         >
             <div
+                v-if="song.originalId || isGroupSong"
                 class="song-one-video"
                 @click="showClipHandler"
-                v-if="song.originalId || isGroupSong">
-            </div>
-            <img :src="`https://img.youtube.com/vi/${clipId}/0.jpg`" alt="">
+            />
+            <img
+                :src="`https://img.youtube.com/vi/${clipId}/0.jpg`"
+                alt=""
+            >
             <ShowClip
                 v-if="showClip"
                 :clip="song.clip"
-                :hideClip="hideClip"
+                :hide-clip="hideClip"
             />
         </div>
         <div class="song-one-right">
             <router-link
                 v-if="!song.originalId && !isGroupSong"
                 class="song-one__title"
-                :to="{ name: 'song', params: { id: song.id }}">
+                :to="{ name: 'song', params: { id: song.id }}"
+            >
                 {{ song.name }}
             </router-link>
-            <div class="song-one__title" v-else>
+            <div
+                v-else
+                class="song-one__title"
+            >
                 {{ song.name }}
             </div>
-            <div class="song-one__date">{{ dateFormat }}</div>
-            <div class="song-one__composer" v-if="song.composer">
+            <div class="song-one__date">
+                {{ dateFormat }}
+            </div>
+            <div
+                v-if="song.composer"
+                class="song-one__composer"
+            >
                 <b>Музыка: </b>{{ song.composer }}
             </div>
-            <div class="song-one__author" v-if="song.author">
+            <div
+                v-if="song.author"
+                class="song-one__author"
+            >
                 <b>Слова: </b>{{ song.author }}
             </div>
-            <div class="song-one__singer" v-if="song.singer">
+            <div
+                v-if="song.singer"
+                class="song-one__singer"
+            >
                 <b>Исполняет: </b>{{ song.singer }}
             </div>
         </div>
-        <div class="song-one-edit" @click="setShowPanel(true)" v-if="isAdmin">
+        <div
+            v-if="isAdmin"
+            class="song-one-edit"
+            @click="setShowPanel(true)"
+        >
             <EditPanel
                 v-if="showPanel"
-                :setShowPanel="setShowPanel"
-                :showPanel="showPanel"
+                :set-show-panel="setShowPanel"
+                :show-panel="showPanel"
                 :song="song"
             />
         </div>
@@ -74,8 +103,8 @@
 import { defineComponent } from 'vue';
 import { ISong } from '@/store/types';
 import { mapMutations, mapState } from 'vuex';
-import EditPanel from './EditPanel.vue'
-import ShowClip from '../song-one-components/ShowClip.vue'
+import EditPanel from './EditPanel.vue';
+import ShowClip from '../song-one-components/ShowClip.vue';
 
 export default defineComponent({
     name: 'SongListOne',
@@ -101,7 +130,7 @@ export default defineComponent({
         return {
             showPanel: false,
             showClip: false,
-        }
+        };
     },
     computed: {
         ...mapState(['isAdmin', 'playbackSong', 'isPlaying', 'playList', 'activeSong']),

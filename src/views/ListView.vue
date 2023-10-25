@@ -24,14 +24,14 @@ export default defineComponent({
     computed: {
         ...mapState(['searchRequest', 'groups', 'isAdmin']),
     },
-    methods: {
-        ...mapMutations(['SET_ACTIVE']),
-    },
     mounted() {
         this.SET_ACTIVE(null);
         if (this.searchRequest) {
             this.$router.push('search');
         }
+    },
+    methods: {
+        ...mapMutations(['SET_ACTIVE']),
     },
 });
 

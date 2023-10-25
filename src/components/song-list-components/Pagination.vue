@@ -1,9 +1,12 @@
 <template>
-    <ul v-if="allPages && allPages > 1" class="pagination">
+    <ul
+        v-if="allPages && allPages > 1"
+        class="pagination"
+    >
         <li
-            :class="['pagination-one', page === i ? 'active' : '']"
             v-for="i in allPages"
             :key="i"
+            :class="['pagination-one', page === i ? 'active' : '']"
             @click="goToPage(i)"
         >
             {{ i }}
@@ -44,7 +47,7 @@ export default defineComponent({
             });
         },
     },
-})
+});
 </script>
 
 <style lang="less">

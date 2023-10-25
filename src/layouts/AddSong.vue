@@ -1,12 +1,18 @@
 <template>
     <div class="add-song">
-        <div class="add-song-button" @click="setShowForm(true)">
-            <img src="../assets/add-song.svg" alt="">
+        <div
+            class="add-song-button"
+            @click="setShowForm(true)"
+        >
+            <img
+                src="../assets/add-song.svg"
+                alt=""
+            >
             <span>Добавить песню</span>
         </div>
         <AddSongForm
             v-if="showForm"
-            :setShowForm="setShowForm"
+            :set-show-form="setShowForm"
         />
     </div>
 </template>
@@ -17,13 +23,13 @@ import AddSongForm from '../components/add-song-components/AddSongForm.vue';
 
 export default defineComponent({
     name: 'AddSong',
+    components: {
+        AddSongForm,
+    },
     data() {
         return {
             showForm: false,
-        }
-    },
-    components: {
-        AddSongForm,
+        };
     },
     computed: {
     },

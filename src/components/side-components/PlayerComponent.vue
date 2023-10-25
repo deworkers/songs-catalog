@@ -1,14 +1,35 @@
 <template>
     <div class="player">
-        <div class="progress" ref="container" @click="moveTo">
-            <div class="progress-line" :style="{ width: progress + '%' }"></div>
+        <div
+            ref="container"
+            class="progress"
+            @click="moveTo"
+        >
+            <div
+                class="progress-line"
+                :style="{ width: progress + '%' }"
+            />
         </div>
         <div class="control">
             <div class="control-left">
-                <button class="control-backward" @click="backward"></button>
-                <button class="control-play" @click="play" v-if="!isPlaying"></button>
-                <button class="control-pause" @click="pause" v-if="isPlaying"></button>
-                <button class="control-forward" @click="forward"></button>
+                <button
+                    class="control-backward"
+                    @click="backward"
+                />
+                <button
+                    v-if="!isPlaying"
+                    class="control-play"
+                    @click="play"
+                />
+                <button
+                    v-if="isPlaying"
+                    class="control-pause"
+                    @click="pause"
+                />
+                <button
+                    class="control-forward"
+                    @click="forward"
+                />
             </div>
             <div class="progress-timer">
                 {{ timer }}
@@ -17,8 +38,7 @@
                 <button
                     :class="['control-mute', muted ? 'active' : '']"
                     @click="mute"
-                >
-                </button>
+                />
             </div>
             <input
                 v-show="!isSafari"
@@ -28,9 +48,12 @@
                 min="0"
                 max="1"
                 name="volume"
-            />
+            >
         </div>
-        <Song v-if="playbackSong" :song="playbackSong" />
+        <Song
+            v-if="playbackSong"
+            :song="playbackSong"
+        />
     </div>
 </template>
 
@@ -55,6 +78,14 @@ export default defineComponent({
         isSafari() {
             return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
         },
+    },
+    watch: {
+        localVolume() {
+            this.SET_VOLUME(this.localVolume);
+        },
+    },
+    mounted() {
+        this.localVolume = this.volume;
     },
     methods: {
         ...mapMutations(['SET_NEXT', 'SET_PREW', 'SET_PLAY', 'SET_PAUSE', 'MOVE_TO', 'MUTE', 'SET_VOLUME']),
@@ -90,14 +121,6 @@ export default defineComponent({
         repeat() {
             this.repeated = !this.repeated;
             console.log('repeat');
-        },
-    },
-    mounted() {
-        this.localVolume = this.volume;
-    },
-    watch: {
-        localVolume() {
-            this.SET_VOLUME(this.localVolume);
         },
     },
 });

@@ -1,20 +1,28 @@
 <template>
-    <div class="add-song-form" @click.stop="hideForm">
+    <div
+        class="add-song-form"
+        @click.stop="hideForm"
+    >
         <div class="delete-song-body">
-            <div class="close-popup" @click.stop="hideForm"></div>
-            <h2 class="add-song-title">{{ title }}</h2>
+            <div
+                class="close-popup"
+                @click.stop="hideForm"
+            />
+            <h2 class="add-song-title">
+                {{ title }}
+            </h2>
             <div class="form-bottom">
                 <button
                     class="add-song-prev"
                     @click="hideForm"
-                    >
+                >
                     Отменить
                 </button>
                 <button
                     class="add-song-next"
                     @click="actionHandler"
                 >
-                    {{ actionTitle}}
+                    {{ actionTitle }}
                 </button>
             </div>
         </div>
@@ -22,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent } from 'vue';
 
 export default defineComponent({
     name: 'EditForm',
@@ -31,9 +39,11 @@ export default defineComponent({
     props: {
         setShowConfirm: {
             type: Function,
+            default: () => {},
         },
         action: {
             type: Function,
+            default: () => {},
         },
         title: {
             type: String,
@@ -57,7 +67,7 @@ export default defineComponent({
             }
         },
     },
-})
+});
 </script>
 
 <style lang="less">

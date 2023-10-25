@@ -1,11 +1,16 @@
 <template>
     <main>
         <div class="page-error">
-            <div class="page-error-title">404</div>
-            <div class="page-error-descr">Страница не найдена</div>
+            <div class="page-error-title">
+                404
+            </div>
+            <div class="page-error-descr">
+                Страница не найдена
+            </div>
             <router-link
                 class="page-error-button"
-                :to="{ name: 'list' }">
+                :to="{ name: 'list' }"
+            >
                 Вернуться на главную
             </router-link>
         </div>

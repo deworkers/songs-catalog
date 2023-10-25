@@ -1,16 +1,24 @@
 <template>
     <div class="group-one">
-        <div class="group-one-edit" @click="setShowPanel(true)" v-if="isAdmin">
+        <div
+            v-if="isAdmin"
+            class="group-one-edit"
+            @click="setShowPanel(true)"
+        >
             <EditPanel
                 v-if="showPanel"
-                :setShowPanel="setShowPanel"
-                :showPanel="showPanel"
+                :set-show-panel="setShowPanel"
+                :show-panel="showPanel"
                 :group="group"
             />
         </div>
         <div @click="openGroup(group.id)">
             <div class="group-one__cover">
-                <img v-if="group.cover" :src="group.cover" alt="">
+                <img
+                    v-if="group.cover"
+                    :src="group.cover"
+                    alt=""
+                >
             </div>
             <div class="group-one__name">
                 {{ group.name }}
@@ -26,23 +34,23 @@
 import { defineComponent, PropType } from 'vue';
 import { mapState } from 'vuex';
 import { IGroup } from '@/store/types';
-import EditPanel from './EditPanel.vue'
+import EditPanel from './EditPanel.vue';
 
 export default defineComponent({
     name: 'HomeView',
     components: {
         EditPanel,
     },
-    data() {
-        return {
-            showPanel: false,
-        }
-    },
     props: {
         group: {
             type: Object as PropType<IGroup>,
             default: {} as IGroup,
         },
+    },
+    data() {
+        return {
+            showPanel: false,
+        };
     },
     computed: {
         ...mapState(['isAdmin']),

@@ -14,34 +14,42 @@
                 <button
                     class="comment-one__vote-button"
                     @click="voteHandler"
-                ></button>
+                />
                 {{ comment.vote_count }}
                 <button
                     v-if="comment.parent_id === 0"
                     class="comment-one__answer"
                     @click="setShowForm(true)"
-                >Ответить</button>
+                >
+                    Ответить
+                </button>
             </div>
         </div>
-        <div class="comment-one-edit" v-if="isAdmin || comment.author === userID">
+        <div
+            v-if="isAdmin || comment.author === userID"
+            class="comment-one-edit"
+        >
             <div :class="['comment-one-status', comment.status]">
                 {{ showStatus(comment.status) }}
             </div>
-            <div class="song-one-edit" @click="setShowMenu(true)"></div>
+            <div
+                class="song-one-edit"
+                @click="setShowMenu(true)"
+            />
             <EditMenu
                 v-if="showMenu"
-                :statusProp="comment.status"
-                :setShowMenu="setShowMenu"
-                :showMenu="showMenu"
+                :status-prop="comment.status"
+                :set-show-menu="setShowMenu"
+                :show-menu="showMenu"
                 :comment="comment"
             />
         </div>
 
         <CommentForm
             v-if="showForm && comment.parent_id === 0"
-            :parentID="comment.id"
-            :songId="comment.song_id"
-            :setShowForm="setShowForm"
+            :parent-i-d="comment.id"
+            :song-id="comment.song_id"
+            :set-show-form="setShowForm"
         />
     </div>
 </template>
@@ -72,22 +80,23 @@ export const showStatus = (status: string): string => {
             return 'Скрыт';
 
         default:
-            return 'Нет статуса'
+            return 'Нет статуса';
     }
-}
+};
 
 export default defineComponent({
-    props: {
-        comment: {
-            type: Object as ()=> IComment,
-        },
-    },
     components: {
         EditMenu,
         CommentForm,
     },
+    props: {
+        comment: {
+            type: Object as ()=> IComment,
+            default: () => {}
+        },
+    },
     setup(props) {
-        const { comment } = toRefs(props)
+        const { comment } = toRefs(props);
         const store = useStore();
         const isAdmin = computed(() => store.state.isAdmin);
         const userID = computed(() => store.state.userID);
@@ -97,24 +106,24 @@ export default defineComponent({
                 .then(({ data }) => {
                     if (data.status === 200) {
                         if (comment.value) {
-                            comment.value.vote_count += 1
+                            comment.value.vote_count += 1;
                         }
                     }
                 })
                 .catch((error) => {
                     console.log(error);
                 });
-        }
+        };
 
         const showMenu = ref(false);
         const setShowMenu = (show: boolean):void => {
             showMenu.value = show;
-        }
+        };
 
         const showForm = ref(false);
         const setShowForm = (show: boolean):void => {
             showForm.value = show;
-        }
+        };
 
         return {
             timeAgo,
@@ -128,7 +137,7 @@ export default defineComponent({
             setShowForm,
         };
     },
-})
+});
 </script>
 
 <style lang="less">

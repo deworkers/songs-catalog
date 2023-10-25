@@ -1,24 +1,38 @@
 <template>
-    <div class="add-song-form" @click="hideForm">
+    <div
+        class="add-song-form"
+        @click="hideForm"
+    >
         <div class="add-song-body">
-            <div class="close-popup" @click="hideForm"></div>
+            <div
+                class="close-popup"
+                @click="hideForm"
+            />
             <h2 class="add-song-title">
                 Добавить {{ originalId ? 'другую версию песни' : 'песню' }}
             </h2>
             <div class="steps">
-                <div :class="['steps-marker', step >= 0 ? 'active' : '']"></div>
-                <div :class="['steps-marker', step >= 1 ? 'active' : '']"></div>
-                <div :class="['steps-marker', step >= 2 ? 'active' : '']"></div>
-                <div :class="['steps-marker', step >= 3 ? 'active' : '']"></div>
-                <div :class="['steps-marker', step >= 4 ? 'active' : '']"></div>
-                <div :class="['steps-marker', step >= 5 ? 'active' : '']"></div>
-                <div :class="['steps-marker', step >= 6 ? 'active' : '']"></div>
+                <div :class="['steps-marker', step >= 0 ? 'active' : '']" />
+                <div :class="['steps-marker', step >= 1 ? 'active' : '']" />
+                <div :class="['steps-marker', step >= 2 ? 'active' : '']" />
+                <div :class="['steps-marker', step >= 3 ? 'active' : '']" />
+                <div :class="['steps-marker', step >= 4 ? 'active' : '']" />
+                <div :class="['steps-marker', step >= 5 ? 'active' : '']" />
+                <div :class="['steps-marker', step >= 6 ? 'active' : '']" />
             </div>
             <div class="steps-tabs">
-                <div class="steps-tab" v-if="step == 0">
-                    <div class="steps-tab-title">1. Введите название песни</div>
+                <div
+                    v-if="step == 0"
+                    class="steps-tab"
+                >
+                    <div class="steps-tab-title">
+                        1. Введите название песни
+                    </div>
                     <div class="steps-tab-body">
-                        <input type="text" v-model="form.name">
+                        <input
+                            v-model="form.name"
+                            type="text"
+                        >
                         <div
                             v-if="!valid"
                             class="error"
@@ -27,21 +41,42 @@
                         </div>
                     </div>
                 </div>
-                <div class="steps-tab" v-if="step == 1">
-                    <div class="steps-tab-title">2. Загрузите файл песни</div>
+                <div
+                    v-if="step == 1"
+                    class="steps-tab"
+                >
+                    <div class="steps-tab-title">
+                        2. Загрузите файл песни
+                    </div>
                     <div class="steps-tab-body">
-                        <div v-if="!song" class="song-upload">
-                            <input type="file" v-on:change="selectFile($event)">
-                            <div class="song-upload-label">Перетащите сюда или </div>
-                            <button class="add-song-next">Выберете файл</button>
+                        <div
+                            v-if="!song"
+                            class="song-upload"
+                        >
+                            <input
+                                type="file"
+                                @change="selectFile($event)"
+                            >
+                            <div class="song-upload-label">
+                                Перетащите сюда или
+                            </div>
+                            <button class="add-song-next">
+                                Выберете файл
+                            </button>
                         </div>
-                        <div v-else class="song-info">
+                        <div
+                            v-else
+                            class="song-info"
+                        >
                             <div class="song-info-left">
                                 {{ song.name }}
                             </div>
                             <div class="song-info-right">
                                 {{ byteToMegabyte(song.size) }} мб
-                                <button @click="removeSong" class="trash"></button>
+                                <button
+                                    class="trash"
+                                    @click="removeSong"
+                                />
                             </div>
                         </div>
                         <div
@@ -52,49 +87,111 @@
                         </div>
                     </div>
                 </div>
-                <div class="steps-tab" v-if="step == 2">
-                    <div class="steps-tab-title">3. Введите композитора</div>
+                <div
+                    v-if="step == 2"
+                    class="steps-tab"
+                >
+                    <div class="steps-tab-title">
+                        3. Введите композитора
+                    </div>
                     <div class="steps-tab-body">
-                        <input name="composer" type="text" v-model="form.composer">
+                        <input
+                            v-model="form.composer"
+                            name="composer"
+                            type="text"
+                        >
                     </div>
                 </div>
-                <div class="steps-tab" v-if="step == 3">
-                    <div class="steps-tab-title">4. Введите автора слов</div>
+                <div
+                    v-if="step == 3"
+                    class="steps-tab"
+                >
+                    <div class="steps-tab-title">
+                        4. Введите автора слов
+                    </div>
                     <div class="steps-tab-body">
-                        <input name="author" type="text" v-model="form.author">
+                        <input
+                            v-model="form.author"
+                            name="author"
+                            type="text"
+                        >
                     </div>
                 </div>
-                <div class="steps-tab" v-if="step == 4">
-                    <div class="steps-tab-title">5. Введите исполнителя</div>
+                <div
+                    v-if="step == 4"
+                    class="steps-tab"
+                >
+                    <div class="steps-tab-title">
+                        5. Введите исполнителя
+                    </div>
                     <div class="steps-tab-body">
-                        <input name="singer" type="text" v-model="form.singer">
+                        <input
+                            v-model="form.singer"
+                            name="singer"
+                            type="text"
+                        >
                     </div>
                 </div>
-                <div class="steps-tab" v-if="step == 5">
-                    <div class="steps-tab-title">6. Введите описание</div>
+                <div
+                    v-if="step == 5"
+                    class="steps-tab"
+                >
+                    <div class="steps-tab-title">
+                        6. Введите описание
+                    </div>
                     <div class="steps-tab-body">
-                        <input name="singer" type="text" v-model="form.description">
+                        <input
+                            v-model="form.description"
+                            name="singer"
+                            type="text"
+                        >
                     </div>
                 </div>
-                <div class="steps-tab" v-if="step == 6">
-                    <div class="steps-tab-title">7. Вставьте ссылку на клип</div>
+                <div
+                    v-if="step == 6"
+                    class="steps-tab"
+                >
+                    <div class="steps-tab-title">
+                        7. Вставьте ссылку на клип
+                    </div>
                     <div class="steps-tab-body">
                         <div class="clip-form">
-                            <input type="text" v-model="form.clip">
-                            <div class="clip-form-bottom">или добавьте изображение для обложки</div>
+                            <input
+                                v-model="form.clip"
+                                type="text"
+                            >
+                            <div class="clip-form-bottom">
+                                или добавьте изображение для обложки
+                            </div>
                         </div>
-                        <div v-if="!cover" class="song-upload">
-                            <input type="file" v-on:change="selectCover($event)">
-                            <div class="song-upload-label">Перетащите сюда или </div>
-                            <button class="add-song-next">Выберете файл</button>
+                        <div
+                            v-if="!cover"
+                            class="song-upload"
+                        >
+                            <input
+                                type="file"
+                                @change="selectCover($event)"
+                            >
+                            <div class="song-upload-label">
+                                Перетащите сюда или
+                            </div>
+                            <button class="add-song-next">
+                                Выберете файл
+                            </button>
                         </div>
-                        <div v-else class="song-info">
+                        <div
+                            v-else
+                            class="song-info"
+                        >
                             <div class="song-info-left">
                                 {{ cover.name }}
                             </div>
                             <div class="song-info-right">
                                 {{ byteToMegabyte(cover.size) }} мб
-                                <button @click="removeCover" class="trash"></button>
+                                <button
+                                    class="trash"
+                                    @click="removeCover"
+                                />
                             </div>
                         </div>
                         <div
@@ -103,7 +200,11 @@
                         >
                             Вставьте ссылку на клип или загрузите обложку чтобы продолжить
                         </div>
-                        <a class="generate-song" href="https://fusionbrain.ai/diffusion" target="_black">Сгенерировать изображение</a>
+                        <a
+                            class="generate-song"
+                            href="https://fusionbrain.ai/diffusion"
+                            target="_black"
+                        >Сгенерировать изображение</a>
                     </div>
                 </div>
             </div>
@@ -147,16 +248,17 @@ interface IFile {
 
 export default defineComponent({
     name: 'AddSong',
+    components: {
+    },
     props: {
         setShowForm: {
             type: Function,
+            default: () => {}
         },
         originalId: {
             type: Number,
             default: null,
         },
-    },
-    components: {
     },
     data() {
         return {
@@ -175,9 +277,17 @@ export default defineComponent({
             cover: null as IFile | null,
             formData: new FormData(),
             valid: true,
-        }
+        };
     },
     computed: {
+    },
+    watch: {
+        form: {
+            deep: true,
+            handler() {
+                this.valid = true;
+            },
+        },
     },
     methods: {
         ...mapActions(['getSongs']),
@@ -255,7 +365,7 @@ export default defineComponent({
                             this.setShowForm(false);
                             this.getSongs().then(() => {
                                 console.log('load');
-                            })
+                            });
                         }
                     })
                     .catch((error) => {
@@ -305,14 +415,6 @@ export default defineComponent({
         removeSong() {
             this.song = null;
             this.formData.delete('Song[songFile]');
-        },
-    },
-    watch: {
-        form: {
-            deep: true,
-            handler() {
-                this.valid = true;
-            },
         },
     },
 });

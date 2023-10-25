@@ -3,16 +3,23 @@
         <div class="comments-top">
             <div class="comments-top-count">
                 {{ comments.length }}
-                {{declOfNum(comments.length, ['комментарий', 'комментария', 'комментариев'])}}
+                {{ declOfNum(comments.length, ['комментарий', 'комментария', 'комментариев']) }}
             </div>
-            <div class="comments-top-sort" v-if="comments.length > 1">
+            <div
+                v-if="comments.length > 1"
+                class="comments-top-sort"
+            >
                 <select v-model="sort">
-                    <option value="date_create">Сначала новые</option>
-                    <option value="vote_count">Сначала популярные</option>
+                    <option value="date_create">
+                        Сначала новые
+                    </option>
+                    <option value="vote_count">
+                        Сначала популярные
+                    </option>
                 </select>
             </div>
         </div>
-        <CommentForm :songId="songId" />
+        <CommentForm :song-id="songId" />
         <div>
             <div
                 v-for="comment in sortedList"
@@ -39,6 +46,11 @@ import CommentForm from './comment-components/CommentForm.vue';
 
 export default defineComponent({
     name: 'CommentsComponent',
+    components: {
+        CommentOne,
+        CommentForm,
+        CommentReplace,
+    },
     props: {
         comments: {
             type: Array as ()=> IComment[],
@@ -48,11 +60,6 @@ export default defineComponent({
             type: Number,
             required: true,
         },
-    },
-    components: {
-        CommentOne,
-        CommentForm,
-        CommentReplace,
     },
     setup(props) {
         const sort = ref('date_create');

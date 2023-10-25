@@ -1,13 +1,15 @@
 <template>
     <div class="groups">
-        <div class="groups-title">Подборки</div>
+        <div class="groups-title">
+            Подборки
+        </div>
         <div class="group-list">
             <GroupListOne
                 v-for="group in groups"
                 :key="group.id"
                 :group="group"
             />
-            <AddGroup v-if="isAdmin"/>
+            <AddGroup v-if="isAdmin" />
         </div>
     </div>
 </template>

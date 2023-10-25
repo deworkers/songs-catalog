@@ -31,19 +31,6 @@ export default defineComponent({
             return this.$route.params.id;
         },
     },
-    methods: {
-        ...mapActions(['getSong']),
-    },
-    mounted() {
-        if (this.songs.length > 0) {
-            this.getSong(this.$route.params.id).then(() => {
-                const element = document.querySelector('.song-one.active');
-                if (element) {
-                    element.scrollIntoView({ behavior: 'smooth' });
-                }
-            });
-        }
-    },
     watch: {
         songs() {
             if (this.songs.length > 0) {
@@ -58,6 +45,19 @@ export default defineComponent({
                 }
             });
         },
+    },
+    mounted() {
+        if (this.songs.length > 0) {
+            this.getSong(this.$route.params.id).then(() => {
+                const element = document.querySelector('.song-one.active');
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        }
+    },
+    methods: {
+        ...mapActions(['getSong']),
     },
 });
 </script>

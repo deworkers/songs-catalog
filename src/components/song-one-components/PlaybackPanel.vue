@@ -1,21 +1,23 @@
 <template>
     <div class="playback">
         <button
+            v-if="isPlaying && activeSong.id === playbackSong.id"
             :class="['playback-pause', scrollTop > 290 ? 'fixed' : '',]"
             @click="pause"
-            v-if="isPlaying && activeSong.id === playbackSong.id">
-        </button>
+        />
         <button
-            :class="['playback-play', scrollTop > 290 ? 'fixed' : '',]"
-            @click="play"
             v-else
-            :disabled="!activeSong.song">
-        </button>
-        <h2 class="playback-title">Слушать</h2>
+            :class="['playback-play', scrollTop > 290 ? 'fixed' : '',]"
+            :disabled="!activeSong.song"
+            @click="play"
+        />
+        <h2 class="playback-title">
+            Слушать
+        </h2>
         <ShowClip
             v-if="showClip"
             :clip="activeSong.clip"
-            :hideClip="hideClip"
+            :hide-clip="hideClip"
         />
     </div>
 </template>
@@ -58,7 +60,7 @@ export default defineComponent({
     data() {
         return {
             showClip: false,
-        }
+        };
     },
     computed: {
         ...mapState(['isAdmin', 'playbackSong', 'isPlaying', 'songs', 'activeSong']),
@@ -71,7 +73,7 @@ export default defineComponent({
             this.getSong(id).then(() => {
                 this.$router.push({
                     name: 'song', params: { id },
-                } as RouteLocationRaw)
+                } as RouteLocationRaw);
             });
         },
         forward() {
@@ -79,7 +81,7 @@ export default defineComponent({
             this.getSong(id).then(() => {
                 this.$router.push({
                     name: 'song', params: { id },
-                } as RouteLocationRaw)
+                } as RouteLocationRaw);
             });
         },
         play() {

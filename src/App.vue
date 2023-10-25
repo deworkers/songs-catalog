@@ -1,7 +1,7 @@
 <template>
-    <Header v-if="view === 'list' || !isMobile" />
+    <HeaderComponent v-if="view === 'list' || !isMobile" />
     <div class="main-body">
-        <router-view></router-view>
+        <router-view />
         <PlayerComponent />
     </div>
 </template>
@@ -10,35 +10,35 @@
 import { defineComponent } from 'vue';
 import { mapActions } from 'vuex';
 
-import Header from './layouts/Header.vue';
+import HeaderComponent from './layouts/Header.vue';
 import PlayerComponent from './components/side-components/PlayerComponent.vue';
 
 export default defineComponent({
     name: 'HomeView',
     components: {
-        Header,
+        HeaderComponent,
         PlayerComponent,
     },
     data() {
         return {
             transitionName: 'slide-right',
-        }
+        };
     },
     computed: {
         view() {
-            return this.$router.currentRoute.value.name
+            return this.$router.currentRoute.value.name;
         },
         isMobile() {
-            return window.innerWidth <= 760
+            return window.innerWidth <= 760;
         },
-    },
-    methods: {
-        ...mapActions(['getSongs']),
     },
     mounted() {
         this.getSongs().then(() => {
             document.title = 'Живая музыка и хорошие песни';
-        })
+        });
+    },
+    methods: {
+        ...mapActions(['getSongs']),
     },
 });
 </script>

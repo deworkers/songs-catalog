@@ -1,8 +1,22 @@
 <template>
-    <div class="add-song-form" @click="hideClipHandler">
+    <div
+        class="add-song-form"
+        @click="hideClipHandler"
+    >
         <div class="clip-popup">
-            <div class="close-popup" @click="hideClipHandler"></div>
-            <iframe width="100%" height="100%" :src="`https://www.youtube.com/embed/${getClipID(clip)}?autoplay=1`" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <div
+                class="close-popup"
+                @click="hideClipHandler"
+            />
+            <iframe
+                width="100%"
+                height="100%"
+                :src="`https://www.youtube.com/embed/${getClipID(clip)}?autoplay=1`"
+                title="YouTube video player"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+            />
         </div>
     </div>
 </template>
@@ -19,10 +33,11 @@ export default defineComponent({
         },
         hideClip: {
             type: Function,
+            default: () => {},
         },
     },
     data() {
-        return {}
+        return {};
     },
     methods: {
         hideClipHandler(event:MouseEvent) {

@@ -4,8 +4,16 @@
             <div
                 :class="['logo-title', !isAdmin ? 'logo-title__full' : '']"
                 @click="toMainPage"
-            >VLPV.ru</div>
-            <div class="logout" v-if="isAdmin" @click="logoutHandler">Выйти</div>
+            >
+                VLPV.ru
+            </div>
+            <div
+                v-if="isAdmin"
+                class="logout"
+                @click="logoutHandler"
+            >
+                Выйти
+            </div>
         </div>
         <Search />
     </header>
@@ -32,7 +40,7 @@ export default defineComponent({
             this.$router.push('/');
         },
         logoutHandler() {
-            window.location.replace('/site/logout')
+            window.location.replace('/site/logout');
         },
     },
 });

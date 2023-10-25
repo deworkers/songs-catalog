@@ -1,16 +1,32 @@
 <template>
-    <div class="add-song-form" @click="hideForm">
+    <div
+        class="add-song-form"
+        @click="hideForm"
+    >
         <div class="add-song-body">
-            <div class="close-popup" @click="hideForm"></div>
-            <h2 class="add-song-title">Редактирование песни</h2>
+            <div
+                class="close-popup"
+                @click="hideForm"
+            />
+            <h2 class="add-song-title">
+                Редактирование песни
+            </h2>
             <div>
                 <div class="edit-form-input">
                     <label>Название песни</label>
-                    <input name="name" type="text" v-model="localForm.name">
+                    <input
+                        v-model="localForm.name"
+                        name="name"
+                        type="text"
+                    >
                 </div>
                 <div class="edit-form-input">
                     <label>Файл песни</label>
-                    <input name="song" type="file" v-on:change="selectFile($event)">
+                    <input
+                        name="song"
+                        type="file"
+                        @change="selectFile($event)"
+                    >
                 </div>
                 <div class="edit-form-input">
                     <label>Подборка</label>
@@ -21,51 +37,79 @@
                         :searchable="false"
                         track-by="id"
                         placeholder="Выберите подборки"
-                        label="name">
-                    </Multiselect>
+                        label="name"
+                    />
                 </div>
                 <div class="edit-form-input">
                     <label>Ссылка на клип</label>
-                    <input name="cover" type="text" v-model="localForm.clip">
+                    <input
+                        v-model="localForm.clip"
+                        name="cover"
+                        type="text"
+                    >
                 </div>
                 <div class="edit-form-input">
                     <label>Обложка</label>
-                    <input name="clip" type="file" v-on:change="selectCover($event)">
+                    <input
+                        name="clip"
+                        type="file"
+                        @change="selectCover($event)"
+                    >
                 </div>
                 <div class="edit-form-input">
                     <label>Автор слов</label>
-                    <input name="author" type="text" v-model="localForm.author">
+                    <input
+                        v-model="localForm.author"
+                        name="author"
+                        type="text"
+                    >
                 </div>
                 <div class="edit-form-input">
                     <label>Композитор</label>
-                    <input name="composer" type="text" v-model="localForm.composer">
+                    <input
+                        v-model="localForm.composer"
+                        name="composer"
+                        type="text"
+                    >
                 </div>
                 <div class="edit-form-input">
                     <label>Исполняет</label>
-                    <input name="singer" type="text" v-model="localForm.singer">
+                    <input
+                        v-model="localForm.singer"
+                        name="singer"
+                        type="text"
+                    >
                 </div>
                 <div class="edit-form-input">
                     <label>Описание</label>
                     <textarea
+                        v-model="localForm.description"
                         name="description"
                         type="text"
-                        v-model="localForm.description"
-                    ></textarea>
+                    />
                 </div>
                 <div class="edit-form-input">
                     <label>Ссылка на оригинал песни</label>
-                    <input name="singer" type="text" v-model="localForm.original_file_url">
+                    <input
+                        v-model="localForm.original_file_url"
+                        name="singer"
+                        type="text"
+                    >
                 </div>
                 <div class="edit-form-input">
                     <label>Файл текста песни и табулатуры</label>
-                    <input name="text" type="file" v-on:change="selectText($event)">
+                    <input
+                        name="text"
+                        type="file"
+                        @change="selectText($event)"
+                    >
                 </div>
                 <div class="edit-form-input">
                     <label>ID оригинала</label>
                     <input
+                        v-model="localForm.originalId"
                         name="originalId"
                         type="text"
-                        v-model="localForm.originalId"
                     >
                 </div>
             </div>
@@ -73,7 +117,7 @@
                 <button
                     class="add-song-prev"
                     @click="hideForm"
-                    >
+                >
                     Отменить
                 </button>
                 <button
@@ -101,9 +145,11 @@ export default defineComponent({
     props: {
         setShowForm: {
             type: Function,
+            default: () => {},
         },
         song: {
             type: Object as PropType<ISong>,
+            default: () => {},
         },
     },
     data() {
@@ -111,10 +157,27 @@ export default defineComponent({
             localForm: {} as ISong,
             formData: new FormData(),
             selectedGroups: [] as IGroup[],
-        }
+        };
     },
     computed: {
         ...mapState(['groups']),
+    },
+    watch: {
+        selectedGroups() {
+            // this.localForm.groups = [];
+            this.formData.delete('Song[groups]');
+            const groups: number[] = [];
+            this.selectedGroups.forEach((group: IGroup) => {
+                groups.push(group.id);
+            });
+            this.formData.append('Song[groups]', JSON.stringify(groups));
+        },
+    },
+    mounted() {
+        if (this.song) {
+            this.localForm = JSON.parse(JSON.stringify(this.song));
+            this.selectedGroups = this.song.groups;
+        }
     },
     methods: {
         ...mapActions(['getSongs', 'edit']),
@@ -175,23 +238,7 @@ export default defineComponent({
             }
         },
     },
-    mounted() {
-        if (this.song) {
-            this.localForm = JSON.parse(JSON.stringify(this.song))
-            this.selectedGroups = this.song.groups;
-        }
-    },
-    watch: {
-        selectedGroups() {
-            // this.localForm.groups = [];
-            this.formData.delete('Song[groups]');
-            const groups: number[] = []
-            this.selectedGroups.forEach((group: IGroup) => {
-                groups.push(group.id);
-            });
-            this.formData.append('Song[groups]', JSON.stringify(groups));
-        },
-    },
+    
 });
 </script>
 

@@ -6,14 +6,15 @@
                 scrollTop > 0 ? 'fixed' : '',
                 scrollTop > 180 ? 'fixed-bg': ''
             ]"
-            :to="{ name: 'list' }">
+            :to="{ name: 'list' }"
+        >
             К списку песен
         </router-link>
         <div class="song-details-body">
             <div class="song-details-top">
                 <div
-                    class="request-block"
                     v-if="activeSong.original_file_url"
+                    class="request-block"
                 >
                     <button
                         class="request-button"
@@ -22,12 +23,16 @@
                         Запрос прав для трансляции
                     </button>
                     <RequestForm
-                        :hideRequestForm="hideRequestForm"
-                        :songId="activeSong.id"
-                        :fileUrl="activeSong.original_file_url"
-                        v-if="showForm" />
+                        v-if="showForm"
+                        :hide-request-form="hideRequestForm"
+                        :song-id="activeSong.id"
+                        :file-url="activeSong.original_file_url"
+                    />
                 </div>
-                <div class="request-block" v-if="isAdmin">
+                <div
+                    v-if="isAdmin"
+                    class="request-block"
+                >
                     <button
                         class="request-button"
                         @click="showAddCover = true"
@@ -36,8 +41,8 @@
                     </button>
                     <AddSongForm
                         v-if="showAddCover"
-                        :originalId="activeSong.id"
-                        :setShowForm="setShowAddCover"
+                        :original-id="activeSong.id"
+                        :set-show-form="setShowAddCover"
                     />
                 </div>
             </div>
@@ -46,62 +51,92 @@
                     {{ activeSong.name }}
                 </div>
                 <div class="song-details-left">
-                    <div class="song-details-cover" v-if="activeSong.cover && !activeSong.clip">
-                        <img :src="activeSong.cover" alt="">
+                    <div
+                        v-if="activeSong.cover && !activeSong.clip"
+                        class="song-details-cover"
+                    >
+                        <img
+                            :src="activeSong.cover"
+                            alt=""
+                        >
                     </div>
                     <div
+                        v-if="activeSong.clip"
                         class="song-details-clip"
-                        v-if="activeSong.clip">
-                        <img :src="`https://img.youtube.com/vi/${getClipID(activeSong.clip)}/0.jpg`" alt="">
+                    >
+                        <img
+                            :src="`https://img.youtube.com/vi/${getClipID(activeSong.clip)}/0.jpg`"
+                            alt=""
+                        >
                     </div>
                     <ShowClip
                         v-if="showClip"
                         :clip="activeSong.clip"
-                        :hideClip="hideClip"
+                        :hide-clip="hideClip"
                     />
                 </div>
-                <div class="cover-list" v-if="activeSong.covers">
+                <div
+                    v-if="activeSong.covers"
+                    class="cover-list"
+                >
                     <h2>Эта песня в другом исполнении:</h2>
                     <SongListOne
                         v-for="song in activeSong.covers"
                         :key="song.id"
                         :song="song"
-                        :isCover="true"
+                        :is-cover="true"
                     />
                 </div>
                 <div class="song-details-right">
                     <div class="song-details-about">
                         <div
+                            v-if="activeSong && !isMobile"
                             class="song-one__date"
-                            v-if="activeSong && !isMobile">
+                        >
                             <b>Добавлено:</b> {{ dateFormat(activeSong.date_modify) }}
                         </div>
                         <div class="song-one__listening">
                             <b>Прослушиваний:</b> {{ activeSong.listeningCnt }}
                         </div>
-                        <div class="song-one__composer" v-if="activeSong.composer && !isMobile">
+                        <div
+                            v-if="activeSong.composer && !isMobile"
+                            class="song-one__composer"
+                        >
                             <b>Музыка: </b>{{ activeSong.composer }}
                         </div>
-                        <div class="song-one__author" v-if="activeSong.author && !isMobile">
+                        <div
+                            v-if="activeSong.author && !isMobile"
+                            class="song-one__author"
+                        >
                             <b>Слова: </b>{{ activeSong.author }}
                         </div>
-                        <div class="song-one__singer" v-if="activeSong.singer && !isMobile">
+                        <div
+                            v-if="activeSong.singer && !isMobile"
+                            class="song-one__singer"
+                        >
                             <b>Исполняет: </b>{{ activeSong.singer }}
                         </div>
-                        <div class="song-one__text" v-if="activeSong.text">
-                            <a :href="activeSong.text" download>Скачать текст песни</a>
+                        <div
+                            v-if="activeSong.text"
+                            class="song-one__text"
+                        >
+                            <a
+                                :href="activeSong.text"
+                                download
+                            >Скачать текст песни</a>
                         </div>
                     </div>
-                    <PlaybackPanel :scrollTop="scrollTop" />
+                    <PlaybackPanel :scroll-top="scrollTop" />
                 </div>
             </div>
             <div
-                class="song-one-description" v-if="activeSong.description"
+                v-if="activeSong.description"
+                class="song-one-description"
                 v-html="activeSong.description"
-            ></div>
+            />
             <div>
                 <CommentsComponent
-                    :songId="activeSong.id"
+                    :song-id="activeSong.id"
                     :comments="activeSong.comments"
                 />
             </div>
@@ -136,13 +171,18 @@ export default defineComponent({
             showAddCover: false,
             loading: false,
             scrollTop: 0,
-        }
+        };
     },
     computed: {
         ...mapState(['activeSong', 'isAdmin']),
         isMobile() {
-            return window.innerWidth <= 760
+            return window.innerWidth <= 760;
         },
+    },
+    mounted() {
+        window.addEventListener('scroll', () => {
+            this.scrollTop = document.documentElement.scrollTop;
+        });
     },
     methods: {
         ...mapMutations(['SET_ACTIVE', 'SET_PAUSE']),
@@ -184,11 +224,6 @@ export default defineComponent({
         setShowAddCover(show: boolean) {
             this.showAddCover = show;
         },
-    },
-    mounted() {
-        window.addEventListener('scroll', () => {
-            this.scrollTop = document.documentElement.scrollTop;
-        });
     },
 });
 </script>

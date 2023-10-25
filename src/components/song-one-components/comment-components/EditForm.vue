@@ -1,31 +1,48 @@
 <template>
-    <div class="add-song-form" @click="hideForm">
+    <div
+        class="add-song-form"
+        @click="hideForm"
+    >
         <div class="add-song-body">
-            <div class="close-popup" @click="hideForm"></div>
-            <h2 class="add-song-title">Редактирование комментария #{{ localForm.id }}</h2>
+            <div
+                class="close-popup"
+                @click="hideForm"
+            />
+            <h2 class="add-song-title">
+                Редактирование комментария #{{ localForm.id }}
+            </h2>
             <div>
-                <div class="edit-form-input" v-if="isAdmin">
+                <div
+                    v-if="isAdmin"
+                    class="edit-form-input"
+                >
                     <label>Статус</label>
                     <select v-model="localForm.status">
-                        <option value="active">Активен</option>
-                        <option value="moderation">На модерации</option>
-                        <option value="reject">Скрыт</option>
+                        <option value="active">
+                            Активен
+                        </option>
+                        <option value="moderation">
+                            На модерации
+                        </option>
+                        <option value="reject">
+                            Скрыт
+                        </option>
                     </select>
                 </div>
                 <div class="edit-form-input">
                     <label>Описание</label>
                     <textarea
+                        v-model="localForm.text"
                         name="description"
                         type="text"
-                        v-model="localForm.text"
-                    ></textarea>
+                    />
                 </div>
             </div>
             <div class="form-bottom">
                 <button
                     class="add-song-prev"
                     @click="hideForm"
-                    >
+                >
                     Отменить
                 </button>
                 <button
@@ -54,12 +71,15 @@ export default defineComponent({
     props: {
         setShowForm: {
             type: Function,
+            default: () => {},
         },
         comment: {
             type: Object as PropType<IComment>,
+            default: () => {},
         },
         edit: {
             type: Function,
+            default: () => {},
         },
     },
     setup(props) {
@@ -73,7 +93,7 @@ export default defineComponent({
             if (props.setShowForm && (element.classList.contains('add-song-form') || element.classList.contains('close-popup') || element.classList.contains('add-song-prev'))) {
                 props.setShowForm(false);
             }
-        }
+        };
 
         const submitHandler = () : void => {
             if (props.edit) {
@@ -82,19 +102,19 @@ export default defineComponent({
                     'Comment[status]': localForm.value.status,
                 });
             }
-        }
+        };
 
         onMounted(() => {
-            localForm.value = JSON.parse(JSON.stringify(props.comment))
-        })
+            localForm.value = JSON.parse(JSON.stringify(props.comment));
+        });
         return {
             localForm,
             hideForm,
             submitHandler,
             isAdmin,
-        }
+        };
     },
-})
+});
 </script>
 
 <style lang="less">

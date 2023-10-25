@@ -1,17 +1,30 @@
 <template>
-    <div class="edit-panel" v-click-outside="clickOutside">
-        <div @click="setShowConfirm(true)" class="edit-panel-elem">Удалить</div>
-        <div @click="setShowForm(true)" class="edit-panel-elem">Редактировать</div>
+    <div
+        v-click-outside="clickOutside"
+        class="edit-panel"
+    >
+        <div
+            class="edit-panel-elem"
+            @click="setShowConfirm(true)"
+        >
+            Удалить
+        </div>
+        <div
+            class="edit-panel-elem"
+            @click="setShowForm(true)"
+        >
+            Редактировать
+        </div>
         <EditForm
             v-if="showForm"
-            :setShowForm="setShowForm"
+            :set-show-form="setShowForm"
             :group="group"
         />
         <ConfirmComponent
             v-if="showConfirm"
-            :setShowConfirm="setShowConfirm"
+            :set-show-confirm="setShowConfirm"
             :action="deleteHandler"
-            :actionTitle="'Удалить'"
+            :action-title="'Удалить'"
             :title="'Уверены что хотите удалить эту подборку?'"
         />
     </div>
@@ -27,18 +40,6 @@ import ConfirmComponent from '../common-components/ConfirmComponent.vue';
 
 export default defineComponent({
     name: 'EditPanel',
-    props: {
-        setShowPanel: {
-            type: Function,
-        },
-        showPanel: {
-            type: Boolean,
-            default: false,
-        },
-        group: {
-            type: Object as PropType<IGroup>,
-        },
-    },
     directives: {
         clickOutside: vClickOutside,
     },
@@ -46,12 +47,26 @@ export default defineComponent({
         EditForm,
         ConfirmComponent,
     },
+    props: {
+        setShowPanel: {
+            type: Function,
+            default: () => {},
+        },
+        showPanel: {
+            type: Boolean,
+            default: false,
+        },
+        group: {
+            type: Object as PropType<IGroup>,
+            default: () => {},
+        },
+    },
     data() {
         return {
             mounted: false,
             showForm: false,
             showConfirm: false,
-        }
+        };
     },
     computed: {
     },

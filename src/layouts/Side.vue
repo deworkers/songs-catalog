@@ -1,6 +1,5 @@
 <template>
-    <aside>
-    </aside>
+    <aside />
 </template>
 
 <script lang="ts">

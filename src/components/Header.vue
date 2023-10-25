@@ -1,7 +1,10 @@
 <template>
     <header>
         <div class="logo">
-            <img src="../assets/songs-logo.png" alt="" />
+            <img
+                src="../assets/songs-logo.png"
+                alt=""
+            >
             Живая музыка и хорошие песни
         </div>
         <Search />

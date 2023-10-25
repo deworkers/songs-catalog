@@ -1,35 +1,55 @@
 <template>
-    <div class="add-song-form" @click="hideForm">
+    <div
+        class="add-song-form"
+        @click="hideForm"
+    >
         <div class="add-song-body">
-            <div class="close-popup" @click="hideForm"></div>
-            <h2 class="add-song-title">Редактирование подборки</h2>
+            <div
+                class="close-popup"
+                @click="hideForm"
+            />
+            <h2 class="add-song-title">
+                Редактирование подборки
+            </h2>
             <div>
                 <div class="edit-form-input">
                     <label>Название подборки</label>
-                    <input name="name" type="text" v-model="localForm.name">
+                    <input
+                        v-model="localForm.name"
+                        name="name"
+                        type="text"
+                    >
                 </div>
                 <div class="edit-form-input">
                     <label>Описание</label>
                     <textarea
+                        v-model="localForm.description"
                         name="description"
                         type="text"
-                        v-model="localForm.description"
-                    ></textarea>
+                    />
                 </div>
                 <div class="edit-form-input">
                     <label>Обложка</label>
-                    <input name="text" type="file" v-on:change="selectCover($event)">
+                    <input
+                        name="text"
+                        type="file"
+                        @change="selectCover($event)"
+                    >
                 </div>
                 <div class="edit-form-input">
                     <label>Ссылка на плейлист</label>
-                    <input name="name" type="text" v-model="localForm.playlist">
+                    <input
+                        v-model="localForm.playlist"
+                        name="name"
+                        type="text"
+                    >
                 </div>
             </div>
             <div class="form-bottom">
                 <button
                     class="add-song-prev"
                     @click="hideForm"
-                    >
+                >
                     Отменить
                 </button>
                 <button
@@ -53,19 +73,26 @@ export default defineComponent({
     props: {
         setShowForm: {
             type: Function,
+            default: () => {},
         },
         group: {
             type: Object as PropType<IGroup>,
+            default: () => {},
         },
     },
     data() {
         return {
             localForm: {} as IGroup,
             formData: new FormData(),
-        }
+        };
     },
     computed: {
         ...mapState(['groups']),
+    },
+    mounted() {
+        if (this.group) {
+            this.localForm = JSON.parse(JSON.stringify(this.group));
+        }
     },
     methods: {
         ...mapActions(['getSongs', 'editGroup']),
@@ -102,11 +129,6 @@ export default defineComponent({
                     });
             }
         },
-    },
-    mounted() {
-        if (this.group) {
-            this.localForm = JSON.parse(JSON.stringify(this.group))
-        }
     },
 });
 </script>

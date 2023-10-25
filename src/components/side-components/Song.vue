@@ -1,10 +1,25 @@
 <template>
-    <div class="song-one-playback" @click="openSong">
-        <div class="song-one-cover" v-if="song.cover && !song.clip">
-            <img :src="song.cover" alt="">
+    <div
+        class="song-one-playback"
+        @click="openSong"
+    >
+        <div
+            v-if="song.cover && !song.clip"
+            class="song-one-cover"
+        >
+            <img
+                :src="song.cover"
+                alt=""
+            >
         </div>
-        <div class="song-one-cover" v-if="song.clip">
-            <img :src="`https://img.youtube.com/vi/${getClipID(song.clip)}/0.jpg`" alt="">
+        <div
+            v-if="song.clip"
+            class="song-one-cover"
+        >
+            <img
+                :src="`https://img.youtube.com/vi/${getClipID(song.clip)}/0.jpg`"
+                alt=""
+            >
         </div>
         <div class="song-one-right">
             <div
@@ -12,13 +27,22 @@
             >
                 {{ song.name }}
             </div>
-            <div class="song-one__composer" v-if="song.composer">
+            <div
+                v-if="song.composer"
+                class="song-one__composer"
+            >
                 <b>Музыка: </b>{{ song.composer }}
             </div>
-            <div class="song-one__author" v-if="song.author">
+            <div
+                v-if="song.author"
+                class="song-one__author"
+            >
                 <b>Слова: </b>{{ song.author }}
             </div>
-            <div class="song-one__singer" v-if="song.singer">
+            <div
+                v-if="song.singer"
+                class="song-one__singer"
+            >
                 <b>Исполняет: </b>{{ song.singer }}
             </div>
         </div>
